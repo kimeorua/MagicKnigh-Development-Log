@@ -8,7 +8,6 @@
 + ### [3.개발 요약](#개발-요약)
 + ### [4.개발 사항](#개발-및-작성-사항)
 
-
 ## 게임 설명
 + ### 모티브: God Of War & Sekiro
 + ### God Of War: 공격 및 피격, 스킬사용 등에서 오는 짜릿한 타격감을 구현 할 예정
@@ -31,8 +30,9 @@
 ### 12/26 ~ 12/30 
 
 + ### 12/26 클래스 구조도 작성 및 Github 작성
-+ ### 12/27 메인 캐릭터 기능 및 변수 구상
-+ ### 12/28 일반 몬스터 기능 및 변수 구상
++ ### 12/27 메인 캐릭터 기능 및 요소 구상
++ ### 12/28 일반 몬스터 기능 및 요소 구상
++ ### 12/29 보스 몬스터 기능 및 요소 구상 && Udemy 강좌 정리
 
 ## 개발 및 작성 사항
 
@@ -67,3 +67,26 @@
 #### --------------------------기능----------------------------
 + #### AI(공격, 대기, 플레이어에게 이동, etc…….)
 + #### 아이템드롭(회복 포션 or 강화 재료)
+
+### 3-1.보스 몬스터(12/29)
+
+### 3-2.Udemy 강좌 정리
+
+#### 강좌 명: Unreal Engine 5 C++ Developer: Learn C++ & Make Video Games
+
+#### 챕터: HealthComponent
+
+내용 정리: 여태까지 플레이어 캐릭터, 적캐릭터 등, HP를 가지고 있는 경우 해당 클래스에서 구현하여 클래스가 길어 졌는데, 해당 강좌에서 설명해준 ActorComponent를 상속 받아
+HealthComponent를 C++로 작성하고 각 객체에 추가하여 프로젝트를 제작하는 방법을 습득, 이번에 만드는 게임에서도 사용해볼 예정
+
+사용 법: HealthComponent를 개량하여 현제 제작할 게임에 맞게 변경 -> HP뿐만아니라 EP(속성치)나, 기절 시간 등 전투에 사용될 공통 부분을 제어할 CombetComponent를 작성 하도록 함.
+
+TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamgeType, AController* Instigator, AActor* DamageCauser)
+
+DamagedActor: 데미지를 받는 액터
+Damage: 받은 데미지
+DamgeType: 데미지 타입 (후에 필요한 타입을 정리하여, 추가 해볼 예정)
+Instigator: 데미지를 준 객체의 컨트롤러
+DamageCauser: 데미지를 준 객체
+
+해당 함수를 사용하는 것도 좋아보임 고려해볼것
