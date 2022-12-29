@@ -84,9 +84,13 @@ HealthComponent를 C++로 작성하고 각 객체에 추가하여 프로젝트�
 TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamgeType, AController* Instigator, AActor* DamageCauser)
 
 DamagedActor: 데미지를 받는 액터
+
 Damage: 받은 데미지
+
 DamgeType: 데미지 타입 (후에 필요한 타입을 정리하여, 추가 해볼 예정)
+
 Instigator: 데미지를 준 객체의 컨트롤러
+
 DamageCauser: 데미지를 준 객체
 
 해당 함수를 사용하는 것도 좋아보임 고려해볼것
