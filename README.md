@@ -136,9 +136,7 @@ _DamageCauser: 데미지를 준 객체_
 
 + #### 이동 방식: W, S, A, D키를 이용하여 앞, 뒤, 좌, 우 방향으로 이동 하도록 구현
 
-'''
-
-void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+'''void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
@@ -146,6 +144,4 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("Move Right", this, &AMainCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("Turn Up", this, &AMainCharacter::AddControllerPitchInput);
-}
-
-'''
+}'''
