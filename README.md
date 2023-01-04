@@ -146,4 +146,4 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("Turn Up", this, &AMainCharacter::AddControllerPitchInput);
 }
-'''
+'''c++
