@@ -34,8 +34,11 @@
 ### 01/02 ~ 01/06
 
 + ### 01/02 아이템 클래스 구상 및 무기클래스 
++ ### 01/03 ~ 01/04 메인캐릭터 이동 및 시점 구현
 
 ## 개발 및 작성 사항
+
+---
 
 ### 1.메인 캐릭터 (12/27)
 #### --------------------------요소---------------------------
@@ -126,3 +129,21 @@ _DamageCauser: 데미지를 준 객체_
 + #### HealingAmount(회복량)
 #### --------------------------기능---------------------------
 + #### 회복(PickUp 시 자동으로 호출-> Type에 따라서 체력(HP) or 속성력(EP) 회복)
+
+---
+
+### 1.캐릭터 이동 및 시점 구현
+
++ #### 이동 방식: W, S, A, D키를 이용하여 앞, 뒤, 좌, 우 방향으로 이동 하도록 구현
+
+'''
+void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis("Move Forward", this, &AMainCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("Move Right", this, &AMainCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("Turn Up", this, &AMainCharacter::AddControllerPitchInput);
+}
+'''
