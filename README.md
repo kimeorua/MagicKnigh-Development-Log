@@ -141,12 +141,12 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("Move Forward", this, &AMainCharacter::MoveForward); 	#앞, 뒤 이동
-	PlayerInputComponent->BindAxis("Move Right", this, &AMainCharacter::MoveRight);		#좌, 우 이동
-	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::AddControllerYawInput); #시점 좌, 우
-	PlayerInputComponent->BindAxis("Turn Up", this, &AMainCharacter::AddControllerPitchInput);  #시점 상, 하
+	PlayerInputComponent->BindAxis("Move Forward", this, &AMainCharacter::MoveForward); 	//앞, 뒤 이동
+	PlayerInputComponent->BindAxis("Move Right", this, &AMainCharacter::MoveRight);		//좌, 우 이동
+	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::AddControllerYawInput); //시점 좌, 우
+	PlayerInputComponent->BindAxis("Turn Up", this, &AMainCharacter::AddControllerPitchInput);  //시점 상, 하
 }
-void AMainCharacter::MoveForward(float Value)
+void AMainCharacter::MoveForward(float Value) // 앞뒤 이동 함수-> 뒤로 이동시 이동속도를 변경
 {
 	if (Value < 0.0f)
 	{
@@ -166,7 +166,7 @@ void AMainCharacter::MoveForward(float Value)
 	}
 }
 
-void AMainCharacter::MoveRight(float Value)
+void AMainCharacter::MoveRight(float Value) //좌우 이동
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
 	{
