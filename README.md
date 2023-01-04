@@ -146,7 +146,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::AddControllerYawInput); //시점 좌, 우
 	PlayerInputComponent->BindAxis("Turn Up", this, &AMainCharacter::AddControllerPitchInput);  //시점 상, 하
 }
-void AMainCharacter::MoveForward(float Value) // 앞뒤 이동 함수-> 뒤로 이동시 이동속도를 변경
+void AMainCharacter::MoveForward(float Value) //앞,뒤 이동 뒤로 이동할시 이동속도 감소
 {
 	if (Value < 0.0f)
 	{
@@ -156,26 +156,13 @@ void AMainCharacter::MoveForward(float Value) // 앞뒤 이동 함수-> 뒤로 �
 	{
 		GetCharacterMovement()->MaxWalkSpeed = ForwardWalkSpeed;
 	}
-	if ((Controller != nullptr) && (Value != 0.0f))
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+	AddMovementInput(GetActorForwardVector() * Value);
 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
-	}
 }
 
-void AMainCharacter::MoveRight(float Value) //좌우 이동
+void AMainCharacter::MoveRight(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f))
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Direction, Value);
-	}
+	AddMovementInput(GetActorRightVector() * Value);
 }
 
 ```
