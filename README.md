@@ -160,11 +160,16 @@ void AMainCharacter::MoveForward(float Value) //앞,뒤 이동 뒤로 이동할�
 
 }
 
-void AMainCharacter::MoveRight(float Value)
+void AMainCharacter::MoveRight(float Value) //좌, 우 이동
 {
 	AddMovementInput(GetActorRightVector() * Value);
 }
 
 ```
+
++ #### 주요 함수
+
+```cpp
+AddMovementInput(FVector)
 
 
