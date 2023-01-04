@@ -170,6 +170,10 @@ void AMainCharacter::MoveRight(float Value) //좌, 우 이동
 + #### 주요 함수
 
 ```cpp
-AddMovementInput(FVector)
-
-
+AddMovementInput(FVector) // 해당 백터의 방향으로 움직임 줌
+AddControllerPitchInput // Pitch 방향으로 회전 줌
+AddControllerYawInput //Yaw 방향으로 회전 줌
+PlayerInputComponent->BindAxis("이벤트 이름", this, Function) // 축 입력 이벤트에 대하여 해당 함수를 Bind함
+GetActorForwardVector() // Actor의 앞방향 벡터를 반환
+GetActorRightVector() // Actor의 오른쪽 방향 백터를 반환
+```
