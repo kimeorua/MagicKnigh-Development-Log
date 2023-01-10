@@ -219,8 +219,10 @@ void AMainCharacter::MoveForward(float Value)
 	}
 }
 ```
+#### 설명: 이동방향 맡게 이동 시키며 후방 이동 시 BackwardSpeed 만큼 이동속도를 감소 시킴
 
 + #### 대쉬: LShift 키를 누르고 있으면 대쉬를 하도록 구현
+
 ```cpp
 void AMainCharacter::Dash()
 {
@@ -240,3 +242,4 @@ void AMainCharacter::DashEnd()
 	}
 }
 ```
+#### 설명: 키 입력을 받아 Shift키가 눌리면 이동속도를 ForwardRunSpeed(뛰기 속도)로 변경하고 눌리지 않았을 경우 ForwardWalkSpeed 걷기 속도로 변경 함
