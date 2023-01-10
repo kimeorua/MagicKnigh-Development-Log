@@ -194,7 +194,6 @@ GetActorRightVector() // Actor의 오른쪽 방향 백터를 반환
 ### 캐릭터 이동 재구현
 
 + #### 이동 방식: W, S, A, D키를 이용하여 앞, 뒤, 좌, 우 방향으로 이동 하도록 구현
-+ #### 대쉬: LShift 키를 누르고 있으면 대쉬를 하도록 구현
 
 ```cpp
 void AMainCharacter::MoveForward(float Value)
@@ -217,6 +216,27 @@ void AMainCharacter::MoveForward(float Value)
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, Value);
+	}
+}
+```
+
++ #### 대쉬: LShift 키를 누르고 있으면 대쉬를 하도록 구현
+```cpp
+void AMainCharacter::Dash()
+{
+	if (!bUseDash)
+	{
+		bUseDash = true;
+		CurrentSpeed = ForwardRunSpeed;
+	}
+}
+
+void AMainCharacter::DashEnd()
+{
+	if (bUseDash)
+	{
+		bUseDash = false;
+		CurrentSpeed = ForwardWalkSpeed;
 	}
 }
 ```
