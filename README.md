@@ -36,6 +36,7 @@
 + ### 01/02 아이템 클래스 구상 및 무기클래스 
 + ### 01/03 ~ 01/04 메인캐릭터 이동 및 시점 구현
 + ### 01/06 ~ 01/08 개발 중지 및 프로잭트 재생성
++ ### 01/09 ~ 01/10 캐릭터 이동 재 구현
 
 ## 개발 및 작성 사항
 
@@ -189,3 +190,33 @@ GetActorRightVector() // Actor의 오른쪽 방향 백터를 반환
 ### 해결
 
 + #### 사용할려는 애니메이션에 제일 비슷한 구조를 가진 pragon에셋을 사용하도록 결정, 프로젝트 정리 및 파일 크기 압축을 위해 애니메이션 작업용 프로젝트를 따로 만들어 애니 메이션을 먼져 작업후 본 프로젝트에 추가하여 작업을 진행 함
+
+### 캐릭터 이동 재구현
+
++ #### 이동 방식: W, S, A, D키를 이용하여 앞, 뒤, 좌, 우 방향으로 이동 하도록 구현
++ #### 대쉬: LShift 키를 누르고 있으면 대쉬를 하도록 구현
+
+```cpp
+void AMainCharacter::MoveForward(float Value)
+{
+	if (Value > 0)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
+	}
+	else if (Value < 0)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed - BackwardSpeed;
+	}
+
+	if ((Controller != nullptr) && (Value != 0.0f))
+	{
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
+	}
+}
+```
