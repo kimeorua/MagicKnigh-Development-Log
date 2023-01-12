@@ -37,6 +37,7 @@
 + ### 01/03 ~ 01/04 메인캐릭터 이동 및 시점 구현
 + ### 01/06 ~ 01/08 개발 중지 및 프로잭트 재생성
 + ### 01/09 ~ 01/10 캐릭터 이동 재 구현
++ ### 01/11 캐릭터 회피 구현
 
 ## 개발 및 작성 사항
 
@@ -243,3 +244,76 @@ void AMainCharacter::DashEnd()
 }
 ```
 #### 설명: 키 입력을 받아 Shift키가 눌리면 이동속도를 ForwardRunSpeed(뛰기 속도)로 변경하고 눌리지 않았을 경우 ForwardWalkSpeed 걷기 속도로 변경 함
+
+### 캐릭터 회피 구현
+
++ ### MainCharacter.h
+
+```cpp
+UENUM()
+enum class MainState : uint8
+{
+	MS_Move UMETA(DisplayName = "Move"),
+	MS_Dodge UMETA(DisplayName = "Dodge"),
+
+	MS_Max
+};
+UCLASS()
+class MYGAME_API AMainCharacter : public ABaseCharacter
+{
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	int32 MoveNum = 1; // W, S, A, D 키 입력에 따라 변하여 회피하는 방향을 결정함
+
+	class UMainAnimInstance* MainAnimInstance; // 캐릭터의 애니메이션 변수
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	MainState State; //캐릭터 상태Enum
+	
+	void Dodge() //회피 실행 함수
+public:
+	void DodgeEnd(); // 회피 종료 함수, 애니메이션의 AnimNotify에 의해 자동으로 호출되어 실행 됨
+}
+```
++ ### MainCharacter.cpp
+```
+void AMainCharacter::MoveForward(float Value)
+{
+	'''
+	if (Value >= 0)
+	{
+		MoveNum = 1;
+	}
+	else if (Value < 0)
+	{
+		MoveNum = 2;
+	}
+}
+
+void AMainCharacter::MoveRight(float Value)
+{
+	'''
+	if (Value > 0)
+	{
+		MoveNum = 3;
+	}
+	else if (Value < 0)
+	{
+		MoveNum = 4;
+	}
+}
+void AMainCharacter::Dodge()
+{
+	State = MainState::MS_Dodge; // 현재 상태를 Dodge로 변경 -> 이동은 Move 상태임으로 이동 불가 상태가 됨
+	MainAnimInstance->PlayDodge(MoveNum); //MainAnimInstance.cpp에 회피 애니메이션 실행 함수 호출
+}
+
+void AMainCharacter::DodgeEnd()
+{
+	State = MainState::MS_Move; // 현재 상태를 Move로 변경
+}
+```
+
+#### 설명: 현재 이동할려는 방향과 스페이스키를 누르면 해당 방향에 맞는 회피 모션이 나오도록 구현함 
+
+#### 문제점: 회피하면서 카메라 시점을 회전하면 캐릭터도 그에 맞게 회전됨 -> 후에 Idle 상태를 추가하여 이동 입력이 들어오면 Move로 바꾸고 이때에만 카메라 시점이 회전하면 캐릭터가 회전 하도록 수정 해볼 것
