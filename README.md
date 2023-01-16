@@ -31,14 +31,21 @@
 + ### 12/29 보스 몬스터 기능 및 요소 구상 && Udemy 강좌 정리
 + ### 12/30 무기 기능 및 요소 구상
 
-### 01/02 ~ 01/06
+### 01/02 ~ 01/08
 
 + ### 01/02 아이템 클래스 구상 및 무기클래스 
 + ### 01/03 ~ 01/04 메인캐릭터 이동 및 시점 구현
 + ### 01/06 ~ 01/08 개발 중지 및 프로잭트 재생성
+
+### 01/09 ~ 01/13
+
 + ### 01/09 ~ 01/10 캐릭터 이동 재 구현
 + ### 01/12 캐릭터 회피 구현
 + ### 01/13 캐릭터 회피 개선 및 클래스 구조 개선
+
+### 01/16 ~ 01/19
+
++ ### 01/16 캐릭터에 방패 부착
 
 ## 개발 및 작성 사항
 
@@ -327,4 +334,68 @@ void AMainCharacter::DodgeEnd()
 
 ### 클래스 개선
 + #### MainCharacter.h에 있던 ENum을 MainState에서 MoveState로 이름을 변경, BaseCharacter.h로 위치를 이동
-#### -> 이유: 후에 몬스터도 해당 ENum을 사용하여 상태를 조절 할 예정, 따로 추가하는 것보단 같은 부모 클래스에 작성하는 것이 효율적이라고 생각 함.
+#### -> 이유: 후에 몬스터도 해당 ENum을 사용하여 상태를 조절 할 예정, 따로 추가하는 것보단 같은 부모 클래스에 작성하는 것이 효율적이라고 판단.
+
+### 캐릭터에 방패 부착
+
++ #### 캐릭터의 왼쪽 팔에다가 ArmShield를 부착함, 장착한 무기에 상관없이 방패는 고정되는 형태로 후에 입력에 따른 방어 애니메이션을 추가할 예정
+
+#### Shield.h
+```cpp
+
+class MYGAME_API AShield : public AActor
+{
+	GENERATED_BODY()
+	
+public:	
+	// Sets default values for this actor's properties
+	AShield();
+private:
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* Root; //root컴포넌트
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* Mesh; //메시
+};
+```
+#### Shield.cpp
+
+```cpp
+
+AShield::AShield()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root")); //root 컴포넌트 설정
+	SetRootComponent(Root);
+
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Messh"); //Mesh설정
+	Mesh->SetupAttachment(Root);
+}
+
+#### MainCharacter.h
+```cpp
+UCLASS()
+class MYGAME_API AMainCharacter : public ABaseCharacter
+{
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true")) 
+	TSubclassOf<AShield> ShieldClass;	// 블루프린트에서 설정할 방패
+
+	UPROPERTY()
+	AShield* Shield; //실제로 c++내에서 컨트롤 하는 방패
+}
+```
+#### MainCharacter.cpp
+
+```cpp
+
+void AMainCharacter::BeginPlay()
+{
+	'''
+	
+	Shield = GetWorld()->SpawnActor<AShield>(ShieldClass); //방패 엑터를 월드상에 스폰
+	Shield->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("ShieldSocket")); // 스폰한 방패를 "ShieldSocket" 란 이름을 가진소켓 에 부착
+	Shield->SetOwner(this);
+}
+```
