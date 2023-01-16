@@ -6,6 +6,15 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+UENUM()
+enum class MoveState : uint8
+{
+	MS_Move UMETA(DisplayName = "Move"),
+	MS_Dodge UMETA(DisplayName = "Dodge"),
+
+	MS_Max
+};
+
 UCLASS()
 class MYGAME_API ABaseCharacter : public ACharacter
 {

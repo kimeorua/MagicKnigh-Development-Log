@@ -9,15 +9,7 @@
 /**
  * 
  */
-UENUM()
-enum class MainState : uint8
-{
-	MS_Move UMETA(DisplayName = "Move"),
-	MS_Dodge UMETA(DisplayName = "Dodge"),
-
-	MS_Max
-};
-
+class AShield;
 
 UCLASS()
 class MYGAME_API AMainCharacter : public ABaseCharacter
@@ -47,7 +39,13 @@ private:
 	class UMainAnimInstance* MainAnimInstance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
-	MainState State;
+	MoveState State;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AShield> ShieldClass;
+
+	UPROPERTY()
+	AShield* Shield;
 
 	//-----------------------------------------Function-----------------------------------------//
 	void MoveForward(float Value);
