@@ -9,6 +9,7 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "MainAnimInstance.h"
+#include "Shield.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -26,7 +27,7 @@ AMainCharacter::AMainCharacter()
 
 	CurrentSpeed = ForwardWalkSpeed;
 	bUseDash = false;
-	State = MainState::MS_Move;
+	State = MoveState::MS_Move;
 	MainAnimInstance = nullptr;
 }
 
@@ -37,8 +38,12 @@ void AMainCharacter::BeginPlay()
 	CurrentSpeed = ForwardWalkSpeed;
 	bUseDash = false;
 
-	State = MainState::MS_Move;
+	State = MoveState::MS_Move;
 	MainAnimInstance = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
+
+	Shield = GetWorld()->SpawnActor<AShield>(ShieldClass);
+	Shield->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("ShieldSocket"));
+	Shield->SetOwner(this);
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -52,18 +57,28 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("Move Forward", this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right", this, &AMainCharacter::MoveRight);
+
 	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::LookUp);
 	PlayerInputComponent->BindAxis("Look Up", this, &AMainCharacter::LookRight);
 
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &AMainCharacter::Dash);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &AMainCharacter::DashEnd);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
+
 }
 
 void AMainCharacter::MoveForward(float Value)
 {
-	if (State == MainState::MS_Move)
+	if ((Controller != nullptr) && (Value != 0.0f))
 	{
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
+
 		if (Value > 0)
 		{
 			GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
@@ -72,19 +87,8 @@ void AMainCharacter::MoveForward(float Value)
 		{
 			GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed - BackwardSpeed;
 		}
-
-		if ((Controller != nullptr) && (Value != 0.0f))
-		{
-			// find out which way is forward
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-			// get forward vector
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-			AddMovementInput(Direction, Value);
-		}
+		
 	}
-
 	if (Value >= 0)
 	{
 		MoveNum = 1;
@@ -93,26 +97,24 @@ void AMainCharacter::MoveForward(float Value)
 	{
 		MoveNum = 2;
 	}
+	
 }
 
 void AMainCharacter::MoveRight(float Value)
 {
-	if (State == MainState::MS_Move)
+	if ((Controller != nullptr) && (Value != 0.0f))
 	{
+		// find out which way is right
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get right vector 
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// add movement in that direction
+		AddMovementInput(Direction, Value);
 		GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
-
-		if ((Controller != nullptr) && (Value != 0.0f))
-		{
-			// find out which way is right
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-			// get right vector 
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-			// add movement in that direction
-			AddMovementInput(Direction, Value);
-		}
 	}
+
 	if (Value > 0)
 	{
 		MoveNum = 3;
@@ -135,7 +137,7 @@ void AMainCharacter::LookRight(float Value)
 
 void AMainCharacter::Dash()
 {
-	if (State == MainState::MS_Move)
+	if (State == MoveState::MS_Move)
 	{
 		if (!bUseDash)
 		{
@@ -156,11 +158,13 @@ void AMainCharacter::DashEnd()
 
 void AMainCharacter::Dodge()
 {
-	State = MainState::MS_Dodge;
+	State = MoveState::MS_Dodge; 
 	MainAnimInstance->PlayDodge(MoveNum);
+	bUseControllerRotationYaw = false;
 }
 
 void AMainCharacter::DodgeEnd()
 {
-	State = MainState::MS_Move;
+	State = MoveState::MS_Move;
+	bUseControllerRotationYaw = true;
 }
