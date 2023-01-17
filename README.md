@@ -48,7 +48,7 @@
 ### 01/16 ~ 01/19
 
 + ### 01/16 캐릭터에 방패 부착
-+ ### 01/17 Udemy 강좌 정리
++ ### 01/17 Udemy 강좌 정리 && 방어 애니메이션 구현
 
 ## 개발 및 작성 사항
 
@@ -415,3 +415,11 @@ void AMainCharacter::BeginPlay()
 SetFocus(AActor* NewFocus, EAIFocusPriority::Type InPriority); //AI 캐릭터의 시점을 특정 Actor를 바라보게 하는 함수,
 ClearFocus(EAIFocusPriority::Type InPriority); // 시점 설정을 초기화 하는 것, 바라보지 않거나 추적 중지 시 사용
 MoveToActor(PlayerPawn, AcceptanceRadius); // PlayerPawn = 목표 Actor, AcceptanceRadius = float 형태, 최소 거리 조절
+```
+
+### 방어 애니메이션 구현
+
+![](./img/전체애니메이션.PNG)
+
+![](./img/방어애니메이션블랜드.PNG)
+
