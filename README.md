@@ -109,7 +109,7 @@
 HealthComponent를 C++로 작성하고 각 객체에 추가하여 프로젝트를 제작하는 방법을 습득, 이번에 만드는 게임에서도 사용해볼 예정
 
 사용 법: HealthComponent를 개량하여 현제 제작할 게임에 맞게 변경 -> HP뿐만아니라 EP(속성치)나, 기절 시간 등 전투에 사용될 공통 부분을 제어할 CombetComponent를 작성 하도록 함.
-
+```cpp
 __TakeDamage(AActor* DamagedActor, float Damage, const UDamageType* DamgeType, AController* Instigator, AActor* DamageCauser)__
 
 _DamagedActor: 데미지를 받는 액터_
@@ -121,6 +121,7 @@ _DamgeType: 데미지 타입 (후에 필요한 타입을 정리하여, 추가 �
 _Instigator: 데미지를 준 객체의 컨트롤러_
 
 _DamageCauser: 데미지를 준 객체_
+```
 
 해당 함수를 사용하는 것도 좋아보임 고려해볼것
 
