@@ -9,6 +9,7 @@ UMainAnimInstance::UMainAnimInstance()
 	Speed = 0.f;
 	Direction =  0.f;
 	DodgeMontage = nullptr;
+	EquipMontage = nullptr;
 }
 
 void UMainAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
@@ -21,6 +22,8 @@ void UMainAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		AMainCharacter* Main = Cast<AMainCharacter>(Pawn); // Main 변수에 저장
 		Speed = Main->GetVelocity().Size(); // 캐릭터의 속도와 변수 speed 동기화
 		Direction = CalculateDirection(Main->GetVelocity(), Main->GetActorRotation());
+		bIsBlock = Main->bUseBlock;
+		UseWeapon = Main->UseWeaponNum;
 	}
 }
 
@@ -52,6 +55,14 @@ void UMainAnimInstance::PlayDodge(int32 num)
 		{
 			return;
 		}
+	}
+}
+
+void UMainAnimInstance::PlayEquip()
+{
+	if (!Montage_IsPlaying(EquipMontage))
+	{
+		Montage_Play(EquipMontage);
 	}
 }
 

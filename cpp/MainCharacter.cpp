@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "MainAnimInstance.h"
 #include "Shield.h"
+#include "Weapon.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -44,6 +45,10 @@ void AMainCharacter::BeginPlay()
 	Shield = GetWorld()->SpawnActor<AShield>(ShieldClass);
 	Shield->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("ShieldSocket"));
 	Shield->SetOwner(this);
+
+	Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
+	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponEquipSocket"));
+	Sword->SetOwner(this);
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -63,7 +68,13 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &AMainCharacter::Dash);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &AMainCharacter::DashEnd);
+
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
+
+	PlayerInputComponent->BindAction("Block", IE_Pressed, this, &AMainCharacter::BlockStart);
+	PlayerInputComponent->BindAction("Block", IE_Released, this, &AMainCharacter::BlockEnd);
+
+	PlayerInputComponent->BindAction("Sword Equip", IE_Pressed, this, &AMainCharacter::SelectSword);
 
 }
 
@@ -161,6 +172,59 @@ void AMainCharacter::Dodge()
 	State = MoveState::MS_Dodge; 
 	MainAnimInstance->PlayDodge(MoveNum);
 	bUseControllerRotationYaw = false;
+	bUseBlock = false;
+}
+
+void AMainCharacter::BlockStart()
+{
+	if (State != MoveState::MS_Dodge && !bUseDash)
+	{
+		bUseBlock = true;
+		State = MoveState::MS_Block;
+	}
+	else
+	{
+		return;
+	}
+}
+
+void AMainCharacter::BlockEnd()
+{
+	if (State != MoveState::MS_Dodge && !bUseDash)
+	{
+		bUseBlock = false;
+		State = MoveState::MS_Move;
+	}
+	else
+	{
+		return;
+	}
+}
+
+void AMainCharacter::SelectSword()
+{
+	if (State == MoveState::MS_Move)
+	{
+		WeaponNum = 1;
+		WeaponEquip();
+	}
+	else { return; }
+}
+
+void AMainCharacter::WeaponEquip()
+{
+	if (UseWeaponNum == WeaponNum) 
+	{ 
+		return; 
+	}
+	else
+	{
+		if (WeaponNum == 1)
+		{
+			Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponHandSocket"));
+			UseWeaponNum = 1;
+		}
+	}
 }
 
 void AMainCharacter::DodgeEnd()
