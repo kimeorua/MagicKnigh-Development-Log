@@ -47,9 +47,11 @@
 + ### 01/16 캐릭터에 방패 부착
 + ### 01/17 Udemy 강좌 정리 && 방어 애니메이션 구현
 
-### 01/18 ~ 01/24 설 연휴
+### 01/18 ~ 01/24 설 연휴 및 건강 회복
 
 ### 01/25 ~ 01/29
+
++ ### 01/25 무기 장착 구현
 
 ## 개발 및 작성 사항
 
@@ -456,3 +458,39 @@ void AMainCharacter::BlockEnd()
 ```
 
 #### 설명: MoveState에 MS_Block상태를 추가하여, 방어 상태인지 확인 할수 있게 하였고, 뛰는 도중에는 방어를 할수 없게 구현 하였다.
+
+
+### 무기 장착 구현
+
++ #### 구현 방식: 기본 상태에서는 무기를 등에 메고 있고, 키보드'1'번 키를 눌르면 무기를 손에 부착 하는 형태로 구현함, 추가적으로 현제 사용할려는 무기에 해당 하는 변수WeaponNum과, 실제 현재로 사용하는 무기 변수 UseWeaponNum을 이용해 후에 추가할 무기 교체 시스템에 사용할 예정
+
++ #### MainCharacter.cpp -> Weapon class는 메시를 추가한 것 말고는 변경점이 없어 설명을 생략 함
+
+```cpp
+
+void AMainCharacter::SelectSword()
+{
+	if (State == MoveState::MS_Move)
+	{
+		WeaponNum = 1; // 사용 할려는 무기 
+		WeaponEquip(); // 무기 장착 함수
+	}
+	else { return; } // 회피 or 방어 중일때는 무기 장착 불가
+}
+
+void AMainCharacter::WeaponEquip()
+{
+	if (UseWeaponNum == WeaponNum) // 실제 사용하는 무기와 현제 키를 눌러 사용할려는 무기가 같을 경우 무기 교체 없음
+	{ 
+		return; 
+	}
+	else
+	{
+		if (WeaponNum == 1)
+		{
+			Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponHandSocket"));
+			UseWeaponNum = 1;
+		}
+	}
+}
+```
