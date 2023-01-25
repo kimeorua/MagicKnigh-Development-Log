@@ -10,6 +10,7 @@
  * 
  */
 class AShield;
+class AWeapon;
 
 UCLASS()
 class MYGAME_API AMainCharacter : public ABaseCharacter
@@ -33,8 +34,12 @@ private:
 
 	float CurrentSpeed;
 	bool bUseDash;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	int32 MoveNum = 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	int32 WeaponNum = 0;
 
 	class UMainAnimInstance* MainAnimInstance;
 
@@ -43,9 +48,13 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AShield> ShieldClass;
-
 	UPROPERTY()
-	AShield* Shield;
+	AShield* Shield = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeapon> SwordClass;
+	UPROPERTY()
+	AWeapon* Sword = nullptr;
 
 	//-----------------------------------------Function-----------------------------------------//
 	void MoveForward(float Value);
@@ -55,6 +64,12 @@ private:
 	void Dash();
 	void DashEnd();
 	void Dodge();
+
+	void BlockStart();
+	void BlockEnd();
+
+	void SelectSword();
+	void WeaponEquip();
 
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -70,6 +85,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	bool bUseBlock = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet)
+	int32 UseWeaponNum = 0;
 
 	void DodgeEnd();
 };

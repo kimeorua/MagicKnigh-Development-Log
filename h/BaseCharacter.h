@@ -11,6 +11,7 @@ enum class MoveState : uint8
 {
 	MS_Move UMETA(DisplayName = "Move"),
 	MS_Dodge UMETA(DisplayName = "Dodge"),
+	MS_Block UMETA(DisplayName = "Block"),
 
 	MS_Max
 };
