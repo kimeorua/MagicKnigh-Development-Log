@@ -56,6 +56,7 @@
 
 ### 01/30 ~ 02/03
 + ### 01/30 검 장착 로직 및 애니메이션 개선
++ ### 02/01 ~ 02/02 검 공격 애니메이션 구현
 
 ---
 ## 개발 및 작성 사항
@@ -510,3 +511,84 @@ void AMainCharacter::WeaponEquip()
 ### 검 장착 로직 및 애니메이션 개선
 
 #### 검 장착시 바로 장착 되는 것이 아닌 등에 메고 있는 검을 '장비' 하는 애니메이션을 추가함, 또한 MoveState에 장착에 해당하는 MS_Equip을 추가하여 플레이어가 무기를 장비 하는 동안에는 움직임, 회피, 방어를 하지 못하게 만들어 플레이어가 무기를 변경 하는것 또한 전략적으로 생각 해야할 여건을 만듬
+
+### 검 공격 애니메이션 구현
+
+#### 마우스 왼쪽 버튼을 클릭하면 공격 애니메이션을 출력 하도록 구현 하였으며, 총 4가지의 공격 애니메이션을 사용하여 콤보 공격을 구현 하엿다, 또한, 공격 중에는 이동 및 회피를 할수 없게 지정 하였다.
+
+MainCharacter.cpp
+
+```cpp
+void AMainCharacter::LMBDawn() //마우스 클릭에 반응 하는 함수
+{
+	if (State != MoveState::MS_Attack) //공격 중이 아닐 때
+	{
+		Attack();
+	}
+	else if (State == MoveState::MS_Attack) //이미 공격 중일때 (콤보 공격 사용)
+	{
+		IsCombo = true;
+	}
+}
+
+void AMainCharacter::Attack() //공격 함수, 메인캐릭터의 상태를 공격중으로 변경하고, 마우스 시점 방향으로 캐릭터를 회전, 해당 방향으로 공격을 실행하며, MainAnimInstace.cpp에서 콤보 애니메이션을 설정 함
+{
+	State = MoveState::MS_Attack;
+	if (MainAnimInstance == nullptr) { return; }
+
+	SetActorRotation(FRotator(0.f, GetControlRotation().Yaw, 0.f));
+	MainAnimInstance->PlayAttack(CurrentCombo); // 현제 콤보 인수로 전달
+}
+
+void AMainCharacter::AttackEnd() //공격 종료 함수 -> 애님노티파이를 통해 호출됨
+{
+	State = MoveState::MS_Move;
+	IsCombo = false;
+	CurrentCombo = 1;
+}
+
+void AMainCharacter::CheackCombo() // 콤보 체크용 함수 -> 애님 노티파이를 통해 호출 
+{
+	if (CurrentCombo >= MaxCombo) 
+	{
+		CurrentCombo = 0; 
+	}
+	if (IsCombo == true) 
+	{
+		CurrentCombo += 1; 
+		IsCombo = false; 
+		Attack();
+	}
+}
+```
+
+MainAnimInstace.cpp
+
+```cpp
+void UMainAnimInstance::PlayAttack(int CurrentCombo) //현제 콤보에 따라 애니메이션 출력 함
+{
+	if (CurrentCombo == 1)
+	{
+		Montage_Play(AttackMontage);
+		Montage_JumpToSection(FName("Attack1"), AttackMontage);
+	}
+	if (CurrentCombo == 2)
+	{
+		Montage_Play(AttackMontage);
+		Montage_JumpToSection(FName("Attack2"), AttackMontage);
+	}
+	if (CurrentCombo == 3)
+	{
+		Montage_Play(AttackMontage, 1.2f);
+		Montage_JumpToSection(FName("Attack3"), AttackMontage);
+	}
+	if (CurrentCombo == 4)
+	{
+		Montage_Play(AttackMontage, 1.2f);
+		Montage_JumpToSection(FName("Attack4"), AttackMontage);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Combo"));
+}
+```
+
+#### 문제점: 무기 장착 여부에 관계없이 공격 키만 누르면 공격이 작동됨, 또한 무기와 공격애니메이션 간의 연결점이 없어 따로 따로 설정 해야함, 후에 무기에 공격 애니메이션을 변수로 저장 하여, 무기를 사용 할때마다 변경 될수 있게 조정 할 
