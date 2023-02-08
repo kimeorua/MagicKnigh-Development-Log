@@ -613,14 +613,15 @@ MainCharacter.cpp
 
 ```cpp
 
-void AMainCharacter::QSkillActivated()
+void AMainCharacter::QSkillActivated() //ESkill도 같은 방식으로 작동.
 {
-	if (CurrentWeapon != nullptr)
+	if (CurrentWeapon != nullptr) // 현재 무기를 장착 하였는지 판단 장착했을경우에만 스킬 사용 가능
 	{
-		if (State == MoveState::MS_Move)
+		if (State == MoveState::MS_Move) // 현재 상태 확인, 공격이나 방어등 다른상태일땐 스킬 사용 불가
 		{
-			State = MoveState::MS_Skill;
-			MainAnimInstance->PlaySkill('Q');
+			State = MoveState::MS_Skill; // 현재 상태 스킬 사용 중으로 변경
+			MainAnimInstance->PlaySkill('Q'); // 애니메이션 호출
 		}
 	}
 }
+```
