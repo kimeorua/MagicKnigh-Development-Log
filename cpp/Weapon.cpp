@@ -14,6 +14,11 @@ AWeapon::AWeapon()
 
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
 	Mesh->SetupAttachment(Root);
+
+	EquipMontage = nullptr;
+	AttackMontage = nullptr;
+	ESkillMontage = nullptr;
+	QSkillMontage = nullptr;
 }
 
 // Called when the game starts or when spawned
