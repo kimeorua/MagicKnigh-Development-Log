@@ -22,23 +22,46 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Move", meta = (AllowPrivateAccess = "true"))
 	bool bIsBlock = false;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
+	class AMainCharacter* Main = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
-	int32 UseWeapon;
+	int32 UseWeaponNum = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* DodgeMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* EquipMontage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* AttackMontage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* ESkillMontage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* QSkillMontage;
 
 public:
 	UMainAnimInstance(); // 생성자
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; //애니메이션 업데이트 함수
 
 	void PlayDodge(int32 num);
-
 	void PlayEquip();
+	void PlayAttack(int CurrentCombo);
+
+	void PlaySkill(char type);
 
 	UFUNCTION()
 	void AnimNotify_DodgeEnd();
+
+	UFUNCTION()
+	void AnimNotify_EquipEnd();
+
+	UFUNCTION()
+	void AnimNotify_AttackEnd();
+
+	UFUNCTION()
+	void AnimNotify_CheackCombo();
 };

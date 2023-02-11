@@ -43,9 +43,6 @@ private:
 
 	class UMainAnimInstance* MainAnimInstance;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
-	MoveState State;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AShield> ShieldClass;
 	UPROPERTY()
@@ -55,6 +52,13 @@ private:
 	TSubclassOf<AWeapon> SwordClass;
 	UPROPERTY()
 	AWeapon* Sword = nullptr;
+	UPROPERTY()
+	AWeapon* CurrentWeapon = nullptr;
+
+	bool IsCombo;
+
+	const int MaxCombo = 4;
+	int CurrentCombo;
 
 	//-----------------------------------------Function-----------------------------------------//
 	void MoveForward(float Value);
@@ -71,6 +75,11 @@ private:
 	void SelectSword();
 	void WeaponEquip();
 
+	void LMBDawn();
+	void Attack();
+
+	void QSkillActivated();
+	void ESkillActivated();
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
@@ -85,9 +94,17 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	bool bUseBlock = false;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet)
 	int32 UseWeaponNum = 0;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	MoveState State;
+
 	void DodgeEnd();
+	void AttackEnd();
+	void CheackCombo();
+	AWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
 };

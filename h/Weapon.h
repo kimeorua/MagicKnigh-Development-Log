@@ -23,11 +23,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* EquipMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* QSkillMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* ESkillMontage;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* Mesh;
-
 };
