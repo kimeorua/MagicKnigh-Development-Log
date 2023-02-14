@@ -62,6 +62,9 @@
 ### 02/06 ~ 02/08
 + ### 02/06 공격 로직 추가 개선 및 무기와의 연동 구현
 + ### 02/08 스킬 사용 구현
+
+### 02/14 ~ 02/17
++ ### 02/14 RPGHitComponent(충돌 시스템) 제작
 ---
 ## 개발 및 작성 사항
 
@@ -623,5 +626,46 @@ void AMainCharacter::QSkillActivated() //ESkill도 같은 방식으로 작동.
 			MainAnimInstance->PlaySkill('Q'); // 애니메이션 호출
 		}
 	}
+}
+```
+
+### RPGHitComponent(충돌 시스템)제작
++ #### BoxComponent를 상속 받아 무기에 적용할 충돌 시스템인 RPGHitComponent 를제작 하였다
+
+#### RPGHitComponent.h
+```cpp
+private:
+	URPGHitComponent(); //생성자
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult); //overlap판정
+```
+
+#### RPGHitComponent.cpp
+```cpp
+URPGHitComponent::URPGHitComponent()
+{
+	PrimaryComponentTick.bCanEverTick = false; // Tick 함수 안 쓰니까 false로.
+
+	OnComponentBeginOverlap.AddDynamic(this, &URPGHitComponent::OnOverlapBegin); //OnComponentBeginOverlap이벤트에 OnOverlapBegin함수를 바인드함.
+}
+
+void URPGHitComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(AMainCharacter::StaticClass())) // Overlap한 Actor가 MainCharacter이면 무시
+	{
+		return;
+	}
+	else		// 그 외의 객체면 Overlap하면 log를 띄움
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit!!"));
+	}
+	
+}
+
+void URPGHitComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	SetCollisionEnabled(ECollisionEnabled::NoCollision); // 게임 시작시 콜리전off
 }
 ```
