@@ -65,6 +65,7 @@
 
 ### 02/14 ~ 02/17
 + ### 02/14 RPGHitComponent(충돌 시스템) 제작
++ ### 02/16 스킬에 충돌 시스템 적용
 ---
 ## 개발 및 작성 사항
 
@@ -693,3 +694,5 @@ void UMainAnimInstance::AnimNotify_CollisionStart() // 공격 시작 -> Collisio
 	RPGHitComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly); Collision On
 }
 ```
+### 스킬에 충돌 시스템 적용
++ #### 스킬 에니메이션에 CollisionStart와 AttackEnd 노티파이를 생성하여, 해당 시점에 Collision을 on/off 하도록 구현 함.
