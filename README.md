@@ -731,3 +731,6 @@ void URPGHitComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 ### 스킬시스템 개선
 + #### 현제 사용하는 방식은 게임 플레이에 적합 하지 않다고 판단 함, 스킬 시스템을 전체적으로 수정 해야 할 필요성을 느낌
  -> 여러 정보를 찾아보는중 언리얼의 게임 플레이 어빌리티 시스템(GAS)를 알게 됨 해당 시스템을 공부하여 적용 해볼 예정
+ 
++ #### 유튜브 강의를 들으면서 프로젝트에 적용 해볼 예정
+ -> 유튜브 주소: https://www.youtube.com/watch?v=LxT8Fc2ejgI&list=PLuS6-Pdt2hhYGZkME7K7ZDT2qf4vbY5c3
