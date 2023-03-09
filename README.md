@@ -738,4 +738,7 @@ void URPGHitComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 
 ### 프로젝트에GameplayAbilitySystem 적용
 
-+ #### 프로젝트에 GameplayAbilitySystem플러그 인을 사용하여, 기초적인 Attribute, Ability, GameplayAbilityComponent를 구현하였음 그후 BaseCharacter class에 상속하여, 어빌리티 시스템을 적용함 이후 현제까지 제작한 이동, 회피, 공격, 방어를 Ability로 변경하여 프로젝트에 추가할 
++ #### 프로젝트에 GameplayAbilitySystem플러그 인을 사용하여, 기초적인 Attribute, Ability, GameplayAbilityComponent를 구현하였음 그후 BaseCharacter class에 상속하여, 어빌리티 시스템을 적용함 이후 현제까지 제작한 이동, 회피, 공격, 방어를 Ability로 변경하여 프로젝트에 추가 할 예정
+ 
++ #### 참고 할 영상 https://www.youtube.com/watch?v=Yub52f4ZUU0&t=1580s
++ #### 참고 할 예시 프로젝트: UE4.27ver 액션RPG
