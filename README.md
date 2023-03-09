@@ -76,6 +76,7 @@
 ### 03/06 ~ 03/10
 + ### 03/06 프로젝트 및 현장실습  정리
 + ### 03/07 스킬 시스템 개선
++ ### 03/08 ~ 03/09 프로젝트에GameplayAbilitySystem 적용
 ---
 
 
@@ -734,3 +735,5 @@ void URPGHitComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
  
 + #### 유튜브 강의를 들으면서 프로젝트에 적용 해볼 예정
  -> 유튜브 주소: https://www.youtube.com/watch?v=LxT8Fc2ejgI&list=PLuS6-Pdt2hhYGZkME7K7ZDT2qf4vbY5c3
+
+### 프로젝트에GameplayAbilitySystem 적용
