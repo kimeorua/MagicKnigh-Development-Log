@@ -77,6 +77,7 @@
 + ### 03/06 프로젝트 및 현장실습  정리
 + ### 03/07 스킬 시스템 개선
 + ### 03/08 ~ 03/09 프로젝트에GameplayAbilitySystem 적용
++ ### 03/10 이동, 달리기, 회피 재 구현 
 ---
 
 
@@ -737,8 +738,34 @@ void URPGHitComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
  -> 유튜브 주소: https://www.youtube.com/watch?v=LxT8Fc2ejgI&list=PLuS6-Pdt2hhYGZkME7K7ZDT2qf4vbY5c3
 
 ### 프로젝트에GameplayAbilitySystem 적용
-
 + #### 프로젝트에 GameplayAbilitySystem플러그 인을 사용하여, 기초적인 Attribute, Ability, GameplayAbilityComponent를 구현하였음 그후 BaseCharacter class에 상속하여, 어빌리티 시스템을 적용함 이후 현제까지 제작한 이동, 회피, 공격, 방어를 Ability로 변경하여 프로젝트에 추가 할 예정
- 
 + #### 참고 할 영상 https://www.youtube.com/watch?v=Yub52f4ZUU0&t=1580s
 + #### 참고 할 예시 프로젝트: UE4.27ver 액션RPG
+
+### 이동, 달리기, 회피 재구현
++ 공통사항: BaseCharacter에 있던 상태 체크용 Enum을 삭제함 -> 후에 GameplayTag를 사용하여 조건을 확인 함.
++ 이동: 원래 사용하던 코드에서 상태를 체크하는 if문을 삭제하여 재 구현 -> GameplayAbilitySystem을 사용하게 되어 GameplayTag 및 간단한 블루프린트로 조건을 체크할수 있게 되어 상태를 채크하는 MoveState 변수를 삭제하였다.
++ 달리기: MoveState 변수를 삭제함에 따라 좀더 간결한 방식으로 재 구현
+```cpp
+void AMainCharacter::Dash()
+{
+	if (!bUseDash)
+	{
+		bUseDash = true;
+		CurrentSpeed = ForwardRunSpeed;
+	}
+}
+
+void AMainCharacter::DashEnd()
+{
+	if (bUseDash)
+	{
+		bUseDash = false;
+		CurrentSpeed = ForwardWalkSpeed;
+	}
+}
+```
++ 회피: AnimNotify를 이용하여, MainAnimInstace와 MainCharacter의 복잡한 방식 대신 블루프린트를 이용하여 NotifyState를 작성, 간단하게 재구성
+![](./img/카메라제어노티파이시작.PNG)
+![](./img/회피애니메이션.PNG)
+
