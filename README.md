@@ -77,7 +77,10 @@
 + ### 03/06 프로젝트 및 현장실습  정리
 + ### 03/07 스킬 시스템 개선
 + ### 03/08 ~ 03/09 프로젝트에GameplayAbilitySystem 적용
-+ ### 03/10 이동, 달리기, 회피 재 구현 
++ ### 03/10 이동, 달리기, 회피 재구현
+
+### 03/13 ~ 03/17
++ ### 03/13 방어 재구현
 ---
 
 
@@ -769,3 +772,41 @@ void AMainCharacter::DashEnd()
 ![](./img/카메라제어노티파이시작.PNG)
 ![](./img/회피애니메이션.PNG)
 
+### 방어 재구현
++ 구현 방식: MainCharacter에 방어 애니메이션 작동을 위한 bUseBlock, 어빌리티사용 가능 여부를 위한 bCanUseAbility, 현제 어빌리티가 작동중인지 확인 하기 위한 bUseAbility 변수를 추가하여 제어함,
++ 방어: 마우스 우클릭 입력 이벤트가 발생 하면, CanUseAbility를 확인하여 현제 어빌리티를 사용 할 수 있는지 확인후 사용이 가능하면 bUseBlock를 true로 변경 애니메이션을 호출 하고 bUseBlock를 true로 바꾸어 현제 어빌리티를 작동중이라고 알림 -> 이로 인하여 회피를 사용 할수 없게 되고, 대쉬를 사용하면 방어 자세가 풀리도록 구현 함
+
++ MainCharacter
+```cpp
+void AMainCharacter::Dash()
+{
+	if (!bUseDash)
+	{
+		bUseDash = true;
+		bCanUseAbility = false;
+		CurrentSpeed = ForwardRunSpeed;
+	}
+}
+
+void AMainCharacter::DashEnd()
+{
+	if (bUseDash)
+	{
+		bUseDash = false;
+		bCanUseAbility = true;
+		CurrentSpeed = ForwardWalkSpeed;
+	}
+}
+
+void AMainCharacter::Dodge()
+{
+	if (!bUseAbility)
+	{
+		MainAnimInstance->PlayDodge(MoveNum);
+		bCanUseAbility = false;
+	}
+}
+```
+
++ GA_Block (AbliltySystem)
+![](./img/방어어빌리티.PNG)
