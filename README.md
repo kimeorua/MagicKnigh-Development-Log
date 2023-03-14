@@ -843,5 +843,7 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 
 + Weapon: 무기에 장착될 장소(EquipSocket), 고유 번호(EquipNum), 장착 애니메이션(EquipMontage)을 변수로 할당하고, 언리얼엔진상 에서 지정 하여 사용 함.
 
++ MainAnimInstace: 애니메이션 업데이트에서 애니메이션 제어를 위한 CurrentWeaponNum(현제 무기의 고유 번호)를 추가 하였다.
+
 
 
