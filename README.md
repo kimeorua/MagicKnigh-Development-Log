@@ -852,4 +852,4 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 ### 방어 개선
 + 방어 어빌리티를 Block, BlockEnd 두개로 나눠서 구현 하였으나 WainInputRelease() 함수를 이용하여 키가 떼졋을때를 추가 구현하여 Block어빌리티에 통합 하였음
 ![](./img/방어개선.PNG)
-+ 이로 인하여 기존의 방어상태에서 달리기 키를 방어자세가 풀리는 오류를 고
++ 이로 인하여 기존의 방어상태에서 달리기 키를 방어자세가 풀리는 오류를 고침
