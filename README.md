@@ -845,5 +845,5 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 
 + MainAnimInstace: 애니메이션 업데이트에서 애니메이션 제어를 위한 CurrentWeaponNum(현제 무기의 고유 번호)를 추가 하였다.
 
-
-
+![](./img/무기장착어빌리티.PNG)
+![](./img/장착함수.PNG)
