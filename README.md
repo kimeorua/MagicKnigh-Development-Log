@@ -435,8 +435,6 @@ private:
 
 void AMainCharacter::BeginPlay()
 {
-	'''
-	
 	Shield = GetWorld()->SpawnActor<AShield>(ShieldClass); //방패 엑터를 월드상에 스폰
 	Shield->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("ShieldSocket")); // 스폰한 방패를 "ShieldSocket" 란 이름을 가진소켓 에 부착
 	Shield->SetOwner(this);
