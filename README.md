@@ -320,6 +320,7 @@ public:
 	void DodgeEnd(); // 회피 종료 함수, 애니메이션의 AnimNotify에 의해 자동으로 호출되어 실행 됨
 }
 ```
+
 + ### MainCharacter.cpp
 
 ```cpp
