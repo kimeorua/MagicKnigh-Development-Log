@@ -189,6 +189,7 @@
 + ### 03/13 방어 재구현
 + ### 03/14 무기 장착 재구현 및 방어 개선
 + ### 03/15 c++, 블루프린트 및 깃허브 정리
++ ### 03/16 콤보 공격 구현
 ---
 ## 11 개발 사항
 
@@ -855,10 +856,65 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 ![](./img/무기장착어빌리티.PNG)
 ![](./img/장착함수.PNG)
 
-### 방어 개선
+#### 방어 개선
 + 방어 어빌리티를 Block, BlockEnd 두개로 나눠서 구현 하였으나 WainInputRelease() 함수를 이용하여 키가 떼졋을때를 추가 구현하여 Block어빌리티에 통합 하였음
 ![](./img/방어개선.PNG)
 + 이로 인하여 기존의 방어상태에서 달리기 키를 방어자세가 풀리는 오류를 고침
+
+### 콤보 공격 구현(03/16)
++ 기존 사용하던 코드에서 State를 체크하는 조건을 지우고 좀더 간략하게 재구성, 애니메이션 부분은 추가사항 없음.
+```cpp
+void AMainCharacter::LMBDawn()
+{
+	if (!bUseAbility && !IsDodge) //회피 중이 아니고, 어빌리티 사용 중이 아닐때 작동
+	{
+		if (CurrentWeapon != nullptr) //무기를 장착 해야지 작동
+		{
+			bCanUseAbility = false; //어빌리티 사용 불가로 변경
+			if (!(MainAnimInstance->Montage_IsPlaying(CurrentWeapon->GetAttackMontage()))) // 몽타주가 실행중이 아니면 처음 공격, 아니면 콤보 공격으로 판단
+			{
+				Attack();
+				IsAttack = true;
+			}
+			else
+			{
+				IsCombo = true; //콤보 중으로 변경
+			}
+		}
+	}
+}
+
+void AMainCharacter::Attack()
+{
+	if (MainAnimInstance == nullptr) { return; }
+	MainAnimInstance->PlayAttack(CurrentCombo);
+	//UE_LOG(LogTemp, Warning, TEXT("Combo: %d"), CurrentCombo);
+}
+
+// 공격 종료 함수 -> 콤보 여부, 공격 여부를 false로 변경, 현제 콤보 초기화 및 어빌리티 사용 가능 상태로 변경 -> 노티파이를 통해 호출 
+void AMainCharacter::AttackEnd()
+{
+	IsCombo = false;
+	CurrentCombo = 1;
+	IsAttack = false;
+	bCanUseAbility = true;
+}
+
+// 콤보 체크용 함수 -> 노티파이를 통해 호출
+void AMainCharacter::CheackCombo()
+{
+	if (CurrentCombo >= MaxCombo)
+	{
+		CurrentCombo = 1;
+	}
+	if (IsCombo == true)
+	{
+		CurrentCombo += 1;
+		IsCombo = false;
+		Attack();
+	}
+}
+```
 
 ---
 
