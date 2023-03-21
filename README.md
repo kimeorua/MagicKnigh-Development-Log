@@ -194,6 +194,7 @@
 
 ### 03/20 ~ 03/24
 + ### EP 및 MaxEP 설정, EPSkill(특수 스킬)기초 구현
++ ### EP스킬 제작 및 스킬사용 구현
 ---
 ## 11 개발 사항
 
@@ -955,6 +956,9 @@ void UCharacterAttributeSetBase::OnRep_MaxEP(const FGameplayAttributeData& OldMa
 ```
 + ### EPSkills Ability블루프린트를 만들어서, 기초적인 EP수치 확인과, 작동을 구현 함.
 ![](./img/특수스킬기초.PNG)
+
+### EP스킬 제작 및 스킬사용 구현(03/21)
++ ### Weapon class에 EPSkill 몽타주를 변수로 할당하고, EPSkills Ability에서 조건에 부합할시, 해당 무기의, EPSkill을 사용하도록 구현함.
 
 ---
 
