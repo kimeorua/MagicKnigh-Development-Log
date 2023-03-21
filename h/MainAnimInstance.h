@@ -20,48 +20,32 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
 	float Direction; //캐릭터의 방향
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Move", meta = (AllowPrivateAccess = "true"))
-	bool bIsBlock = false;
+	bool bIsBlock = false; //방어 애니메이션 활성화용 변수
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* DodgeMontage; //회피 애니메이션
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
-	class AMainCharacter* Main = nullptr;
+	class AMainCharacter* Main = nullptr; // 메인캐릭터 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
-	int32 UseWeaponNum = 0;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	int32 CurrentWeaponNum = 0; //회피 방향 결정용 변수
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* DodgeMontage;
-
+	// 공격 용 몽타주
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* EquipMontage;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* AttackMontage;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* ESkillMontage;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* QSkillMontage;
+	UAnimMontage* AttackMontage = nullptr;
 
 public:
 	UMainAnimInstance(); // 생성자
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; //애니메이션 업데이트 함수
 
-	void PlayDodge(int32 num);
-	void PlayEquip();
-	void PlayAttack(int CurrentCombo);
+	void PlayDodge(int32 num); //회피 애니메이션 작동
 
-	void PlaySkill(char type);
+	void PlayAttack(int CurrentCombo); //공격 애니메이션 작동
 
-	UFUNCTION()
-	void AnimNotify_DodgeEnd();
-
-	UFUNCTION()
-	void AnimNotify_EquipEnd();
-
+	// 노티파이에서 자동 호출 되는 함수
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
-
 	UFUNCTION()
 	void AnimNotify_CheackCombo();
 };
