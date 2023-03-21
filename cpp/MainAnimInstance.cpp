@@ -4,19 +4,18 @@
 #include "MainAnimInstance.h"
 #include "MainCharacter.h"
 #include "Weapon.h"
+#include "RPGHitComponent.h"
 
 UMainAnimInstance::UMainAnimInstance()
 {
+	//초기화
 	Speed = 0.f;
 	Direction =  0.f;
+
 	DodgeMontage = nullptr;
-	EquipMontage = nullptr;
-	AttackMontage = nullptr;
-	ESkillMontage = nullptr;
-	QSkillMontage = nullptr;
 }
 
-void UMainAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
+void UMainAnimInstance::NativeUpdateAnimation(float DeltaSeconds) //애니메이션 업데이트 시 호출
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 	APawn* Pawn = TryGetPawnOwner(); // Pawn 변수에 플레이어 캐릭터 저장
@@ -25,9 +24,9 @@ void UMainAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Main = Cast<AMainCharacter>(Pawn); // Main 변수에 저장
 		Speed = Main->GetVelocity().Size(); // 캐릭터의 속도와 변수 speed 동기화
-		Direction = CalculateDirection(Main->GetVelocity(), Main->GetActorRotation());
-		bIsBlock = Main->bUseBlock;
-		UseWeaponNum = Main->UseWeaponNum;
+		Direction = CalculateDirection(Main->GetVelocity(), Main->GetActorRotation()); //현제 방향을 계산하여 저장
+		bIsBlock = Main->GetUseBlock(); //현제 방어 여부를 저장
+		CurrentWeaponNum = Main->GetCurrentWeaponNum(); //현제 무기의 고유 번호 저장
 	}
 }
 
@@ -62,18 +61,10 @@ void UMainAnimInstance::PlayDodge(int32 num)
 	}
 }
 
-void UMainAnimInstance::PlayEquip()
-{
-	EquipMontage = Main->GetCurrentWeapon()->EquipMontage;
-	if (!Montage_IsPlaying(EquipMontage))
-	{
-		Montage_Play(EquipMontage);
-	}
-}
-
 void UMainAnimInstance::PlayAttack(int CurrentCombo)
 {
-	AttackMontage = Main->GetCurrentWeapon()->AttackMontage;
+	//공격 실행지 해당 무기의 공격 몽타주를 가져옴
+	AttackMontage = Main->GetCurrentWeapon()->GetAttackMontage();
 	if (CurrentCombo == 1)
 	{
 		Montage_Play(AttackMontage);
@@ -81,56 +72,19 @@ void UMainAnimInstance::PlayAttack(int CurrentCombo)
 	}
 	else if (CurrentCombo == 2)
 	{
-		///EquipMontage = Main->GetCurrentWeapon()->AttackMontage;
 		Montage_Play(AttackMontage);
 		Montage_JumpToSection(FName("Attack2"), AttackMontage);
 	}
 	else if (CurrentCombo == 3)
 	{
-		//EquipMontage = Main->GetCurrentWeapon()->AttackMontage;
-		Montage_Play(AttackMontage, 1.2f);
+		Montage_Play(AttackMontage);
 		Montage_JumpToSection(FName("Attack3"), AttackMontage);
 	}
 	else if (CurrentCombo == 4)
 	{
-		//EquipMontage = Main->GetCurrentWeapon()->AttackMontage;
-		Montage_Play(AttackMontage, 1.75f);
+		Montage_Play(AttackMontage);
 		Montage_JumpToSection(FName("Attack4"), AttackMontage);
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Combo"));
-}
-
-void UMainAnimInstance::PlaySkill(char type)
-{
-	QSkillMontage = Main->GetCurrentWeapon()->QSkillMontage;
-	ESkillMontage = Main->GetCurrentWeapon()->ESkillMontage;
-
-	if (type == 'Q')
-	{
-		if (!Montage_IsPlaying(QSkillMontage))
-		{
-			Montage_Play(QSkillMontage);
-		}
-		else { return; }
-	}
-	else if (type == 'E')
-	{
-		if (!Montage_IsPlaying(ESkillMontage))
-		{
-			Montage_Play(ESkillMontage);
-		}
-		else { return; }
-	}
-}
-
-void UMainAnimInstance::AnimNotify_DodgeEnd()
-{
-	Main->DodgeEnd();
-}
-
-void UMainAnimInstance::AnimNotify_EquipEnd()
-{
-	Main->State = MoveState::MS_Move;
 }
 
 void UMainAnimInstance::AnimNotify_AttackEnd()

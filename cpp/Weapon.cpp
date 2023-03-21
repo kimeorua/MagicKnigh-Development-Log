@@ -12,13 +12,12 @@ AWeapon::AWeapon()
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(Root);
 
-	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Root);
+	EquipSocket = " ";
 
-	EquipMontage = nullptr;
-	AttackMontage = nullptr;
-	ESkillMontage = nullptr;
-	QSkillMontage = nullptr;
+	UseESkils = nullptr;
+	UseQSkils = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -26,12 +25,12 @@ void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UseESkils = ESkils[0];
+	UseQSkils = QSkils[0];
 }
 
 // Called every frame
 void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
-

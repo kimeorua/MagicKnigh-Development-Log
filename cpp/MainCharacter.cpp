@@ -14,8 +14,10 @@
 
 AMainCharacter::AMainCharacter()
 {
+	//캡슐 컴포넌트 크기
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
+	//카메라 초기화
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 
@@ -25,32 +27,34 @@ AMainCharacter::AMainCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
 	FollowCamera->bUsePawnControlRotation = false; 
+	//-----------------------------------------------------------------------------------------------------//
 
+	//현제 속도, 달리기 사용 여부, 애님인스턴스 초기화
 	CurrentSpeed = ForwardWalkSpeed;
 	bUseDash = false;
-	State = MoveState::MS_Move;
 	MainAnimInstance = nullptr;
-	IsCombo = false;
-	CurrentCombo = 1;
 }
 
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	// 게임 시작시 현제속도를 걷기 속도로 변경
 	CurrentSpeed = ForwardWalkSpeed;
 	bUseDash = false;
 
-	State = MoveState::MS_Move;
+	// 애님인스턴스 할장
 	MainAnimInstance = Cast<UMainAnimInstance>(GetMesh()->GetAnimInstance());
 
+	//방패 생성 밑 부착
 	Shield = GetWorld()->SpawnActor<AShield>(ShieldClass);
 	Shield->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("ShieldSocket"));
 	Shield->SetOwner(this);
 
+	// 검 생성 및 부착
 	Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
 	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponEquipSocket"));
-	Sword->SetOwner(this);
+	Sword->SetOwner(this); 
+	MaxCombo = 0;
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -62,88 +66,75 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	//축 입력
 	PlayerInputComponent->BindAxis("Move Forward", this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("Move Right", this, &AMainCharacter::MoveRight);
-
 	PlayerInputComponent->BindAxis("Turn Right", this, &AMainCharacter::LookUp);
 	PlayerInputComponent->BindAxis("Look Up", this, &AMainCharacter::LookRight);
-
+	//-----------------------------------------------------------------------------------------------------//
+	
+	// 액션 입력
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &AMainCharacter::Dash);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &AMainCharacter::DashEnd);
-
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
-
-	PlayerInputComponent->BindAction("Block", IE_Pressed, this, &AMainCharacter::BlockStart);
-	PlayerInputComponent->BindAction("Block", IE_Released, this, &AMainCharacter::BlockEnd);
-
-	PlayerInputComponent->BindAction("Sword Equip", IE_Pressed, this, &AMainCharacter::SelectSword);
-
 	PlayerInputComponent->BindAction("LMB", IE_Pressed, this, &AMainCharacter::LMBDawn);
-
-	PlayerInputComponent->BindAction("QSkill", IE_Pressed, this, &AMainCharacter::QSkillActivated);
-	PlayerInputComponent->BindAction("ESkill", IE_Pressed, this, &AMainCharacter::ESkillActivated);
+	//-----------------------------------------------------------------------------------------------------//
 }
 
 void AMainCharacter::MoveForward(float Value)
 {
-	if (State != MoveState::MS_Equip && State != MoveState::MS_Attack && State != MoveState::MS_Skill)
+	if ((Controller != nullptr) && (Value != 0.0f) && !IsAttack)
 	{
-		if ((Controller != nullptr) && (Value != 0.0f))
-		{
-			// find out which way is forward
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
+		// 앞 진행 방향 찾기
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-			// get forward vector
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-			AddMovementInput(Direction, Value);
+		//Forward vector 계산
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value); // 해당 방향으로 이동
 
-			if (Value > 0)
-			{
-				GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
-			}
-			else if (Value < 0)
-			{
-				GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed - BackwardSpeed;
-			}
-
-		}
-		if (Value >= 0)
+		//앞, 뒤에 따라 속도 변경
+		if (Value > 0.f)
 		{
-			MoveNum = 1;
+			GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
 		}
-		else if (Value < 0)
+		else if (Value < 0.f)
 		{
-			MoveNum = 2;
+			GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed - BackwardSpeed;
 		}
+	}
+	// 회피 방향 설정
+	if (Value >= 0)
+	{
+		MoveNum = 1;
+	}
+	else if (Value < 0)
+	{
+		MoveNum = 2;
 	}
 }
 
 void AMainCharacter::MoveRight(float Value)
 {
-	if (State != MoveState::MS_Equip && State != MoveState::MS_Attack)
+	if ((Controller != nullptr) && (Value != 0.0f) && !IsAttack)
 	{
-		if ((Controller != nullptr) && (Value != 0.0f))
-		{
-			// find out which way is right
-			const FRotator Rotation = Controller->GetControlRotation();
-			const FRotator YawRotation(0, Rotation.Yaw, 0);
+		// 오른쪽 방향 찾기
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-			// get right vector 
-			const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-			// add movement in that direction
-			AddMovementInput(Direction, Value);
-			GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
-		}
+		//Right vector 계산 
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, Value);
+		GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
+	}
 
-		if (Value > 0)
-		{
-			MoveNum = 3;
-		}
-		else if (Value < 0)
-		{
-			MoveNum = 4;
-		}
+	if (Value > 0)
+	{
+		MoveNum = 3;
+	}
+	else if (Value < 0)
+	{
+		MoveNum = 4;
 	}
 }
 
@@ -159,176 +150,112 @@ void AMainCharacter::LookRight(float Value)
 
 void AMainCharacter::Dash()
 {
-	if (State == MoveState::MS_Move)
+	// 현제 어빌리티 사용 이 아니고
+	if (!bUseAbility)
 	{
+		//달리기 상태도 아닐때 작동
 		if (!bUseDash)
 		{
+			// 달리기 상태로 변경 및, 어빌리티 사용 불가
 			bUseDash = true;
+			bCanUseAbility = false;
 			CurrentSpeed = ForwardRunSpeed;
 		}
-	}	
+	}
 }
 
 void AMainCharacter::DashEnd()
 {
-	if (bUseDash)
+	if (!bUseAbility)
 	{
-		bUseDash = false;
-		CurrentSpeed = ForwardWalkSpeed;
+		if (bUseDash)
+		{
+			//달리기 상태 해제 및 어빌리티 사용 가능
+			bUseDash = false;
+			bCanUseAbility = true;
+			CurrentSpeed = ForwardWalkSpeed;
+		}
 	}
 }
 
 void AMainCharacter::Dodge()
 {
-	if (State != MoveState::MS_Equip && State != MoveState::MS_Attack)
+	// 어비리티 사용 중이 아닐때 작동
+	if (!bUseAbility && !IsAttack)
 	{
-		State = MoveState::MS_Dodge;
+		// 회피 애니메이션 작동 및 어빌리티 사용 불가로 변경 -> AnimNotify에서 종료 시 어빌리티 사용 가능으로 변경 함
 		MainAnimInstance->PlayDodge(MoveNum);
-		bUseControllerRotationYaw = false;
-		bUseBlock = false;
-	}
-	else
-	{
-		return;
+		bCanUseAbility = false;
+		IsDodge = true;
 	}
 }
 
-void AMainCharacter::BlockStart()
+bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum)
 {
-	if (State == MoveState::MS_Move && !bUseDash && State != MoveState::MS_Attack)
+	//장착 할 무기(UseWeapon), 장착할 소켓(EquipSocket), 고유번호(EquipNum)
+	//어빌리티에서 변수를 받아 해당 무기가 이미 장착한 무기와 다르면 무기에 지정된 소켓에 장착 및 고유 번호 저장
+	//최대 콤보 횟수도 이 시기에 지정
+	if (CurrentWeapon == UseWeapon)
 	{
-		bUseBlock = true;
-		State = MoveState::MS_Block;
+		return false;
 	}
 	else
 	{
-		return;
-	}
-}
-
-void AMainCharacter::BlockEnd()
-{
-	if (State == MoveState::MS_Block && !bUseDash && State != MoveState::MS_Attack)
-	{
-		bUseBlock = false;
-		State = MoveState::MS_Move;
-	}
-	else
-	{
-		return;
-	}
-}
-
-void AMainCharacter::SelectSword()
-{
-	if (State == MoveState::MS_Move)
-	{
-		State = MoveState::MS_Equip;
-		WeaponNum = 1;
-		WeaponEquip();
-	}
-	else { return; }
-}
-
-void AMainCharacter::WeaponEquip()
-{
-	if (UseWeaponNum == WeaponNum) 
-	{ 
-		State = MoveState::MS_Move;
-		return; 
-	}
-	else
-	{
-		if (WeaponNum == 1)
-		{
-			Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponHandSocket"));
-			UseWeaponNum = 1;
-			CurrentWeapon = Sword;
-			MainAnimInstance->PlayEquip();
-		}
+		CurrentWeapon = UseWeapon;
+		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, EquipSocket);
+		CurrentWeaponNum = EquipNum;
+		MaxCombo = UseWeapon->GetAttackMaxCombo();
+		return true;
 	}
 }
 
 void AMainCharacter::LMBDawn()
 {
-	if (CurrentWeapon != nullptr)
+	if (!bUseAbility && !IsDodge) //회피 중이 아니고, 어빌리티 사용 중이 아닐때 작동
 	{
-		if (State != MoveState::MS_Attack && State == MoveState::MS_Move)
+		if (CurrentWeapon != nullptr) //무기를 장착 해야지 작동
 		{
-			Attack();
-		}
-		else if (State == MoveState::MS_Attack)
-		{
-			IsCombo = true;
+			bCanUseAbility = false; //어빌리티 사용 불가로 변경
+			if (!(MainAnimInstance->Montage_IsPlaying(CurrentWeapon->GetAttackMontage()))) // 몽타주가 실행중이 아니면 처음 공격, 아니면 콤보 공격으로 판단
+			{
+				Attack();
+				IsAttack = true;
+			}
+			else
+			{
+				IsCombo = true; //콤보 중으로 변경
+			}
 		}
 	}
-	else { return; }
 }
 
 void AMainCharacter::Attack()
 {
-	State = MoveState::MS_Attack;
 	if (MainAnimInstance == nullptr) { return; }
-
-	SetActorRotation(FRotator(0.f, GetControlRotation().Yaw, 0.f));
 	MainAnimInstance->PlayAttack(CurrentCombo);
 	//UE_LOG(LogTemp, Warning, TEXT("Combo: %d"), CurrentCombo);
 }
 
-void AMainCharacter::QSkillActivated()
-{
-	if (CurrentWeapon != nullptr)
-	{
-		if (State == MoveState::MS_Move)
-		{
-			State = MoveState::MS_Skill;
-			MainAnimInstance->PlaySkill('Q');
-		}
-	}
-}
-
-void AMainCharacter::ESkillActivated()
-{
-	if (CurrentWeapon != nullptr)
-	{
-		if (State == MoveState::MS_Move)
-		{
-			State = MoveState::MS_Skill;
-			MainAnimInstance->PlaySkill('E');
-		}
-	}
-}
-
+// 공격 종료 함수 -> 콤보 여부, 공격 여부를 false로 변경, 현제 콤보 초기화 및 어빌리티 사용 가능 상태로 변경 -> 노티파이를 통해 호출 
 void AMainCharacter::AttackEnd()
 {
-	State = MoveState::MS_Move;
 	IsCombo = false;
 	CurrentCombo = 1;
+	IsAttack = false;
+	bCanUseAbility = true;
 }
 
-void AMainCharacter::DodgeEnd()
-{
-	if (State != MoveState::MS_Equip && State != MoveState::MS_Attack)
-	{
-		State = MoveState::MS_Move;
-		bUseControllerRotationYaw = true;
-	}
-	else
-	{
-		return;
-	}
-}
-
+// 콤보 체크용 함수 -> 노티파이를 통해 호출
 void AMainCharacter::CheackCombo()
 {
-	if (CurrentCombo >= MaxCombo) 
+	if (CurrentCombo >= MaxCombo)
 	{
-		CurrentCombo = 0; 
+		CurrentCombo = 1;
 	}
-	if (IsCombo == true) 
+	if (IsCombo == true)
 	{
-		CurrentCombo += 1; 
-		IsCombo = false; 
+		CurrentCombo += 1;
+		IsCombo = false;
 		Attack();
 	}
 }
