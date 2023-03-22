@@ -201,6 +201,7 @@
 
 ### 1.캐릭터 이동 및 시점 구현 (01/03 ~ 01/04)
 + #### 이동 방식: W, S, A, D키를 이용하여 앞, 뒤, 좌, 우 방향으로 이동 하도록 구현
+
 ```cpp
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -240,6 +241,7 @@ void AMainCharacter::MoveRight(float Value)
 	}
 }
 ```
+
 ### 캐릭터 후방 이동속도 감소 구현 (01/09)
 
 ```cpp
@@ -267,6 +269,7 @@ void AMainCharacter::MoveForward(float Value)
 	}
 }
 ```
+
 #### 설명:후방 이동 시 BackwardSpeed 만큼 이동속도를 감소 시킴 -> 후방 이동시 이동 속도가 감소 됨
 
 #### 대쉬: LShift 키를 누르고 있으면 대쉬를 하도록 구현(01/10)
@@ -290,6 +293,7 @@ void AMainCharacter::DashEnd()
 	}
 }
 ```
+
 #### 설명: 키 입력을 받아 Shift키가 눌리면 이동속도를 ForwardRunSpeed(뛰기 속도)로 변경하고 눌리지 않았을 경우 ForwardWalkSpeed 걷기 속도로 변경 함
 
 ### 캐릭터 회피 구현(01/11 ~ 01/12)
@@ -373,6 +377,7 @@ void AMainCharacter::DodgeEnd()
 + #### 캐릭터의 왼쪽 팔에다가 ArmShield를 부착함, 장착한 무기에 상관없이 방패는 고정되는 형태로 후에 입력에 따른 방어 애니메이션을 추가할 예정
 
 #### Shield.h
+
 ```cpp
 class MYGAME_API AShield : public AActor
 {
@@ -389,7 +394,9 @@ private:
 	UStaticMeshComponent* Mesh; //메시
 };
 ```
+
 #### Shield.cpp
+
 ```cpp
 AShield::AShield()
 {
@@ -402,7 +409,9 @@ AShield::AShield()
 	Mesh->SetupAttachment(Root);
 }
 ```
+
 #### MainCharacter.h
+
 ```cpp
 UCLASS()
 class MYGAME_API AMainCharacter : public ABaseCharacter
@@ -497,6 +506,7 @@ void AMainCharacter::WeaponEquip()
 	}
 }
 ```
+
 ### 검 장착 시 애니메이션 구현(01/26)
 
 + #### 검 장착 시 애니메이션의 변화를 주기로 함, 또한 걷기 애니메이션에도 변화를 주어 자연스럽게 검을 쥐고 걷는 애니메이션을 구현 함
@@ -588,6 +598,7 @@ void UMainAnimInstance::PlayAttack(int CurrentCombo) //현제 콤보에 따라 �
 	UE_LOG(LogTemp, Warning, TEXT("Combo"));
 }
 ```
+
 ### 무기와의 연동 구현(02/06)
 + #### Weapon.h 에 해당 무기의 공격 애니메이션 몽타주와, 장착 애니메이션 몽타주를 변수로 추가하여, 언리얼 에디터 상에서 애니메이션을 설정하고 무기를 장착하면, 해당 에니메이션이 MainAnimInstace의 AttackMontage와 EquipMontage에 연동 되도록 추가 구현 함.
 
@@ -597,7 +608,6 @@ void UMainAnimInstance::PlayAttack(int CurrentCombo) //현제 콤보에 따라 �
 MainCharacter.cpp
 
 ```cpp
-
 void AMainCharacter::QSkillActivated() //ESkill도 같은 방식으로 작동.
 {
 	if (CurrentWeapon != nullptr) // 현재 무기를 장착 하였는지 판단 장착했을경우에만 스킬 사용 가능
@@ -616,6 +626,7 @@ void AMainCharacter::QSkillActivated() //ESkill도 같은 방식으로 작동.
 + #### 애니메이션에서 공격 시작 및 종료시 Collision을 On/Off 하도록 구현
 
 #### RPGHitComponent.h
+
 ```cpp
 private:
 	URPGHitComponent(); //생성자
@@ -625,6 +636,7 @@ private:
 ```
 
 #### RPGHitComponent.cpp
+
 ```cpp
 URPGHitComponent::URPGHitComponent()
 {
@@ -654,6 +666,7 @@ void URPGHitComponent::BeginPlay()
 ```
 
 UMainAnimInstance.cpp
+
 ```cpp
 void UMainAnimInstance::AnimNotify_AttackEnd() //공격 종료 -> Collision off
 {
@@ -698,6 +711,7 @@ void URPGHitComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	
 }
 ```
+
 ### GameplayAbilitySystem 구현 (03/07)
 + 프로젝트에 GameplayAbilitySystem플러그 인을 사용하여, 기초적인 Attribute, Ability, GameplayAbilityComponent를 구현하였음 그후 BaseCharacter class에 상속함
 + #### 참고 한 영상 https://www.youtube.com/watch?v=Yub52f4ZUU0&t=1580s
@@ -713,9 +727,6 @@ CharacterAttributeSetBase
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
-/**
- * 
- */
 UCLASS()
 class MYGAME_API UCharacterAttributeSetBase : public UAttributeSet
 {
@@ -745,6 +756,7 @@ public:
 };
 ```
 CharacterGameplayAbility
+
  ```cpp
 UCLASS()
 class MYGAME_API UCharacterGameplayAbility : public UGameplayAbility
@@ -762,6 +774,7 @@ public:
 + 공통사항: BaseCharacter에 있던 상태 체크용 Enum을 삭제함 -> 후에 GameplayTag를 사용하여 조건을 확인 함.
 + 이동: 원래 사용하던 코드에서 상태를 체크하는 if문을 삭제하여 재 구현 -> GameplayAbilitySystem을 사용하게 되어 GameplayTag 및 간단한 블루프린트로 조건을 체크할수 있게 되어 상태를 채크하는 MoveState 변수를 삭제하였다.
 + 달리기: MoveState 변수를 삭제함에 따라 좀더 간결한 방식으로 재 구현
+
 ```cpp
 void AMainCharacter::Dash()
 {
@@ -781,6 +794,7 @@ void AMainCharacter::DashEnd()
 	}
 }
 ```
+
 + 회피: AnimNotify를 이용하여, MainAnimInstace와 MainCharacter의 복잡한 방식 대신 블루프린트를 이용하여 NotifyState를 작성, 간단하게 재구성
 ![](./img/카메라제어노티파이시작.PNG)
 ![](./img/회피애니메이션.PNG)
@@ -791,6 +805,7 @@ void AMainCharacter::DashEnd()
 + 방어 자세가 풀리는것은 후에 개선할 예정
 
 + MainCharacter
+
 ```cpp
 void AMainCharacter::Dash()
 {
@@ -837,6 +852,7 @@ GA_Block과 동일한 방식으로 제작하였으며, bUseBlock과, bUseAblilit
 
 #### 무기 장착 재구현
 + MainCharacter: 무기 장착 여부를 위한 CurrentWeapon 변수를 설정 하고 에니메이션 제어를 위한 int형의 CurrentWeaponNum를 추가 하고, 실제로 장착 하기 위해 소켓에 부착하고 초기화 해주는 Equip() 함수를 작성 하였다. 
+
 ```cpp 
 bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNumt)
 {
@@ -853,6 +869,7 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 	}
 }
 ```
+
 + 이 함수는 Ability 블루프린트에서 호출 되어 번호 키에 맞는 무기의 정보(UseWeapon(장착될 무기), quipSocket(장착될 소켓), EquipNumt(무기의 고유번호))를 받아서 실제로 장착 및 초기화를 진행 해준다.
 
 + Weapon: 무기에 장착될 장소(EquipSocket), 고유 번호(EquipNum), 장착 애니메이션(EquipMontage)을 변수로 할당하고, 언리얼엔진상 에서 지정 하여 사용 함.
@@ -869,6 +886,7 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 
 ### 콤보 공격 구현(03/16)
 + 기존 사용하던 코드에서 State를 체크하는 조건을 지우고 좀더 간략하게 재구성, 애니메이션 부분은 추가사항 없음.
+
 ```cpp
 void AMainCharacter::LMBDawn()
 {
@@ -932,6 +950,7 @@ void AMainCharacter::CheackCombo()
 
 ### EP 및 MaxEP 설정, EPSkill(특수 스킬)기초 구현(03/20)
 + ### CharacterAttributeBase에 EP(속성치), MaxEP(최대 속성치)를 지정하여 에디터에서 각각 0, 100으로 초기화 함
+
 ```cpp
 //속성치 설정
 UPROPERTY(BlueprintReadOnly, Category = "Abilities", ReplicatedUsing = OnRep_EP)
@@ -955,6 +974,7 @@ void UCharacterAttributeSetBase::OnRep_MaxEP(const FGameplayAttributeData& OldMa
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UCharacterAttributeSetBase, MaxEP, OldMaxEP);
 }
 ```
+
 + ### EPSkills Ability블루프린트를 만들어서, 기초적인 EP수치 확인과, 작동을 구현 함.
 ![](./img/특수스킬기초.PNG)
 
@@ -990,6 +1010,7 @@ AWeapon* AMainCharacter::CheackCanUseSkillAbility() const // 현제 무기여부
 	}
 }
 ```
+
 + ####  방패 효과 추가: 방어를 사용할려고 할때 방패가 커지는 효과를 추가하여, 기본 상태일때는 작게 방어 상태일때는 커지도록 구현, 사운드 추가.
 ![](./img/뱅패효과.gif)
 ---
