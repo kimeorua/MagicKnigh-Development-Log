@@ -246,6 +246,7 @@ void AMainCharacter::MoveRight(float Value)
 ### 캐릭터 후방 이동속도 감소 구현 (01/09)
 
 ```cpp
+
 void AMainCharacter::MoveForward(float Value)
 {
 	if ((Controller != nullptr) && (Value != 0.0f))
@@ -269,6 +270,7 @@ void AMainCharacter::MoveForward(float Value)
 		}
 	}
 }
+
 ```
 
 #### 설명:후방 이동 시 BackwardSpeed 만큼 이동속도를 감소 시킴 -> 후방 이동시 이동 속도가 감소 됨
