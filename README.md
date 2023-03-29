@@ -1183,9 +1183,11 @@ void AEnemyController::SetPerceptionSystem()
 + #### 블랙보드와 비헤이비어를 통하여 실질적인 AI 를 관리함.
 
 블랙보드
+
 ![](./img/뱅패효과.gif)
 
 비헤이비어 트리
+
 ![](./img/뱅패효과.gif)
 
 
