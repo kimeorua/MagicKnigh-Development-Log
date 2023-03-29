@@ -1184,13 +1184,13 @@ void AEnemyController::SetPerceptionSystem()
 
 블랙보드
 
-![](./img/뱅패효과.gif)
+![](./img/블랙보드.PNG)
 
 비헤이비어 트리
 
-![](./img/뱅패효과.gif)
+![](./img/트리.PNG)
 
-+ #### RandomPatrol구현: 맵상의 랜덤 좌표를 지정하여, 블랙보드에 기입.
++ #### RandomPatrol: 맵상의 랜덤 좌표를 지정하여, 블랙보드에 기입.
 
 ```cpp
 
