@@ -202,6 +202,8 @@
 ### 03/27 ~ 03/31
 + ### 03/27 두번째 무기 특수스킬 및 이펙트 추가
 + ### 03/28 기본EnemyClass 제작 및 이동 애니메이션, 기초 스텟 설정
++ ### 03/29 Enemy RandomPatrol 구현
+
 ---
 ## 11 개발 사항
 
@@ -1035,10 +1037,158 @@ AWeapon* AMainCharacter::CheackCanUseSkillAbility() const // 현제 무기여부
 ### 두번째 무기 특수 스킬 및 이펙트 추가(03/27)
 + #### Paragon에셋을 이용하여 특수 스킬 및 이펙트를 추가함
 
-### 기본EnemyClass 제작 및 애님인스턴스, 기초 스텟 설정
+### 기본EnemyClass 제작 및 애님인스턴스, 기초 스텟 설정(03/28)
 + #### 기본EnemyClass 제작 -> BaseCharacter를 상속 받아서 제작, 기본적인 생성자 및 Tick, BeginPlay함수만 정의 함
 + #### 애님인스턴스 제작 -> MainCharacter와 동일하게, AnimInstace class를 상속받아 구현, 속도와, 이동방향을 구해, 변수로 저장함.
 + #### 기초 스텟 설정 -> Enemy용 DefultGameplayEffect를 제작, 체력과 최대 채력만 설정 함.
+
+### Enemy RandomPatrol 구현(03/29)
++ #### AI제작을 위해, EnemyController와 비헤이비어트리, 블랙보드를 이용하여, 맵상의 랜덤한 위치로 이동하는 RandomPatrol을 구현함
++ #### EnemyController에 AIPerception컴포넌트를 통해, 플레이어를 인지 할수 있게 구현.
+
+EnemyController.h
+
+```cpp
+UCLASS()
+class MYGAME_API AEnemyController : public AAIController
+{
+	GENERATED_BODY()
+private:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+    class UBehaviorTree* BehaviorTree; //비헤이비어 트리 에셋
+
+    UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
+    class UBehaviorTreeComponent* BehaviorTreeComponent; //비헤이비어트리 컴포넌트
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
+    class UBlackboardComponent* BlackboardComponent;    //블랙보드 컴포넌트
+
+    class UAISenseConfig_Sight* SightConfig;
+
+public:
+    //블랙보드 키에 접근시 사용할 이름들
+    static const FName TargetLocation;
+    static const FName CanSeePlayer;
+
+    //AI Perception 변수
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float AISightRadius = 500.f;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float AILoseSightRadius = 50.f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float AIFieldOfView = 90.f;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float AISightAge = 1.f;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float AILastSeenLocation = 100.f;
+
+    //------------------------Function-----------------------//
+   UFUNCTION()
+    void OnUpdated(TArray<AActor*> const& updated_actors);
+    UFUNCTION()
+    void OnTargetDetected(AActor* actor, FAIStimulus const Stimulus);
+    UFUNCTION()
+    void SetPerceptionSystem();
+
+    AEnemyController(); //생성자
+
+    //블랙보드 컴포넌트 반환
+    FORCEINLINE UBlackboardComponent* GetBlackboardComponent() const { return BlackboardComponent; }
+
+protected:
+    void BeginPlay()override;
+    virtual void OnPossess(APawn* InPawn) override;     //폰 빙의시 호출 되는 함수
+```
+
+EnemyController.cpp
+
+```cpp
+
+//접근할 이름에 블랙보드 키값 할당
+const FName AEnemyController::TargetLocation(TEXT("TargetLocation"));
+const FName AEnemyController::CanSeePlayer(TEXT("CanSeePlayer"));
+
+AEnemyController::AEnemyController()
+{
+	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
+	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
+
+	SetPerceptionSystem();
+}
+
+void AEnemyController::BeginPlay()
+{
+	Super::BeginPlay();
+	if (IsValid(BehaviorTree))
+	{
+		RunBehaviorTree(BehaviorTree);
+		BehaviorTreeComponent->StartTree(*BehaviorTree);
+	}
+}
+
+void AEnemyController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	if (IsValid(Blackboard) && IsValid(BehaviorTree))
+	{
+		Blackboard->InitializeBlackboard(*BehaviorTree->BlackboardAsset); //블랙보드 키값 초기화 실시
+	}
+}
+
+void AEnemyController::OnUpdated(TArray<AActor*> const& updated_actors)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Updating"));
+}
+
+void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulus)
+{
+	if (auto const player = Cast<AMainCharacter>(actor))
+	{
+		//성공적으로 감지하면 블랙보드에 true값을 넣어준다.
+		GetBlackboardComponent()->SetValueAsBool(CanSeePlayer, Stimulus.WasSuccessfullySensed());
+	}
+}
+
+//PerceptionComponent 초기화 담당 함수
+void AEnemyController::SetPerceptionSystem()
+{
+	//PerceptionComponent할당 및 주요 감지 설정
+	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerception Component"));
+	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
+	PerceptionComponent->ConfigureSense(*SightConfig);
+	PerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
+
+	//시야 범위, 각도등 기초 정보 설정
+	SightConfig->SightRadius = AISightRadius;
+	SightConfig->LoseSightRadius = SightConfig->SightRadius + AILoseSightRadius;
+	SightConfig->PeripheralVisionAngleDegrees = AIFieldOfView;
+	SightConfig->SetMaxAge(AISightAge);
+	SightConfig->AutoSuccessRangeFromLastSeenLocation = AILastSeenLocation;
+
+	//감지할 객체 정보(적, 중립, 아군)
+	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
+	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
+	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
+
+	//주요 감지 능력 설정
+	PerceptionComponent->SetDominantSense(*SightConfig->GetSenseImplementation());
+
+	//함수 바인딩
+	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &AEnemyController::OnUpdated);
+	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyController::OnTargetDetected);
+}
+```
+
++ #### 블랙보드와 비헤이비어를 통하여 실질적인 AI 를 관리함.
+
+블랙보드
+![](./img/뱅패효과.gif)
+
+비헤이비어 트리
+![](./img/뱅패효과.gif)
+
+
 ---
 
 ## 12 버그 및 개선 사항
