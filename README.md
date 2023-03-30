@@ -1267,7 +1267,7 @@ void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulu
 ```
 
 + #### 비헤비어 트리
-![](./img/트리2.PNG)
+![](./img/트리2.png)
 
 ---
 
