@@ -203,6 +203,7 @@
 + ### 03/27 두번째 무기 특수스킬 및 이펙트 추가
 + ### 03/28 기본EnemyClass 제작 및 이동 애니메이션, 기초 스텟 설정
 + ### 03/29 Enemy RandomPatrol 구현
++ ### 03/30 플레이어 추적 구현
 
 ---
 ## 11 개발 사항
@@ -1231,8 +1232,42 @@ EBTNodeResult::Type UFindPatrolPosTask::ExecuteTask(UBehaviorTreeComponent& Owne
 	return EBTNodeResult::Succeeded;
 }
 
+```
+
+### 플레이어 추적 구현(03/30)
++ #### 플레이어 추적 구현: 블랙보드에 Player 오브젝트 키를 추가함. cpp의 OnTargetDetected()에서 플레이어가 탐지 되면, Player키에 플레이어캐릭터를 저장, 해당 객체 위치로 이동하는 AI 구현함.
+
+```cpp
+
+void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulus)
+{
+	if (auto const PlayerPawn = Cast<AMainCharacter>(actor))
+	{
+		//성공적으로 플레이어를 감지 하면 true값을 넣어준다.
+		GetBlackboardComponent()->SetValueAsBool(CanSeePlayer, Stimulus.WasSuccessfullySensed());
+		
+		//CanSeePlayer가 true면 플레이어를 감지 한것 이고 false면 감지 하지 못한 것으로 판단함. 
+		if (GetBlackboardComponent()->GetValueAsBool(CanSeePlayer))
+		{
+			// Player 에 플레이어 캐릭터 저장 및 이동 속도 증가
+			GetBlackboardComponent()->SetValueAsObject(Player, PlayerPawn);
+			AEnemy* Enemy = Cast<AEnemy>(GetPawn());
+			Enemy->GetCharacterMovement()->MaxWalkSpeed = 550.f;
+		}
+		else
+		{
+			// 플레이어가 감지 범위 밖으로 나갔거나, 감지 하지 않은 것이므로 Player에 nullptr저장 및 이동속도 감소
+			GetBlackboardComponent()->SetValueAsObject(Player, nullptr);
+			AEnemy* Enemy = Cast<AEnemy>(GetPawn());
+			Enemy->GetCharacterMovement()->MaxWalkSpeed = 300.f;
+		}
+	}
+}
 
 ```
+
++ #### 비헤비어 트리
+![](./img/트리2.PNG)
 
 ---
 
