@@ -1295,9 +1295,9 @@ void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulu
 ### 스킬 충돌 및 데미지 판정(04/04)
 + #### 순서: 충돌 판정 -> 에디터에 공격 충돌용 Trace채널 추가 -> 콜리전 프리셋에 CombetCollision프리셋을 추가하고, Enemy캐릭터의 팔, 다리 몸통 등 형태에 맞는 콜리전을 추가하고, CombetCollision으로 프리셋을 설정(해당 프리셋은 오직 공격 충돌용 Trace에만 반응함.) -> 공격 중 AnimNotify에서 AttackHandle이벤트를 호출하여, 해당 무기의 충돌 판정을 실시 -> 충돌이 일어나면 충돌이 일어난 객체의 정보와, 플레이어 객체를 묶어서 이벤트로 보냄 -> 스킬 Ability는 몽타주 재생후 이벤트가 들어오는것을 기다리다가 들어오면 데미지를 적용함.
 
-+ #### ![](./img/충돌체크이벤트PNG)
++ #### ![](./img/충돌체크이벤트.PNG)
 -> AnimNotify에서 호출되는 이벤트로, 현제 무기가 유효한지 확인후 유효하면, 해당무기의 충돌 체크 함수를 호출 함.
-+ #### ![](./img/.근접충돌판정.PNG)
++ #### ![](./img/근접충돌판정.PNG)
 -> SphereTraceByChanel함수를 통하여 검의 일정 부분을 감싸는 구형체의 범위를 지정하여 해당 Trace가 충돌한 객체 및 충돌 정보를 구조체로 반환함
 + #### ![](./img/근접데미지이벤트보내기.PNG)
 -> 위에서 반환된 구조체 있을 경우 해당 구조체와 공격한 객체(플레이어)의 정보를 GameplayEvent로 묶어서 스킬Ability가 받을수있게 이벤트를 보냄 
