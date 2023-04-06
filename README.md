@@ -215,6 +215,7 @@
 + ### 04/03 충돌처리 방식 고안
 + ### 04/04 스킬 충돌 및 데미지 판정
 + ### 04/05 일반공격 Ability 재 구현 및 데미지 판정
++ ### 04/06 Enemy TookDamage 구현
 
 ---
 ## 11 개발 사항
@@ -1317,6 +1318,11 @@ void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulu
 -> 실제 공격이 작동 되는어빌리티로 해당 어빌리티가 작동되면, 현재 어빌리티 사용 가능 여부를 확인하고, 현재 콤보를 확인 함
 + #### ![](./img/공격애니메이션제어.PNG)
 -> 현재 콤보 수치에 따라 애니메이션몽타주의 색션을 StartingSection에 저장 
+
+### Enemy 피격모션 구현(04/06)
++ #### GameplayCue에 TookDamage를 추가하여, 데미지가 들어가는 GameplayEffect GE_Dagame에 연결하여 사용함
++ #### 피격 애니메이션 재생 ![](./img/골렘데미지.PNG)
++ #### GameplayEffect에 GameplayCue연결 ![](./img/이펙트에큐추가.PNG)
 
 ---
 
