@@ -61,38 +61,7 @@ void UMainAnimInstance::PlayDodge(int32 num)
 	}
 }
 
-void UMainAnimInstance::PlayAttack(int CurrentCombo)
-{
-	//공격 실행지 해당 무기의 공격 몽타주를 가져옴
-	AttackMontage = Main->GetCurrentWeapon()->GetAttackMontage();
-	if (CurrentCombo == 1)
-	{
-		Montage_Play(AttackMontage);
-		Montage_JumpToSection(FName("Attack1"), AttackMontage);
-	}
-	else if (CurrentCombo == 2)
-	{
-		Montage_Play(AttackMontage);
-		Montage_JumpToSection(FName("Attack2"), AttackMontage);
-	}
-	else if (CurrentCombo == 3)
-	{
-		Montage_Play(AttackMontage);
-		Montage_JumpToSection(FName("Attack3"), AttackMontage);
-	}
-	else if (CurrentCombo == 4)
-	{
-		Montage_Play(AttackMontage);
-		Montage_JumpToSection(FName("Attack4"), AttackMontage);
-	}
-}
-
 void UMainAnimInstance::AnimNotify_AttackEnd()
 {
 	Main->AttackEnd();
-}
-
-void UMainAnimInstance::AnimNotify_CheackCombo()
-{
-	Main->CheackCombo();
 }

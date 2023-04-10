@@ -33,6 +33,17 @@ AMainCharacter::AMainCharacter()
 	CurrentSpeed = ForwardWalkSpeed;
 	bUseDash = false;
 	MainAnimInstance = nullptr;
+
+	MaxCombo = 0;
+	bUseAbility = false;
+	bCanUseAbility = true;
+	MoveNum = 1;
+	IsCombo = false;
+	MaxCombo = 0;
+	CurrentCombo = 1;
+	IsAttack = false;
+	IsDodge = false;
+	bUseBloack = false;
 }
 
 void AMainCharacter::BeginPlay()
@@ -52,9 +63,23 @@ void AMainCharacter::BeginPlay()
 
 	// 검 생성 및 부착
 	Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
-	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponEquipSocket"));
+	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, Sword->GetUnequipSocket());
 	Sword->SetOwner(this); 
+
+	Axe = GetWorld()->SpawnActor<AWeapon>(AxeClass);
+	Axe->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, Axe->GetUnequipSocket());
+	Axe->SetOwner(this);
+
 	MaxCombo = 0;
+	bUseAbility = false;
+	bCanUseAbility = true;
+	MoveNum = 1;
+	IsCombo = false;
+	MaxCombo = 0;
+	CurrentCombo = 1;
+	IsAttack = false;
+	IsDodge = false;
+	bUseBloack = false;
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -77,7 +102,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &AMainCharacter::Dash);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &AMainCharacter::DashEnd);
 	PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AMainCharacter::Dodge);
-	PlayerInputComponent->BindAction("LMB", IE_Pressed, this, &AMainCharacter::LMBDawn);
+	//PlayerInputComponent->BindAction("LMB", IE_Pressed, this, &AMainCharacter::LMBDawn);
 	//-----------------------------------------------------------------------------------------------------//
 }
 
@@ -150,7 +175,7 @@ void AMainCharacter::LookRight(float Value)
 
 void AMainCharacter::Dash()
 {
-	// 현제 어빌리티 사용 이 아니고
+	// 현재 어빌리티 사용 이 아니고
 	if (!bUseAbility)
 	{
 		//달리기 상태도 아닐때 작동
@@ -201,39 +226,43 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 	}
 	else
 	{
+		if (CurrentWeapon != nullptr)
+		{
+			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, CurrentWeapon->GetUnequipSocket());
+		}
 		CurrentWeapon = UseWeapon;
 		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, EquipSocket);
 		CurrentWeaponNum = EquipNum;
 		MaxCombo = UseWeapon->GetAttackMaxCombo();
+		CurrentCombo = 1;
 		return true;
 	}
 }
 
-void AMainCharacter::LMBDawn()
+
+
+bool AMainCharacter::CheackCanUseAbility() const
 {
-	if (!bUseAbility && !IsDodge) //회피 중이 아니고, 어빌리티 사용 중이 아닐때 작동
+	if (bCanUseAbility)
 	{
-		if (CurrentWeapon != nullptr) //무기를 장착 해야지 작동
-		{
-			bCanUseAbility = false; //어빌리티 사용 불가로 변경
-			if (!(MainAnimInstance->Montage_IsPlaying(CurrentWeapon->GetAttackMontage()))) // 몽타주가 실행중이 아니면 처음 공격, 아니면 콤보 공격으로 판단
-			{
-				Attack();
-				IsAttack = true;
-			}
-			else
-			{
-				IsCombo = true; //콤보 중으로 변경
-			}
-		}
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
-void AMainCharacter::Attack()
+AWeapon* AMainCharacter::CheackCanUseSkillAbility() const
 {
-	if (MainAnimInstance == nullptr) { return; }
-	MainAnimInstance->PlayAttack(CurrentCombo);
-	//UE_LOG(LogTemp, Warning, TEXT("Combo: %d"), CurrentCombo);
+	if (CheackCanUseAbility() && CurrentWeapon != nullptr)
+	{
+		return CurrentWeapon;
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 // 공격 종료 함수 -> 콤보 여부, 공격 여부를 false로 변경, 현제 콤보 초기화 및 어빌리티 사용 가능 상태로 변경 -> 노티파이를 통해 호출 
@@ -243,19 +272,5 @@ void AMainCharacter::AttackEnd()
 	CurrentCombo = 1;
 	IsAttack = false;
 	bCanUseAbility = true;
-}
-
-// 콤보 체크용 함수 -> 노티파이를 통해 호출
-void AMainCharacter::CheackCombo()
-{
-	if (CurrentCombo >= MaxCombo)
-	{
-		CurrentCombo = 1;
-	}
-	if (IsCombo == true)
-	{
-		CurrentCombo += 1;
-		IsCombo = false;
-		Attack();
-	}
+	bUseAbility = false;
 }

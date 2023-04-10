@@ -3,6 +3,8 @@
 
 #include "Weapon.h"	
 #include "Components/SkeletalMeshComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Engine/EngineTypes.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -15,9 +17,18 @@ AWeapon::AWeapon()
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Root);
 	EquipSocket = " ";
+	UnequipSocket = " ";
 
 	UseESkils = nullptr;
 	UseQSkils = nullptr;
+
+	EquipNum = 0;
+	MaxCombo = 0;
+
+	Combo1 = nullptr;
+	Combo2 = nullptr;
+	Combo3 = nullptr;
+	Combo4 = nullptr;
 }
 
 // Called when the game starts or when spawned
