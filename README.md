@@ -218,6 +218,9 @@
 + ### 04/06 Enemy 피격모션 구현
 + ### 04/07 콤보 공격 개선
 
+### 04/10 ~ 04/14
++ ### 04/10 공격 범위 설정 및 전투 <-> 추적 변환 구현
+
 ---
 ## 11 개발 사항
 
@@ -1324,6 +1327,75 @@ void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulu
 + #### GameplayCue에 TookDamage를 추가하여, 데미지가 들어가는 GameplayEffect GE_Dagame에 연결하여 사용함
 + #### 피격 애니메이션 재생 ![](./img/골렘데미지.PNG)
 + #### GameplayEffect에 GameplayCue연결 ![](./img/이펙트에큐추가.PNG)
+
+### 공격 범위 설정 및 전투 <-> 추적 변환 구현(04/10)
++ #### 공격 범위 확인을 위한 BT_Service 구현, 이름을 IsInAttackRange로 하고 플레이어를 추적 하는 상태일때 범위 안에 들어오면 전투 상태로 변경 함.
++ #### 추가적으로 적의 시야 범위를 늘려 추적상태와 전투 상태가 구별 되도록 구현함.
+
+IsInAttackRange
+
+```cpp
+
+UInAttackRange::UInAttackRange()
+{
+	NodeName = TEXT("InAttackRange"); //표시되는 노드 이름
+	Interval = 0.05f; //반복 주기
+}
+
+void UInAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+{
+	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
+
+	APawn* ControllingPawn = OwnerComp.GetAIOwner()->GetPawn(); // ControllingPawn에 현제 조종하는 Pawn 저장
+	if (ControllingPawn == nullptr)
+	{
+		return;
+	}
+	UWorld* World = ControllingPawn->GetWorld();
+	FVector Center = ControllingPawn->GetActorLocation(); //후에 사용할OverlapMultiByChannel에서 사용할 중점을 적 캐릭터의 좌표로 설정
+	float AttackRange = 300.0f;
+
+	if (World == nullptr)
+	{
+		return;
+	}
+
+	TArray<FOverlapResult> OverlapResults; //오버랩 결과
+	FCollisionQueryParams CollisionQueryParam(NAME_None, false, ControllingPawn);
+	bool bResult = World->OverlapMultiByChannel
+	(
+		OverlapResults,
+		Center,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel2,
+		FCollisionShape::MakeSphere(AttackRange),
+		CollisionQueryParam
+	);
+
+	if (bResult)
+	{
+		for (auto const OverlapResult : OverlapResults)
+		{
+			AMainCharacter* Main = Cast<AMainCharacter>(OverlapResult.GetActor());
+			AEnemy* Enemy = Cast<AEnemy>(OwnerComp.GetAIOwner()->GetPawn());
+			if (Main && Main->GetController()->IsPlayerController())
+			{
+				OwnerComp.GetBlackboardComponent()->SetValueAsBool(AEnemyController::IsInAttackRange, true);
+				return;
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Out"));
+		OwnerComp.GetBlackboardComponent()->SetValueAsBool(AEnemyController::IsInAttackRange, false);
+	}
+	DrawDebugSphere(World, Center, AttackRange, 16, FColor::Red, false, 0.2f);
+}
+
+```
+
++ #### ![](./img/전투및추적상태AI.PNG)
 
 ---
 
