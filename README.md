@@ -1394,8 +1394,8 @@ void UInAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 }
 
 ```
-
-+ #### ![](./img/전투및추적상태AI.PNG)
++ #### AI비헤이비어 트리
+![](./img/전투및추적상태AI.PNG)
 
 ---
 
