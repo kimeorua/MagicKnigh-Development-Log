@@ -23,8 +23,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FORCEINLINE UAnimMontage* GetAttackMontage() const { return ComboAttackMontage; }
 	FORCEINLINE int GetAttackMaxCombo() const { return MaxCombo; }
+	FORCEINLINE FName GetUnequipSocket() const { return UnequipSocket; }
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -37,6 +37,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
 	FName EquipSocket;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
+	FName UnequipSocket;
+
 	//고유 번호 -> 애니메이션 제어용, 에디터 상에서 지정
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
 	int32 EquipNum;
@@ -47,7 +50,16 @@ private:
 
 	// 장착 애니메이션 -> 에디터 상에서 지정
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* ComboAttackMontage = nullptr;
+	UAnimMontage* Combo1;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* Combo2;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* Combo3;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* Combo4;
 
 	//스킬 배열 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Skill", meta = (AllowPrivateAccess = "true"))
@@ -67,4 +79,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
 	int MaxCombo;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	float CheackRadius;
 };

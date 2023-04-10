@@ -41,11 +41,7 @@ public:
 
 	void PlayDodge(int32 num); //회피 애니메이션 작동
 
-	void PlayAttack(int CurrentCombo); //공격 애니메이션 작동
-
 	// 노티파이에서 자동 호출 되는 함수
 	UFUNCTION()
 	void AnimNotify_AttackEnd();
-	UFUNCTION()
-	void AnimNotify_CheackCombo();
 };

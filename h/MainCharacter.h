@@ -45,38 +45,39 @@ private:
 
 	//방어 사용 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	bool bUseBloack = false;
+	bool bUseBloack;
 
 	//어빌리티 사용 가능 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	bool bCanUseAbility = true;
+	bool bCanUseAbility;
 
 	//현재 어빌리티 사용 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	bool bUseAbility = false;
+	bool bUseAbility;
 
 	//이동 방향용 변수(회피 애니메이션 제어 용)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	int32 MoveNum = 1;
+	int32 MoveNum;
 
 	//콤보 확인용 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	bool IsCombo = false;
+	bool IsCombo;
 
 	// 최대 콤보 -> 무기에서 전달 받아서 사용
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	int MaxCombo = 0;
+	int MaxCombo;
 
 	// 현제 콤보 번호
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	int CurrentCombo = 1;
+	int CurrentCombo;
 
 	//현제 공격 중인지 확인(C++ 전용)
-	bool IsAttack = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	bool IsAttack;
 
 	//현제 회피 중인지 판단(DodgeControll 애님노티파이 스테이트에서 사용)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	bool IsDodge = false;
+	bool IsDodge;
 
 	//애님인스턴스 변수
 	class UMainAnimInstance* MainAnimInstance;
@@ -84,7 +85,7 @@ private:
 	//방패
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AShield> ShieldClass;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	AShield* Shield = nullptr;
 	//-----------------------------------------------------------------------------------------------------//
 
@@ -94,14 +95,21 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	AWeapon* Sword = nullptr;
+
+	//검
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeapon> AxeClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	AWeapon* Axe = nullptr;
 	//-----------------------------------------------------------------------------------------------------//
 
 	//현재 사용 무기
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	AWeapon* CurrentWeapon = nullptr;
 	
 	//현재 사용 하는 무기의 고유 번호(애니메이션 제어)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combet, meta = (AllowPrivateAccess = "true"))
 	int32 CurrentWeaponNum= 0;
 
 	//-----------------------------------------Function-----------------------------------------//
@@ -120,11 +128,6 @@ private:
 
 	//회피
 	void Dodge();
-
-	//일반 공격
-	void LMBDawn(); //마우스 클릭 감지
-	void Attack(); //실제 공격 함수
-
 
 	// 무기 장착 함수--블루프린트에서 호출 가능 하게 구현
 	UFUNCTION(BlueprintCallable)
@@ -150,8 +153,13 @@ public:
 	FORCEINLINE int32 GetCurrentWeaponNum() const { return CurrentWeaponNum; }
 
 	//무기 반환용 함수
-	UFUNCTION(BlueprintCallable)
 	FORCEINLINE class AWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
+
+	UFUNCTION(BlueprintCallable)
+	bool CheackCanUseAbility() const;
+
+	UFUNCTION(BlueprintCallable)
+	AWeapon* CheackCanUseSkillAbility() const;
 
 	void AttackEnd(); // 공격 종료 함수
 	void CheackCombo(); // 콤보 체크용 함수

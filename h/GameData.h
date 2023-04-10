@@ -12,6 +12,7 @@ enum class EGameAbilityInputID : uint8
 	Cancel,
 	Block,
 	SwordEquip,
+	AxeEquip,
 	QSkill,
 	ESkill,
 	EPSkill
