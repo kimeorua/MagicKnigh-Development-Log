@@ -220,7 +220,7 @@
 
 ### 04/10 ~ 04/14
 + ### 04/10 공격 범위 설정 및 전투 <-> 추적 변환 구현
-
++ ### 04/11 공격 AI 기초 로직 구현
 ---
 ## 11 개발 사항
 
@@ -1397,6 +1397,14 @@ void UInAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 + #### AI비헤이비어 트리
 ![](./img/전투및추적상태AI.PNG)
 
+### 공격 AI 기초 로직 구현(04/11)
++ #### 공격 및 근접 패턴에서 사용할 AI의 기초 로직을 구현함 -> 현제는 공격 범위 안에 들어오면 자동으로 공격을 1번 하도록 간단하게 구현함
++ #### Enemy 클래스에 일반 공격에 해당하는 ComboAttackMontage와 근접 패턴인 MeleePatternMontage변수를 추가하고 에디터에서 애니메이션 지정
++ #### 
+
+![](./img/공격애님스테이트.PNG)
+![](./img/공격AI.PNG)
+![](./img/적공격작동.PNG)
 ---
 
 ## 12 버그 및 개선 사항
