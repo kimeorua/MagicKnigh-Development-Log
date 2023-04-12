@@ -221,6 +221,9 @@
 ### 04/10 ~ 04/14
 + ### 04/10 공격 범위 설정 및 전투 <-> 추적 변환 구현
 + ### 04/11 공격 AI 기초 로직 구현
++ ### 04/12 콤보공격 패턴 완성
+
+
 ---
 ## 11 개발 사항
 
@@ -1414,6 +1417,57 @@ void UInAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 -> 공격 애니메이션의 끝부분에서 블랙보드에 공격 중을 false로 지정하고 공격 종료 Message를 보냄
 
 + #### 공격Ability는 메인캐릭터외 유사하여 생략 함.
+
+### 콤보 공격 패턴 완성(04/12)
++ #### 몬스터가 콤보 공격을 사용하는 패턴을 완성 함, Enemy Class에 콤보 증가 함수와, 피격시 콤보를 초기화 하는 함수, 현제 콤보에 맞는 애니메이션을 반환 하는 함수를 제작함
+
+```cpp
+
+/// FORCEINLINE은 헤더 파일에서 Inline 함수로 사용하는 메크로 이다.
+/-----------------------------헤더 파일----------------------------------/
+FORCEINLINE void ComboReset() { ComboNum = 0; } //콤보 초기화 함수
+/-----------------------------헤더 파일----------------------------------/
+
+// 콤보 증가 함수
+void AEnemy::ComboUp()
+{
+	ComboNum ++;
+
+	if (ComboNum > 2)
+	{
+		ComboNum = 0;
+	}
+}
+
+// 현제 콤보에 맞는 애니메이션 반환
+UAnimMontage* AEnemy::GetCurrentCombo()
+{
+	switch (ComboNum)
+	{
+	case 0:
+	{
+		CurrentComboAttackMontage = ComboAttackMontage[0];
+		break;
+	}
+	case 1:
+	{
+		CurrentComboAttackMontage = ComboAttackMontage[1];
+		break;
+	}
+	case 2:
+	{
+		CurrentComboAttackMontage = ComboAttackMontage[2];
+		break;
+	}
+	default:
+		break;
+	}
+	return CurrentComboAttackMontage;
+}
+
+```
+
++ #### 그 후 04/11에 제작한 어빌리티 및 AnimNofity에 추가하여, 콤보공격을 제어 함.
 
 ---
 
