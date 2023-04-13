@@ -222,7 +222,7 @@
 + ### 04/10 공격 범위 설정 및 전투 <-> 추적 변환 구현
 + ### 04/11 공격 AI 기초 로직 구현
 + ### 04/12 콤보공격 패턴 완성
-
++ ### 04/13 AI 패턴 완성
 
 ---
 ## 11 개발 사항
@@ -1468,6 +1468,36 @@ UAnimMontage* AEnemy::GetCurrentCombo()
 ```
 
 + #### 그 후 04/11에 제작한 어빌리티 및 AnimNofity에 추가하여, 콤보공격을 제어 함.
+
+### AI 패턴 완성(04/13)
++ #### 랜덤한 패턴을 작동 하는 AI패턴을 구현하였고 추가로 근접 공격 패턴을 구현하였음.
+
+#### EnemyClass
+
+```cpp
+
+void AEnemy::RandomPattern()
+{
+	int x = 0;	//랜덤한 숫자를 저장할 변수
+	x = FMath::RandRange(1, 100);		// 랜덤 값 저장
+
+	if (x <= 60)
+	{
+		Controller->GetBlackboardComponent()->SetValueAsEnum(Controller->AttackPattern, 1);
+	}
+	else if (x <= 100)
+	{
+		Controller->GetBlackboardComponent()->SetValueAsEnum(Controller->AttackPattern, 2);
+	}
+}
+
+```
+
+-> 해당 x값에 따라 AttackPattern이라는 이름의 열거형에 저장된 값을 블랙보드에 기입, 해당 값에따라 AI가 패턴을 작동 하도록 구현함.
+
+#### AI비헤이비어 트리
+
+![](./img/AI비헤이비어트리.PNG)
 
 ---
 
