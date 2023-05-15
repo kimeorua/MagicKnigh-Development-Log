@@ -15,5 +15,15 @@ enum class EGameAbilityInputID : uint8
 	AxeEquip,
 	QSkill,
 	ESkill,
-	EPSkill
+	EPSkill,
+	UsePotion
+};
+
+UENUM(BlueprintType)
+enum class EEnemyPattern : uint8
+{
+	None UMETA(DisplayName = "None"),
+	ComboAttack UMETA(DisplayName = "ComboAttack"),
+	Melee UMETA(DisplayName = "Melee"),
+	Melee2 UMETA(DisplayName = "Melee2")
 };

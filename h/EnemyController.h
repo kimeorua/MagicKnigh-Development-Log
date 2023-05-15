@@ -32,12 +32,13 @@ public:
     static const FName CanSeePlayer;
     static const FName Player;
     static const FName IsInAttackRange;
+    static const FName AttackPattern;
 
     //AI Perception 변수
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float AISightRadius = 800;
+    float AISightRadius = 300;
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    float AILoseSightRadius = 100.f;
+    float AILoseSightRadius = 150.f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     float AIFieldOfView = 90.f;
@@ -58,6 +59,7 @@ public:
 
     //블랙보드 컴포넌트 반환
     FORCEINLINE UBlackboardComponent* GetBlackboardComponent() const { return BlackboardComponent; }
+    FORCEINLINE UBehaviorTreeComponent* GetBehaviorTreeComponent() const { return BehaviorTreeComponent; }
 
 protected:
     void BeginPlay()override;

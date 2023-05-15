@@ -39,6 +39,22 @@ public:
 	FGameplayAttributeData MaxEP;
 	ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, MaxEP)
 
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities", ReplicatedUsing = OnRep_Overload)
+	FGameplayAttributeData Overload;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, Overload)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities", ReplicatedUsing = OnRep_MaxOverload)
+	FGameplayAttributeData MaxOverload;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, MaxOverload)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities", ReplicatedUsing = OnRep_Potion)
+	FGameplayAttributeData Potion;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, Potion)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Abilities", ReplicatedUsing = OnRep_MaxPotion)
+	FGameplayAttributeData MaxPotion;
+	ATTRIBUTE_ACCESSORS(UCharacterAttributeSetBase, MaxPotion)
+
 
 	//-------------------------------------------Funtion----------------------------------------------------//
 	UCharacterAttributeSetBase();
@@ -50,7 +66,17 @@ public:
 	UFUNCTION()
 	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth); //MaxHP 정의
 	UFUNCTION()
-	virtual void OnRep_EP(const FGameplayAttributeData& OldHealth); // HP 정의
+	virtual void OnRep_EP(const FGameplayAttributeData& OldEP); // EP 정의
 	UFUNCTION()
-	virtual void OnRep_MaxEP(const FGameplayAttributeData& OldMaxHealth); //MaxHP 정의
+	virtual void OnRep_MaxEP(const FGameplayAttributeData& OldMaxEP); //MaxEP 정의
+
+	UFUNCTION()
+	virtual void OnRep_Potion(const FGameplayAttributeData& OldPotion); // 현재 과부화 수치 정의
+	UFUNCTION()
+	virtual void OnRep_MaxPotion(const FGameplayAttributeData& OldMaxPotion); // 최대 과부하 수치 정의
+
+	UFUNCTION()
+	virtual void OnRep_Overload(const FGameplayAttributeData& OldOverload); // 현재 포션 양 정의
+	UFUNCTION()
+	virtual void OnRep_MaxOverload(const FGameplayAttributeData& OldMaxOverload); // 최대 포션 수 정의
 };

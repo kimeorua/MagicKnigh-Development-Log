@@ -55,21 +55,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
 	bool bUseAbility;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	bool bIsHit;
+
 	//이동 방향용 변수(회피 애니메이션 제어 용)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
 	int32 MoveNum;
-
-	//콤보 확인용 변수
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	bool IsCombo;
-
-	// 최대 콤보 -> 무기에서 전달 받아서 사용
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	int MaxCombo;
-
-	// 현제 콤보 번호
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
-	int CurrentCombo;
 
 	//현제 공격 중인지 확인(C++ 전용)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combet", meta = (AllowPrivateAccess = "true"))
@@ -136,6 +127,9 @@ private:
 	//카메라 관련 컴포넌트 반환용 함수
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UFUNCTION(BlueprintCallable)
+	void PlayerOnHit();
 
 protected:
 	// Called when the game starts or when spawned

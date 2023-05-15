@@ -82,4 +82,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
 	float CheackRadius;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	float AOE_CheackRadius;
 };
