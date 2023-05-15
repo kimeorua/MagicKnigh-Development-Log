@@ -34,16 +34,13 @@ AMainCharacter::AMainCharacter()
 	bUseDash = false;
 	MainAnimInstance = nullptr;
 
-	MaxCombo = 0;
 	bUseAbility = false;
 	bCanUseAbility = true;
 	MoveNum = 1;
-	IsCombo = false;
-	MaxCombo = 0;
-	CurrentCombo = 1;
 	IsAttack = false;
 	IsDodge = false;
 	bUseBloack = false;
+	bIsHit = false;
 }
 
 void AMainCharacter::BeginPlay()
@@ -70,16 +67,13 @@ void AMainCharacter::BeginPlay()
 	Axe->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, Axe->GetUnequipSocket());
 	Axe->SetOwner(this);
 
-	MaxCombo = 0;
 	bUseAbility = false;
 	bCanUseAbility = true;
 	MoveNum = 1;
-	IsCombo = false;
-	MaxCombo = 0;
-	CurrentCombo = 1;
 	IsAttack = false;
 	IsDodge = false;
 	bUseBloack = false;
+	bIsHit = false;
 }
 
 void AMainCharacter::Tick(float DeltaTime)
@@ -108,7 +102,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMainCharacter::MoveForward(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f) && !IsAttack)
+	if ((Controller != nullptr) && (Value != 0.0f) && !IsAttack && !bIsHit)
 	{
 		// 앞 진행 방향 찾기
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -141,7 +135,7 @@ void AMainCharacter::MoveForward(float Value)
 
 void AMainCharacter::MoveRight(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f) && !IsAttack)
+	if ((Controller != nullptr) && (Value != 0.0f) && !IsAttack && !bIsHit)
 	{
 		// 오른쪽 방향 찾기
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -206,13 +200,23 @@ void AMainCharacter::DashEnd()
 void AMainCharacter::Dodge()
 {
 	// 어비리티 사용 중이 아닐때 작동
-	if (!bUseAbility && !IsAttack)
+	if (!bUseAbility && !IsAttack && !bIsHit)
 	{
 		// 회피 애니메이션 작동 및 어빌리티 사용 불가로 변경 -> AnimNotify에서 종료 시 어빌리티 사용 가능으로 변경 함
 		MainAnimInstance->PlayDodge(MoveNum);
 		bCanUseAbility = false;
 		IsDodge = true;
 	}
+}
+
+void AMainCharacter::PlayerOnHit()
+{
+	IsAttack = false;
+	bUseAbility = false;
+	bUseDash = false;
+	bCanUseAbility = true;
+	CurrentSpeed = ForwardWalkSpeed;
+	bUseBloack = false;
 }
 
 bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum)
@@ -233,8 +237,6 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 		CurrentWeapon = UseWeapon;
 		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, EquipSocket);
 		CurrentWeaponNum = EquipNum;
-		MaxCombo = UseWeapon->GetAttackMaxCombo();
-		CurrentCombo = 1;
 		return true;
 	}
 }
@@ -243,7 +245,7 @@ bool AMainCharacter::Equip(AWeapon* UseWeapon, FName EquipSocket, int32 EquipNum
 
 bool AMainCharacter::CheackCanUseAbility() const
 {
-	if (bCanUseAbility)
+	if (bCanUseAbility && !bIsHit)
 	{
 		return true;
 	}
@@ -268,8 +270,6 @@ AWeapon* AMainCharacter::CheackCanUseSkillAbility() const
 // 공격 종료 함수 -> 콤보 여부, 공격 여부를 false로 변경, 현제 콤보 초기화 및 어빌리티 사용 가능 상태로 변경 -> 노티파이를 통해 호출 
 void AMainCharacter::AttackEnd()
 {
-	IsCombo = false;
-	CurrentCombo = 1;
 	IsAttack = false;
 	bCanUseAbility = true;
 	bUseAbility = false;

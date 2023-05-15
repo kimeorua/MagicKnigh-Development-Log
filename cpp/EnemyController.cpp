@@ -13,12 +13,14 @@
 #include "MainCharacter.h"
 #include "Enemy.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 //접근할 이름에 블랙보드 키값 할당
 const FName AEnemyController::TargetLocation(TEXT("TargetLocation"));
 const FName AEnemyController::CanSeePlayer(TEXT("CanSeePlayer"));
 const FName AEnemyController::Player(TEXT("Player"));
 const FName AEnemyController::IsInAttackRange(TEXT("IsInAttackRange"));
+const FName AEnemyController::AttackPattern(TEXT("AttackPattern"));
 
 AEnemyController::AEnemyController()
 {
@@ -67,6 +69,9 @@ void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulu
 			GetBlackboardComponent()->SetValueAsObject(Player, PlayerPawn);
 			AEnemy* Enemy = Cast<AEnemy>(GetPawn());
 			Enemy->GetCharacterMovement()->MaxWalkSpeed = 550.f;
+
+			AMainCharacter* Main = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			SetFocus(Main);
 		}
 		else
 		{
@@ -75,6 +80,9 @@ void AEnemyController::OnTargetDetected(AActor* actor, FAIStimulus const Stimulu
 			GetBlackboardComponent()->SetValueAsBool(IsInAttackRange, false);
 			AEnemy* Enemy = Cast<AEnemy>(GetPawn());
 			Enemy->GetCharacterMovement()->MaxWalkSpeed = 300.f;
+
+			AMainCharacter* Main = Cast<AMainCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			ClearFocus(EAIFocusPriority::Gameplay);
 		}
 	}
 }

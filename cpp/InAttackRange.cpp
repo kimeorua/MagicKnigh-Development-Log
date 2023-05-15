@@ -25,7 +25,7 @@ void UInAttackRange::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemo
 	}
 	UWorld* World = ControllingPawn->GetWorld();
 	FVector Center = ControllingPawn->GetActorLocation(); //후에 사용할OverlapMultiByChannel에서 사용할 중점을 적 캐릭터의 좌표로 설정
-	float AttackRange = 300.0f;
+	float AttackRange = 100.0f;
 
 	if (World == nullptr)
 	{
