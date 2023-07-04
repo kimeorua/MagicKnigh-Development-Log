@@ -62,9 +62,8 @@
 
 ## 6 GameplayTag 표
 
-![](./img/플레이어행동Tag.PNG)
+![](./img/플레이어행동및상태Tag.PNG)
 
-![](./img/플레이어상태Tag.PNG)
 
 ## 7 개발 일정
 
