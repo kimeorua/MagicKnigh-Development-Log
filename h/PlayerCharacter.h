@@ -14,7 +14,8 @@ UCLASS()
 class PF_MAGICKNIGHT_API APlayerCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
-	
+
+private:
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -35,9 +36,21 @@ class PF_MAGICKNIGHT_API APlayerCharacter : public ABaseCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
-	//달리기 액션 
+	//달리기 Input 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* DashAction;
+
+	//회피 Input
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* DodgeAction;
+
+	// 무기 장착 Input 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TArray<UInputAction*>EquipActions;
+
+	// 무기 장착 Input 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ComboAction;
 
 	//시점 회전 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -51,13 +64,40 @@ class PF_MAGICKNIGHT_API APlayerCharacter : public ABaseCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float RunSpeed = 650.0f;
 
+	//----------------------------------------------------------------------무기-----------------------------------------------------------------------\\
+
+	//검 블루프린트 가져오기
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AWeapon> SwordClass;
+
+	//검
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	class AWeapon* Sword;
+
+	// 장착될 장소 배열 0  = 검, 1 = 도끼  ....(무기가 늘어날때 마다 추가 할 것)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	TArray<FName>EquipSockets;
+
+	//현제 장착한 무기
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	class AWeapon* CurrentWeapon;
+
+	//----------------------------------------------------------------------무기-----------------------------------------------------------------------\\
+
 public:
 	APlayerCharacter();
 
-	// GameplayEffect를 사용하여 태그 부착 (쓸일 없어지면 삭제 할것!)
-	void AddTagUseEffect(TSubclassOf<class UGameplayEffect> AddTagEffect);
+	// APawn interface
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-protected:
+	// To add mapping context
+	virtual void BeginPlay();
+
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
@@ -70,15 +110,18 @@ protected:
 	void Dash();
 	void DashEnd();
 
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//회피 사용
+	void Dodge();
 
-	// To add mapping context
-	virtual void BeginPlay();
+	/// <summary>
+	/// 일반 공격 사용(콤보)
+	/// </summary>
+	void ComboAttack();
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	void SwordSummons();
+	UFUNCTION(BlueprintCallable)
+	void WeaponEquip(FName EquipSocketName);
+	void WeaponUnequip();
+
+	
 };
