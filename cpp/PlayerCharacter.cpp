@@ -11,6 +11,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTagContainer.h"
+#include "Weapon.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -46,19 +47,15 @@ APlayerCharacter::APlayerCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
-}
 
-//GameplayEffect를 통해 Tag를 추가하는 함수
-void APlayerCharacter::AddTagUseEffect(TSubclassOf<class UGameplayEffect> AddTagEffect)
-{
-	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(AddTagEffect, 1, EffectContext);
-
-	if (SpecHandle.IsValid())
-	{
-		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
-	}
+	DefaultMappingContext = nullptr;
+	MoveAction = nullptr;
+	LookAction = nullptr;
+	DashAction = nullptr;
+	DodgeAction = nullptr;
+	ComboAction = nullptr;
+	Sword = nullptr;
+	CurrentWeapon = nullptr;
 }
 
 void APlayerCharacter::BeginPlay()
@@ -73,6 +70,8 @@ void APlayerCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+
+		Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
 	}
 }
 
@@ -91,6 +90,15 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		//달리기
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Dash);
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Completed, this, &APlayerCharacter::DashEnd);
+
+		//회피(구르기 & 스탭)
+		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Dodge);
+
+		//무기 장착
+		EnhancedInputComponent->BindAction(EquipActions[0], ETriggerEvent::Triggered, this, &APlayerCharacter::SwordSummons);
+
+		//일반공격(콤보)
+		EnhancedInputComponent->BindAction(ComboAction, ETriggerEvent::Started, this, &APlayerCharacter::ComboAttack);
 
 	}
 }
@@ -111,9 +119,12 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.DoNotMove"))) <= 0)
+		{
+			// add movement 
+			AddMovementInput(ForwardDirection, MovementVector.Y);
+			AddMovementInput(RightDirection, MovementVector.X);
+		}
 
 		//플레이어에게 Tag 부착, 현제 태그가 있의면 부착하지 않음.
 		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.Move"))) <= 0)
@@ -226,5 +237,57 @@ void APlayerCharacter::DashEnd()
 			GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Dash")));
 		}
+	}
+}
+
+void APlayerCharacter::Dodge()
+{
+	if (Controller != nullptr)
+	{
+		if (!(GetCharacterMovement()->IsFalling()))
+		{
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("Player.Dodge.Rolling")));
+			GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+		}
+	}
+}
+
+void APlayerCharacter::SwordSummons()
+{
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) <= 0)
+	{
+		if (!(GetCharacterMovement()->IsFalling()))
+		{
+			WeaponUnequip();
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("Player.EquipWeapon.Sword")));
+			GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+		}
+	}
+}
+
+void APlayerCharacter::WeaponEquip(FName EquipSocketName)
+{
+	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, EquipSocketName);
+	CurrentWeapon = Sword;
+}
+
+void APlayerCharacter::WeaponUnequip()
+{
+	if (CurrentWeapon != nullptr)
+	{
+		CurrentWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+		CurrentWeapon->SetActorLocation(FVector(0.f));
+	}
+}
+
+void APlayerCharacter::ComboAttack()
+{
+	if (!(GetCharacterMovement()->IsFalling()))
+	{
+		FGameplayTagContainer TagContainer;
+		TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack")));
+		GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
 	}
 }

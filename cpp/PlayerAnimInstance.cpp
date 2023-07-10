@@ -3,6 +3,7 @@
 
 #include "PlayerAnimInstance.h"
 #include "PlayerCharacter.h"
+#include "KismetAnimationLibrary.h"
 
 UPlayerAnimInstance::UPlayerAnimInstance()
 {
@@ -19,6 +20,19 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		Player = Cast<APlayerCharacter>(Pawn); // Main 변수에 저장
 		Speed = Player->GetVelocity().Size(); // 캐릭터의 속도를 speed에 저장
-		Direction = CalculateDirection(Player->GetVelocity(), Player->GetActorRotation()); //현제 방향을 계산하여 저장
+		Direction = UKismetAnimationLibrary::CalculateDirection(Player->GetVelocity(), Player->GetActorRotation());
+		EquipedWeapon = CheackWeaponTag();
+	}
+}
+
+EEquipedWeapon UPlayerAnimInstance::CheackWeaponTag()
+{
+	if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) > 0)
+	{
+		return  EEquipedWeapon::Sword;
+	}
+	else
+	{
+		return  EEquipedWeapon::None;
 	}
 }
