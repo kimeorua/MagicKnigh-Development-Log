@@ -18,24 +18,24 @@ class PF_MAGICKNIGHT_API ABaseCharacter : public ACharacter, public IAbilitySyst
 //---------------------------------------------------변수----------------------------------------------------//
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attributes", meta = (AllowPrivateAccess = "true"))
-	class UAbilitySystemComponent* AbilitySystemComponent;
+	class UAbilitySystemComponent* AbilitySystemComponent; //어빌리티 시스템 컴포넌트
 
 	UPROPERTY()
-	UMagicKnightAttributeSet* Attributes;
+	UMagicKnightAttributeSet* Attributes; //어트리뷰트
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
-	TSubclassOf<class UGameplayEffect> DefaultAttributeEffect;
+	TSubclassOf<class UGameplayEffect> DefaultAttributeEffect; //기본 스텟 설정용 GameplayEffect
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
-	TArray<TSubclassOf<class UGameplayAbility>>DefaultAblity;
+	TArray<TSubclassOf<class UGameplayAbility>>DefaultAbility; //사용하는 GameplayAbility
 
 //----------------------------------------------------함수----------------------------------------------------//
 public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
-	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	FORCEINLINE UAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; };
 
 protected:
 	// Called when the game starts or when spawned

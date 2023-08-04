@@ -20,37 +20,53 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
-	/** Follow camera */
+	// 카메라 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	/** MappingContext */
+	//MappingContext 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
-	/** Move Input Action */
+	// W,A,S,D Move Input Action 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
-	/** Look Input Action */
+	//시점 변경 Look Input Action 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
-	//달리기 Input 
+	//달리기 Input Action
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* DashAction;
 
-	//회피 Input
+	//회피 Input Action
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* DodgeAction;
 
-	// 무기 장착 Input 
+	// 무기 장착 Input Action
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	TArray<UInputAction*>EquipActions;
+	TArray<class UInputAction*>EquipActions;
 
-	// 무기 장착 Input 
+	// 일반공격 Input Action
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ComboAction;
+
+	// 스킬 공격(Q) Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* QSkillAction;
+
+	// 스킬공격(E) Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ESkillAction;
+
+	// 특수 스킬(EF)공격 Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* EFSkillAction;
+
+	// 방어 입력 Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* BlockAction;
 
 	//시점 회전 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -66,11 +82,11 @@ private:
 
 	//----------------------------------------------------------------------무기-----------------------------------------------------------------------\\
 
-	//검 블루프린트 가져오기
+	//검 블루프린트 지정 -> 에디터에서 셋팅
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AWeapon> SwordClass;
 
-	//검
+	//class에서 사용할 검 변수
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	class AWeapon* Sword;
 
@@ -78,14 +94,25 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	TArray<FName>EquipSockets;
 
-	//현제 장착한 무기
+	//현재 장착한 무기
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	class AWeapon* CurrentWeapon;
+
+	//방패  블루프린트 지정 -> 에디터에서 셋팅
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AArmBarrier> ArmBarrierClass;
+
+	//class에서 사용할 방패 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	class AArmBarrier* ArmBarrier;
 
 	//----------------------------------------------------------------------무기-----------------------------------------------------------------------\\
 
 public:
+	// 생성자
 	APlayerCharacter();
+
+	void PlayerSetup();
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -93,35 +120,50 @@ public:
 	// To add mapping context
 	virtual void BeginPlay();
 
-	/** Returns CameraBoom subobject **/
+	//------------------------ 카메라 및 SpringArm 반환 ------------------------//
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	//--------------------------------------------------------------------------------//
 
-	/** Called for movement input */
+	//태그 생성 및 해당 태그를 가진 GameplayAbility 작동
+	void MakeTagAndActive(FString TagName);
+
+	//W, A, S, D 움직임 
 	void Move(const FInputActionValue& Value);
 
+	// 움직임 종료 -> Tag 제거
 	void MoveEnd();
 
-	/** Called for looking input */
+	// 시점 변경
 	void Look(const FInputActionValue& Value);
 
-	/*달리기 사용*/
-	void Dash();
+	// 달리기 사용 및 종료
+ 	void Dash();
 	void DashEnd();
 
 	//회피 사용
 	void Dodge();
 
-	/// <summary>
-	/// 일반 공격 사용(콤보)
-	/// </summary>
+	// 일반 공격 사용(콤보)
 	void ComboAttack();
 
-	void SwordSummons();
-	UFUNCTION(BlueprintCallable)
-	void WeaponEquip(FName EquipSocketName);
-	void WeaponUnequip();
+	//Q Skill 사용
+	void UseQSkill();
 
-	
+	// E Skill 사용
+	void UseESkill();
+
+	// EF Skill 사용
+	void UseEFSkill();
+
+	//방어 시작 및 종료
+	void BlockStart();
+	void BlockEnd();
+
+	//무기 소환 -> 장착해제(다른 무기 장착 중 일때) -> 장착
+	void SwordSummons();
+	void WeaponUnequip();
+	// 무기 장착은 블루프린트에서 호출 -> 무기 이동 완료후 장착 됨
+	UFUNCTION(BlueprintCallable)
+	void WeaponEquip(FName EquipSocketName, AWeapon* Weapon);
 };

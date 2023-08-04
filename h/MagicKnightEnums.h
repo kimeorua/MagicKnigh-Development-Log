@@ -3,6 +3,7 @@
 #pragma once
 #include "CoreMinimal.h"
 
+//¹«±â Enum
 UENUM(BlueprintType)
 enum class EEquipedWeapon : uint8
 {
