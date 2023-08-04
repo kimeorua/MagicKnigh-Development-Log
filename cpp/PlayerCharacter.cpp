@@ -12,41 +12,24 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTagContainer.h"
 #include "Weapon.h"
+#include "ArmBarrier.h"
+#include "Kismet/GameplayStatics.h"
 
 
 APlayerCharacter::APlayerCharacter()
 {
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
-	// Don't rotate when the controller rotates. Let that just affect the camera.
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
-
-	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
-
-	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
-	// instead of recompiling to adjust them
-	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
-	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-
-	// Create a camera boom (pulls in towards the player if there is a collision)
+	// SpringArm 설정
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	CameraBoom->TargetArmLength = 400.0f; // 
+	CameraBoom->bUsePawnControlRotation = true; 
 
-	// Create a follow camera
+	//Camera 설정
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
+	FollowCamera->bUsePawnControlRotation = false; 
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	PlayerSetup();
 
 	DefaultMappingContext = nullptr;
 	MoveAction = nullptr;
@@ -56,6 +39,28 @@ APlayerCharacter::APlayerCharacter()
 	ComboAction = nullptr;
 	Sword = nullptr;
 	CurrentWeapon = nullptr;
+	BlockAction = nullptr;
+}
+
+void APlayerCharacter::PlayerSetup()
+{
+	// 플레이어 캡슐 컴포넌트 크기 설정
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+
+	// 컨트롤러 회전시, 캐릭터 회전 안되도록 설정
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
+	// 캐릭터 회전 설정
+	GetCharacterMovement()->bOrientRotationToMovement = true; // 이동방향으로 회전
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // 회전 속도
+
+	//캐릭터 움직인 관련 설정
+	GetCharacterMovement()->AirControl = 0.35f;
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
+	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 }
 
 void APlayerCharacter::BeginPlay()
@@ -70,8 +75,12 @@ void APlayerCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+		ArmBarrier = GetWorld()->SpawnActor<AArmBarrier>(ArmBarrierClass);
+		ArmBarrier->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, ArmBarrier->GetEquipSocketName());
 
 		Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
+
+		
 	}
 }
 
@@ -100,6 +109,14 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		//일반공격(콤보)
 		EnhancedInputComponent->BindAction(ComboAction, ETriggerEvent::Started, this, &APlayerCharacter::ComboAttack);
 
+		//스킬 사용
+		EnhancedInputComponent->BindAction(QSkillAction, ETriggerEvent::Triggered, this, &APlayerCharacter::UseQSkill); //Q Skill
+		EnhancedInputComponent->BindAction(ESkillAction, ETriggerEvent::Triggered, this, &APlayerCharacter::UseESkill); // E Skill
+		EnhancedInputComponent->BindAction(EFSkillAction, ETriggerEvent::Triggered, this, &APlayerCharacter::UseEFSkill); //특수 스킬
+
+		//방어 사용
+		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Triggered, this, &APlayerCharacter::BlockStart);
+		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Completed, this, &APlayerCharacter::BlockEnd);
 	}
 }
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -218,10 +235,13 @@ void APlayerCharacter::Dash()
 	{
 		if (!(GetCharacterMovement()->IsFalling()))
 		{
-			GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.Dash"))) <= 0)
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
 			{
-				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Dash")));
+				GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.Dash"))) <= 0)
+				{
+					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Dash")));
+				}
 			}
 		}
 	}
@@ -240,19 +260,85 @@ void APlayerCharacter::DashEnd()
 	}
 }
 
+// 태긋 생성 및 해당 Tag를 가진 GamepalyAbility 작동
+void APlayerCharacter::MakeTagAndActive(FString TagName)
+{
+	FGameplayTagContainer TagContainer;
+	TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName(TagName)));
+	GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+}
+
+//회피
 void APlayerCharacter::Dodge()
 {
 	if (Controller != nullptr)
 	{
 		if (!(GetCharacterMovement()->IsFalling()))
 		{
-			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("Player.Dodge.Rolling")));
-			GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+			MakeTagAndActive("Player.Dodge.Rolling");
 		}
 	}
 }
 
+//콤보 공격
+void APlayerCharacter::ComboAttack()
+{
+	if (!(GetCharacterMovement()->IsFalling()))
+	{
+		MakeTagAndActive("Player.Attack");
+	}
+}
+
+//스킬 사용(Q)
+void APlayerCharacter::UseQSkill()
+{
+	if (!(GetCharacterMovement()->IsFalling()))
+	{
+		MakeTagAndActive("Player.Skill.QSkill");
+	}
+}
+
+//스킬 사용(E)
+void APlayerCharacter::UseESkill()
+{
+	if (!(GetCharacterMovement()->IsFalling()))
+	{
+		MakeTagAndActive("Player.Skill.ESkill");
+	}
+}
+
+// 특수 스킬 사용
+void APlayerCharacter::UseEFSkill()
+{
+	if (!(GetCharacterMovement()->IsFalling()))
+	{
+		MakeTagAndActive("Player.Skill.EFSkill");
+	}
+}
+
+//방어 시작
+void APlayerCharacter::BlockStart()
+{
+	if (!(GetCharacterMovement()->IsFalling()))
+	{
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
+		{
+			MakeTagAndActive("Player.Block");
+		}
+	}
+}
+
+// 방어 종료
+void APlayerCharacter::BlockEnd()
+{
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+	{
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock")));
+		ArmBarrier->BarrierOff();
+	}
+}
+
+//검 소환
 void APlayerCharacter::SwordSummons()
 {
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) <= 0)
@@ -260,34 +346,33 @@ void APlayerCharacter::SwordSummons()
 		if (!(GetCharacterMovement()->IsFalling()))
 		{
 			WeaponUnequip();
-			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("Player.EquipWeapon.Sword")));
-			GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+			MakeTagAndActive("Player.EquipWeapon.Sword");
 		}
 	}
 }
 
-void APlayerCharacter::WeaponEquip(FName EquipSocketName)
+// 검을 플레이어 소켓에 장착
+void APlayerCharacter::WeaponEquip(FName EquipSocketName, AWeapon* Weapon)
 {
-	Sword->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, EquipSocketName);
-	CurrentWeapon = Sword;
+	if (Weapon != nullptr)
+	{
+		CurrentWeapon = Weapon;
+		if (CurrentWeapon->GetSoummonsParticle() == nullptr) return;
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), CurrentWeapon->GetSoummonsParticle(), CurrentWeapon->GetActorTransform());
+
+		if (CurrentWeapon->GetSoummonSound() == nullptr) return;
+		UGameplayStatics::PlaySound2D(this, CurrentWeapon->GetSoummonSound());
+
+		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, EquipSocketName);
+	}
 }
 
+// 이미 장착된 무기를 제거 후 안보이는 곳으로 이동
 void APlayerCharacter::WeaponUnequip()
 {
 	if (CurrentWeapon != nullptr)
 	{
 		CurrentWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 		CurrentWeapon->SetActorLocation(FVector(0.f));
-	}
-}
-
-void APlayerCharacter::ComboAttack()
-{
-	if (!(GetCharacterMovement()->IsFalling()))
-	{
-		FGameplayTagContainer TagContainer;
-		TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack")));
-		GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
 	}
 }

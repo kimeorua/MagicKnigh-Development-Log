@@ -8,6 +8,20 @@ public class PF_MagicKnight : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "GameplayAbilities", "GameplayTags", "GameplayTasks", "EnhancedInput", "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay" });
+        PublicDependencyModuleNames.AddRange(new string[] 
+		{ 
+			"GameplayAbilities", 
+			"GameplayTags", 
+			"GameplayTasks", 
+			"EnhancedInput", 
+			"Core", 
+			"CoreUObject", 
+			"Engine", 
+			"InputCore", 
+			"HeadMountedDisplay", 
+			"AnimGraphRuntime",
+            "NavigationSystem", 
+			"AIModule"
+        });
     }
 }

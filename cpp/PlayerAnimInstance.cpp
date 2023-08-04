@@ -22,17 +22,44 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Speed = Player->GetVelocity().Size(); // 캐릭터의 속도를 speed에 저장
 		Direction = UKismetAnimationLibrary::CalculateDirection(Player->GetVelocity(), Player->GetActorRotation());
 		EquipedWeapon = CheackWeaponTag();
+		IsBlock = CheackUseBlock();
 	}
 }
 
 EEquipedWeapon UPlayerAnimInstance::CheackWeaponTag()
 {
-	if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) > 0)
+	if (Player != nullptr) // 플레이어가 유효 하면
 	{
-		return  EEquipedWeapon::Sword;
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) > 0)
+		{
+			return  EEquipedWeapon::Sword;
+		}
+		else
+		{
+			return  EEquipedWeapon::None;
+		}
 	}
 	else
 	{
 		return  EEquipedWeapon::None;
+	}
+}
+
+bool UPlayerAnimInstance::CheackUseBlock()
+{
+	if (Player != nullptr) //  플레이어가 유효 하면
+	{
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
 	}
 }

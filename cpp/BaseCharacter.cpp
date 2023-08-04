@@ -18,11 +18,7 @@ ABaseCharacter::ABaseCharacter()
 	Attributes = CreateDefaultSubobject<UMagicKnightAttributeSet>(TEXT("Attributes")); //어트리뷰트 생성
 }
 
-UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
-{
-	return AbilitySystemComponent;
-}
-
+//빙의시 호출
 void ABaseCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -65,7 +61,7 @@ void ABaseCharacter::GiveAbilities()
 {
 	if (HasAuthority() && AbilitySystemComponent)
 	{
-		for (TSubclassOf<UGameplayAbility>& StartupAbility : DefaultAblity)
+		for (TSubclassOf<UGameplayAbility>& StartupAbility : DefaultAbility)
 		{
 			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(StartupAbility.GetDefaultObject(), 1, 0));
 		}
