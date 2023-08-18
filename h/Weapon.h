@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MagicKnightEnums.h"
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
@@ -26,6 +27,13 @@ public:
 	FORCEINLINE UParticleSystem* GetSoummonsParticle() const { return SoummonParitcle; }
 	FORCEINLINE USoundBase* GetSoummonSound() const { return SoummonSound; }
 
+	//오버랩 확인
+	UFUNCTION(BlueprintCallable)
+	FHitResult CheakCollision(EAttackCollisionType Type, float Range);
+
+	UFUNCTION(BlueprintCallable)
+	void HitArrReset();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
@@ -39,4 +47,21 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SoummonParticle", meta = (AllowPrivateAccess = "true"))
 	USoundBase* SoummonSound = nullptr;
 
+	// 공격 반지름
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	float AttackRadius = 0.f;
+
+	//Trace Start Socket
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FName CollisionStartSocket = "";
+
+	//Trace End Socket
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FName CollisionEndSocket = "";
+
+	//Trace AOE Socket
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FName CollisionAOESocket = "";
+
+	TArray<class AEnemyCharacter*>HitEnemys;
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "MagicKnightEnums.h"
 #include "EnemyCharacter.generated.h"
 
 /**
@@ -35,11 +36,27 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Patrol", meta = (AllowPrivateAccess = "true"))
 	int PointNum; //순찰할 장소 숫자
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Patrol", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
 	FName AnimSection;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Patrol", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
 	bool bIsFristAttack = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision", meta = (AllowPrivateAccess = "true"))
+	UCapsuleComponent* HitCollision;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
+	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 데미지용 이펙트들(에디터 설정)
+
+	//Trace Start Socket
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FName CollisionStartSocket = "";
+
+	//Trace End Socket
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FName CollisionEndSocket = "";
+
+	bool PlayerIsHit = false;
 
 protected:
 	virtual void BeginPlay()override;
@@ -49,6 +66,13 @@ public:
 	AEnemyCharacter();
 	void FindPlayer();
 	void LosePlayer();
+	void TakeDamgeFormPlayer();
+
+	UFUNCTION(BlueprintCallable)
+	void PlayerHitReset();
+
+	UFUNCTION(BlueprintCallable)
+	FHitResult CheakCollision(EAttackCollisionType Type, float Range);
 
 	UFUNCTION(BlueprintCallable)
 	TArray<FVector> GetPatrolPoints() const;

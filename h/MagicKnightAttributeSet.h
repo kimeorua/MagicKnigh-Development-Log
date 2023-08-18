@@ -34,11 +34,18 @@ public:
 	virtual void OnRep_MaxHealth(FGameplayAttributeData& OldMaxHealth);
 
 	UFUNCTION()
+	virtual void OnRep_Posture(FGameplayAttributeData& OldPosture);
+
+	UFUNCTION()
+	virtual void OnRep_MaxPosture(FGameplayAttributeData& OldMaxPosture);
+
+	UFUNCTION()
 	virtual void OnRep_ElementalForce(FGameplayAttributeData& OldElementalForce);
 
 	UFUNCTION()
 	virtual void OnRep_MaxElementalForce(FGameplayAttributeData& OldMaxElementalForce);
 
+	void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data); // 속성의 기본 값을 수정하기 위해 GameplayEffect가 실행되기 직전에 호출됩니다
 
 	//-------------------------------------변수--------------------------------------------------//
 
@@ -49,8 +56,18 @@ public:
 	
 	// 최대 생명력(MaxHP)
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
-	FGameplayAttributeData MaxHealth;
+	FGameplayAttributeData MaxHealth = 100.f;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, MaxHealth)
+
+	//원소력(EF) -> RPG의 마나와 비슷
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData  Posture;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, Posture)
+
+	//최대 원소력(MaxEF)
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData MaxPosture = 100.f;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, MaxPosture)
 
 	//원소력(EF) -> RPG의 마나와 비슷
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
@@ -59,6 +76,6 @@ public:
 
 	//최대 원소력(MaxEF)
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
-	FGameplayAttributeData MaxElementalForce;
+	FGameplayAttributeData MaxElementalForce = 100.f;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, MaxElementalForce)
 };

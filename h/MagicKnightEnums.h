@@ -13,3 +13,14 @@ enum class EEquipedWeapon : uint8
 
 	Max UMETA(DisplayName = "Max")
 };
+
+UENUM(BlueprintType)
+enum class EAttackCollisionType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	Melee UMETA(DisplayName = "Melee"),
+	AOE UMETA(DisplayName = "AOE"),
+	AOE_Player_Center UMETA(DisplayName = "AOE Player Center"),
+
+	Max UMETA(DisplayName = "Max")
+};

@@ -108,6 +108,9 @@ private:
 
 	//----------------------------------------------------------------------무기-----------------------------------------------------------------------\\
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
+	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 데미지용 이펙트들(에디터 설정)
+
 public:
 	// 생성자
 	APlayerCharacter();
@@ -124,6 +127,9 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	//--------------------------------------------------------------------------------//
+	
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE class AWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
 
 	//태그 생성 및 해당 태그를 가진 GameplayAbility 작동
 	void MakeTagAndActive(FString TagName);
@@ -163,7 +169,10 @@ public:
 	//무기 소환 -> 장착해제(다른 무기 장착 중 일때) -> 장착
 	void SwordSummons();
 	void WeaponUnequip();
+
 	// 무기 장착은 블루프린트에서 호출 -> 무기 이동 완료후 장착 됨
 	UFUNCTION(BlueprintCallable)
 	void WeaponEquip(FName EquipSocketName, AWeapon* Weapon);
+
+	void TakeDamageFromEnemy(); //적이 공격하여 피격 될시 GameplayEffect 호출
 };
