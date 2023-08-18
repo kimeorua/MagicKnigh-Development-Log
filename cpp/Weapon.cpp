@@ -3,6 +3,12 @@
 
 #include "Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "PlayerCharacter.h"
+#include "Math/Rotator.h"
+#include "Engine/EngineTypes.h"
+#include "Abilities/GameplayAbility.h"
+#include "EnemyCharacter.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -21,7 +27,7 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	HitEnemys.Empty();
 }
 
 // Called every frame
@@ -29,5 +35,97 @@ void AWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range = 0.f)
+{
+	FVector Start = Mesh->GetSocketLocation(CollisionStartSocket); //시작 점
+	FVector End = Mesh->GetSocketLocation(CollisionEndSocket); //끝 점
+	FVector AOE = Mesh->GetSocketLocation(CollisionAOESocket); //범위 스킬 끝점
+
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(GetOwner());
+	FHitResult OutHit;
+	bool bResult;
+
+	switch (Type)
+	{
+	case EAttackCollisionType::None:
+		bResult = false;
+		break;
+
+	case EAttackCollisionType::Melee:
+		bResult = UKismetSystemLibrary::LineTraceSingle(
+			GetWorld(),
+			Start,
+			End,
+			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
+			false,
+			ActorsToIgnore,
+			EDrawDebugTrace::ForDuration,
+			OutHit,
+			true);
+		break;
+
+	case EAttackCollisionType::AOE:
+		bResult = UKismetSystemLibrary::SphereTraceSingle(
+			GetWorld(),
+			End,
+			AOE,
+			Range,
+			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
+			false,
+			ActorsToIgnore,
+			EDrawDebugTrace::ForDuration, 
+			OutHit,
+			true);
+		break;
+
+	case EAttackCollisionType::AOE_Player_Center:
+		bResult = UKismetSystemLibrary::SphereTraceSingle(
+			GetWorld(),
+			GetOwner()->GetActorLocation(),
+			GetOwner()->GetActorLocation(),
+			Range,
+			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
+			false,
+			ActorsToIgnore,
+			EDrawDebugTrace::ForDuration,
+			OutHit,
+			true);
+		break;
+
+	case EAttackCollisionType::Max:
+		bResult = false;
+		break;
+
+	default:
+		bResult = false;
+		break;
+	}
+
+	if (bResult)
+	{
+		if (HitEnemys.IsEmpty())
+		{
+			HitEnemys.Add(Cast<AEnemyCharacter>(OutHit.GetActor()));
+			HitEnemys[0]->TakeDamgeFormPlayer();
+		}
+		else if(!HitEnemys.IsEmpty())
+		{
+			if (!HitEnemys.Contains(OutHit.GetActor()))
+			{
+				AEnemyCharacter* HitEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
+				HitEnemy->TakeDamgeFormPlayer();
+				HitEnemys.Add(HitEnemy);
+			}
+		}
+	}
+	return OutHit;
+}
+
+void AWeapon::HitArrReset()
+{
+	HitEnemys.Empty();
 }
 

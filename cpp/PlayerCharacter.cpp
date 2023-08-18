@@ -13,6 +13,8 @@
 #include "GameplayTagContainer.h"
 #include "Weapon.h"
 #include "ArmBarrier.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "CollisionShape.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -79,8 +81,6 @@ void APlayerCharacter::BeginPlay()
 		ArmBarrier->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, ArmBarrier->GetEquipSocketName());
 
 		Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
-
-		
 	}
 }
 
@@ -285,6 +285,7 @@ void APlayerCharacter::ComboAttack()
 {
 	if (!(GetCharacterMovement()->IsFalling()))
 	{
+		//SetActorRotation(FRotator(0.f, GetControlRotation().Yaw, 0.f));
 		MakeTagAndActive("Player.Attack");
 	}
 }
@@ -294,6 +295,7 @@ void APlayerCharacter::UseQSkill()
 {
 	if (!(GetCharacterMovement()->IsFalling()))
 	{
+		//SetActorRotation(FRotator(0.f, GetControlRotation().Yaw, 0.f));
 		MakeTagAndActive("Player.Skill.QSkill");
 	}
 }
@@ -303,6 +305,7 @@ void APlayerCharacter::UseESkill()
 {
 	if (!(GetCharacterMovement()->IsFalling()))
 	{
+		//SetActorRotation(FRotator(0.f, GetControlRotation().Yaw, 0.f));
 		MakeTagAndActive("Player.Skill.ESkill");
 	}
 }
@@ -312,6 +315,7 @@ void APlayerCharacter::UseEFSkill()
 {
 	if (!(GetCharacterMovement()->IsFalling()))
 	{
+		//SetActorRotation(FRotator(0.f, GetControlRotation().Yaw, 0.f));
 		MakeTagAndActive("Player.Skill.EFSkill");
 	}
 }
@@ -363,7 +367,46 @@ void APlayerCharacter::WeaponEquip(FName EquipSocketName, AWeapon* Weapon)
 		if (CurrentWeapon->GetSoummonSound() == nullptr) return;
 		UGameplayStatics::PlaySound2D(this, CurrentWeapon->GetSoummonSound());
 
+		Weapon->SetOwner(this);
 		Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, EquipSocketName);
+	}
+}
+
+void APlayerCharacter::TakeDamageFromEnemy()
+{
+	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+	FGameplayEffectSpecHandle SpecHandle;
+
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+	{
+		if (GetInstigator())
+		{
+			float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw);
+			bool CheakBlock = UKismetMathLibrary::BooleanOR(BlockAbleRot > 150.f, BlockAbleRot < -150.f);
+
+			UE_LOG(LogTemp, Warning, TEXT("%f"), 360.f - FMath::Abs(BlockAbleRot));
+			if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Block"));
+				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Hit"));
+				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+			}
+		}
+		
+	}
+	else
+	{
+		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+	}
+
+	if (SpecHandle.IsValid())
+	{
+		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
 }
 
@@ -372,6 +415,7 @@ void APlayerCharacter::WeaponUnequip()
 {
 	if (CurrentWeapon != nullptr)
 	{
+		CurrentWeapon->SetOwner(CurrentWeapon);
 		CurrentWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 		CurrentWeapon->SetActorLocation(FVector(0.f));
 	}

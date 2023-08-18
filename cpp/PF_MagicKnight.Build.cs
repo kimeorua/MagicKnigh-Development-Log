@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+	// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -15,8 +15,8 @@ public class PF_MagicKnight : ModuleRules
 			"GameplayTasks", 
 			"EnhancedInput", 
 			"Core", 
-			"CoreUObject", 
-			"Engine", 
+			"CoreUObject",
+            "Engine", 
 			"InputCore", 
 			"HeadMountedDisplay", 
 			"AnimGraphRuntime",
