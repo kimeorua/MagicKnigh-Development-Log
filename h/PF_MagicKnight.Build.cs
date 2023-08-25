@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+	// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -8,6 +8,20 @@ public class PF_MagicKnight : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "GameplayAbilities", "GameplayTags", "GameplayTasks", "EnhancedInput", "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "AnimGraphRuntime"});
+        PublicDependencyModuleNames.AddRange(new string[] 
+		{ 
+			"GameplayAbilities", 
+			"GameplayTags", 
+			"GameplayTasks", 
+			"EnhancedInput", 
+			"Core", 
+			"CoreUObject",
+            "Engine", 
+			"InputCore", 
+			"HeadMountedDisplay", 
+			"AnimGraphRuntime",
+            "NavigationSystem", 
+			"AIModule"
+        });
     }
 }

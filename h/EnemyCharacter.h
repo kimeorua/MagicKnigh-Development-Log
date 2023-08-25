@@ -67,6 +67,7 @@ public:
 	void FindPlayer();
 	void LosePlayer();
 	void TakeDamgeFormPlayer();
+	void TakeParrying();
 
 	UFUNCTION(BlueprintCallable)
 	void PlayerHitReset();
