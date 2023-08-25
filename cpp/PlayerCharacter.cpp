@@ -2,6 +2,7 @@
 
 
 #include "PlayerCharacter.h"
+#include "EnemyCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -325,6 +326,23 @@ void APlayerCharacter::BlockStart()
 {
 	if (!(GetCharacterMovement()->IsFalling()))
 	{
+		if (!CanUseParrying)
+		{
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) <= 0)
+			{
+				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))); 
+				CanUseParrying = true;
+
+				FTimerHandle ParryingEndHandle;
+				GetWorld()->GetTimerManager().SetTimer(ParryingEndHandle, FTimerDelegate::CreateLambda([&]()
+					{
+						GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying")));
+
+						// 타이머 초기화
+						GetWorld()->GetTimerManager().ClearTimer(ParryingEndHandle);
+					}), InDelayTime, false); 
+			}
+		}
 		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
 		{
 			MakeTagAndActive("Player.Block");
@@ -337,6 +355,7 @@ void APlayerCharacter::BlockEnd()
 {
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
 	{
+		CanUseParrying = false;
 		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock")));
 		ArmBarrier->BarrierOff();
 	}
@@ -384,16 +403,28 @@ void APlayerCharacter::TakeDamageFromEnemy()
 		{
 			float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw);
 			bool CheakBlock = UKismetMathLibrary::BooleanOR(BlockAbleRot > 150.f, BlockAbleRot < -150.f);
+			AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator());
 
-			UE_LOG(LogTemp, Warning, TEXT("%f"), 360.f - FMath::Abs(BlockAbleRot));
 			if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Block"));
-				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Parrying"));
+					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
+					AttackedEnemy->TakeParrying();
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Block"));
+					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+				}
+				
 			}
 			else
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Hit"));
+				//GetAbilitySystemComponent()->GetOwnedGameplayTags;
+
 				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
 			}
 		}
@@ -401,6 +432,12 @@ void APlayerCharacter::TakeDamageFromEnemy()
 	}
 	else
 	{
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo1")));
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo2")));
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo3")));
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo4")));
+		GetAbilitySystemComponent()->CancelAbilities();
+
 		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
 	}
 
