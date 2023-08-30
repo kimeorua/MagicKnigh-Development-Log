@@ -362,3 +362,4 @@
 ### HP감소 및 체간 획득 시스템 변경
 + #### HP, 체간, EF Attribute값에 집적 수정하는 것이 아닌, Damage, ChargeEF, PostrueUP Attribute를 작성 후, 해당 Attribute에 값이 설정되면 변경되는 형식으로 변경함.
 + #### 후에 GameplayEffectCalculate를 통해 무기 또는 스킬마다 다른 데미지 및 체간 상승을 위하여 변경을 함.
++ #### 해당 방식은 공격 성공시 EF 충전에도 같은 방식을 적용
