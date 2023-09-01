@@ -30,21 +30,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Patrol", meta = (AllowPrivateAccess = "true"))
 	TArray <class ATargetPoint*> PatrolPoints; // 순찰할 패트롤 포인트
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Patrol", meta = (AllowPrivateAccess = "true"))
-	FVector StartPoint; //처음 위치
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Patrol", meta = (AllowPrivateAccess = "true"))
-	int PointNum; //순찰할 장소 숫자
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-	FName AnimSection;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-	bool bIsFristAttack = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* HitCollision;
 
+	// 0 -> Hit Effect, 1-> TakeDamage(Attack) 2-> ParryingAble
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
 	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 데미지용 이펙트들(에디터 설정)
 
@@ -75,27 +64,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FHitResult CheakCollision(EAttackCollisionType Type, float Range);
 
-	UFUNCTION(BlueprintCallable)
-	TArray<FVector> GetPatrolPoints() const;
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE FVector GetStartPoint() const { return StartPoint; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE int GetPatrolPointNum() const { return PointNum; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetPatrolPointNum(int Num) { PointNum = Num; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE FName GetAnimSection() const { return AnimSection; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetAnimSection(FName SectionName) { AnimSection = SectionName; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE bool GetIsFristAttack() const { return bIsFristAttack; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetIsFristAttack(bool Cheack) { bIsFristAttack = Cheack; }
+	FORCEINLINE TArray <class ATargetPoint*> GetPatrolPoint() const { return PatrolPoints; }
 };

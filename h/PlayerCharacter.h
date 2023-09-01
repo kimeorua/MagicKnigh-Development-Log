@@ -68,6 +68,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* BlockAction;
 
+	// 락온 입력 Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* LockOnAction;
+
 	//시점 회전 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float LookRate = 0.35f;
@@ -108,17 +112,27 @@ private:
 
 	//----------------------------------------------------------------------무기-----------------------------------------------------------------------\\
 
+	// 0-> Hit Effect,  1 -> Block Effect, 2-> Parrying Effect, 3-> EF Charge Effect
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
-	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 데미지용 이펙트들(에디터 설정)
+	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 전투 용 이펙트들(에디터 설정)
 
 	bool CanUseParrying = false;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
 	float InDelayTime = 0.5;
 
+	//-------------- Lock On ---------------//
+
+	class AEnemyCharacter* LockOnEnemy = nullptr;
+	bool bUseLockOn = false;
+
+	//-------------- Lock On ---------------//
+
 public:
 	// 생성자
 	APlayerCharacter();
+
+	void Tick(float DeltaTime) override;
 
 	void PlayerSetup();
 
@@ -131,6 +145,7 @@ public:
 	//------------------------ 카메라 및 SpringArm 반환 ------------------------//
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE bool GetUseLockOn() const { return bUseLockOn; }
 	//--------------------------------------------------------------------------------//
 	
 	UFUNCTION(BlueprintCallable)
@@ -180,4 +195,8 @@ public:
 	void WeaponEquip(FName EquipSocketName, AWeapon* Weapon);
 
 	void TakeDamageFromEnemy(); //적이 공격하여 피격 될시 GameplayEffect 호출
+	void EFCharge();
+
+	//락온 기능 사용
+	void LockOn();
 };

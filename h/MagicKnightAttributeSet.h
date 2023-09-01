@@ -45,6 +45,15 @@ public:
 	UFUNCTION()
 	virtual void OnRep_MaxElementalForce(FGameplayAttributeData& OldMaxElementalForce);
 
+	UFUNCTION()
+	virtual void OnRep_Damage(FGameplayAttributeData& OldDamage);
+
+	UFUNCTION()
+	virtual void OnRep_ChargeEF(FGameplayAttributeData& OldChargeEF);
+
+	UFUNCTION()
+	virtual void OnRep_PostureUp(FGameplayAttributeData& OldPostureUp);
+
 	void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data); // 속성의 기본 값을 수정하기 위해 GameplayEffect가 실행되기 직전에 호출됩니다
 
 	//-------------------------------------변수--------------------------------------------------//
@@ -78,4 +87,20 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData MaxElementalForce = 100.f;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, MaxElementalForce)
+
+	//받은 데미지(Damage)
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, Damage)
+
+	//플레이어가 공격 시 획득하는 원소력(ChargeEF)
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData ChargeEF;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, ChargeEF)
+
+	//피격 시 얻는 체간
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData PostureUp;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, PostureUp)
+
 };
