@@ -110,6 +110,7 @@ FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range = 0.f)
 		{
 			HitEnemys.Add(Cast<AEnemyCharacter>(OutHit.GetActor()));
 			HitEnemys[0]->TakeDamgeFormPlayer();
+			Cast<APlayerCharacter>(GetOwner())->EFCharge();
 		}
 		else if(!HitEnemys.IsEmpty())
 		{

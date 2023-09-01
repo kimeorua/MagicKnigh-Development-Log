@@ -23,7 +23,6 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 	Controller = Cast<AEnemyAIController>(GetController());
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-	StartPoint = GetActorLocation();
 }
 
 void AEnemyCharacter::Tick(float DeltaTime)
@@ -44,7 +43,7 @@ void AEnemyCharacter::LosePlayer()
 void AEnemyCharacter::TakeDamgeFormPlayer()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Hit"));
-
+	//UE_LOG(LogTemp, Warning, TEXT("Hit"));
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
@@ -53,16 +52,6 @@ void AEnemyCharacter::TakeDamgeFormPlayer()
 	{
 		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
-}
-
-TArray<FVector> AEnemyCharacter::GetPatrolPoints() const
-{
-	TArray<FVector>PatrolPointsArr;
-	for (ATargetPoint* Point : PatrolPoints)
-	{
-		PatrolPointsArr.Add(Point->GetActorLocation());
-	}
-	return PatrolPointsArr;
 }
 
 FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Range)

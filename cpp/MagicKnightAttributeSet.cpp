@@ -24,6 +24,22 @@ void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	{
 		SetPosture(FMath::Clamp(GetPosture(), 0.f, GetMaxPosture()));
 	}
+	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth() - Damage.GetCurrentValue(), 0.f, GetMaxHealth()));
+		SetPosture(FMath::Clamp(GetPosture() + Damage.GetCurrentValue() * 1.2f, 0.f, GetMaxPosture()));
+		Damage = 0.f;
+	}
+	else if (Data.EvaluatedData.Attribute == GetChargeEFAttribute())
+	{
+		SetElementalForce(FMath::Clamp(GetElementalForce() + ChargeEF.GetCurrentValue(), 0, GetMaxElementalForce()));
+		ChargeEF = 0.f;
+	}
+	else if (Data.EvaluatedData.Attribute == GetPostureUpAttribute())
+	{
+		SetPosture(FMath::Clamp(GetPosture() + PostureUp.GetCurrentValue(), 0, GetMaxPosture()));
+		PostureUp = 0.f;
+	}
 }
 
 void UMagicKnightAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -36,6 +52,8 @@ void UMagicKnightAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, MaxElementalForce, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, Posture, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, MaxPosture, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, Damage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, ChargeEF, COND_None, REPNOTIFY_Always);
 }
 
 void UMagicKnightAttributeSet::OnRep_Health(FGameplayAttributeData& OldHealth)
@@ -66,4 +84,19 @@ void UMagicKnightAttributeSet::OnRep_ElementalForce(FGameplayAttributeData& OldE
 void UMagicKnightAttributeSet::OnRep_MaxElementalForce(FGameplayAttributeData& OldMaxElementalForce)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, MaxElementalForce, OldMaxElementalForce);
+}
+
+void UMagicKnightAttributeSet::OnRep_Damage(FGameplayAttributeData& OldDamage)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, Damage, OldDamage);
+}
+
+void UMagicKnightAttributeSet::OnRep_ChargeEF(FGameplayAttributeData& OldChargeEF)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, ChargeEF, OldChargeEF);
+}
+
+void UMagicKnightAttributeSet::OnRep_PostureUp(FGameplayAttributeData& OldPostureUp)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, PostureUp, OldPostureUp);
 }

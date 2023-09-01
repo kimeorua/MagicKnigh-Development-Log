@@ -17,6 +17,8 @@ const FName AEnemyAIController::CanSeePlayer(TEXT("CanSeePlayer"));
 const FName AEnemyAIController::Player(TEXT("Player"));
 const FName AEnemyAIController::SelfActor(TEXT("SelfActor"));
 const FName AEnemyAIController::Distance(TEXT("Distance"));
+const FName AEnemyAIController::TargetLocation(TEXT("TargetLocation"));
+const FName AEnemyAIController::PatrolNum(TEXT("PatrolNum"));
 
 
 AEnemyAIController::AEnemyAIController()

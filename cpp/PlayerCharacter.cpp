@@ -43,6 +43,19 @@ APlayerCharacter::APlayerCharacter()
 	Sword = nullptr;
 	CurrentWeapon = nullptr;
 	BlockAction = nullptr;
+	bUseLockOn = false;
+}
+
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (IsValid(LockOnEnemy)) //락온 판정 성공시, 카메라를 락온할 객체에 고정, 상하 시점 변경만 가능 하도록 구현
+	{
+		FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockOnEnemy->GetActorLocation());
+		FRotator LockOnRotation = FRotator (GetController()->GetControlRotation().Pitch, LookAt.Yaw, LookAt.Roll);
+		GetController()->SetControlRotation(LockOnRotation);
+	}
 }
 
 void APlayerCharacter::PlayerSetup()
@@ -88,8 +101,8 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
-
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) 
+	{
 		//Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Completed, this, &APlayerCharacter::MoveEnd);
@@ -118,6 +131,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		//방어 사용
 		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Triggered, this, &APlayerCharacter::BlockStart);
 		EnhancedInputComponent->BindAction(BlockAction, ETriggerEvent::Completed, this, &APlayerCharacter::BlockEnd);
+
+		//Lock On 사용
+		EnhancedInputComponent->BindAction(LockOnAction, ETriggerEvent::Started, this, &APlayerCharacter::LockOn);
 	}
 }
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -276,7 +292,29 @@ void APlayerCharacter::Dodge()
 	{
 		if (!(GetCharacterMovement()->IsFalling()))
 		{
-			MakeTagAndActive("Player.Dodge.Rolling");
+			if (bUseLockOn)
+			{
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd"))) > 0)
+				{
+					MakeTagAndActive("Player.Dodge.Rolling");
+				}
+				else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd"))) > 0)
+				{
+					MakeTagAndActive("Player.Dodge.Rolling.Bwd");
+				}
+				else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft"))) > 0)
+				{
+					MakeTagAndActive("Player.Dodge.Rolling.Left");
+				}
+				else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight"))) > 0)
+				{
+					MakeTagAndActive("Player.Dodge.Rolling.Right");
+				}
+			}
+			else if (!bUseLockOn)
+			{
+				MakeTagAndActive("Player.Dodge.Rolling");
+			}
 		}
 	}
 }
@@ -391,6 +429,17 @@ void APlayerCharacter::WeaponEquip(FName EquipSocketName, AWeapon* Weapon)
 	}
 }
 
+// 이미 장착된 무기를 제거 후 안보이는 곳으로 이동
+void APlayerCharacter::WeaponUnequip()
+{
+	if (CurrentWeapon != nullptr)
+	{
+		CurrentWeapon->SetOwner(CurrentWeapon);
+		CurrentWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+		CurrentWeapon->SetActorLocation(FVector(0.f));
+	}
+}
+
 void APlayerCharacter::TakeDamageFromEnemy()
 {
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
@@ -423,8 +472,6 @@ void APlayerCharacter::TakeDamageFromEnemy()
 			else
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Hit"));
-				//GetAbilitySystemComponent()->GetOwnedGameplayTags;
-
 				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
 			}
 		}
@@ -447,13 +494,64 @@ void APlayerCharacter::TakeDamageFromEnemy()
 	}
 }
 
-// 이미 장착된 무기를 제거 후 안보이는 곳으로 이동
-void APlayerCharacter::WeaponUnequip()
+void APlayerCharacter::EFCharge()
 {
-	if (CurrentWeapon != nullptr)
+	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+	FGameplayEffectSpecHandle SpecHandle;
+	SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[3], 1, EffectContext);
+
+	if (SpecHandle.IsValid())
 	{
-		CurrentWeapon->SetOwner(CurrentWeapon);
-		CurrentWeapon->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
-		CurrentWeapon->SetActorLocation(FVector(0.f));
+		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+	}
+}
+
+void APlayerCharacter::LockOn()
+{
+	if (LockOnEnemy != nullptr) //락온 해제
+	{
+		LockOnEnemy = nullptr;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->bUseControllerDesiredRotation = false;
+		bUseLockOn = false;
+	}
+	else if (LockOnEnemy == nullptr) //락온 작동
+	{
+		FVector Start = GetActorLocation();
+		FVector End = GetActorLocation() + (UKismetMathLibrary::GetForwardVector(GetControlRotation()) * 500.f);
+		TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
+		TraceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+		TArray<AActor*> ActorsToIgnore;
+		ActorsToIgnore.Add(GetOwner());
+		ActorsToIgnore.Add(ArmBarrier);
+		ActorsToIgnore.Add(Sword);
+		FHitResult OutHit;
+		bool bResult;
+
+		bResult = UKismetSystemLibrary::SphereTraceSingle
+		(
+			GetWorld(),
+			Start,
+			End,
+			125.f,
+			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel4),
+			false,
+			ActorsToIgnore,
+			EDrawDebugTrace::ForDuration,
+			OutHit,
+			true
+		);
+
+		if (bResult)
+		{
+			LockOnEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
+			if (LockOnEnemy)
+			{
+				GetCharacterMovement()->bOrientRotationToMovement = false;
+				GetCharacterMovement()->bUseControllerDesiredRotation = true;
+				bUseLockOn = true;
+			}
+		}
 	}
 }

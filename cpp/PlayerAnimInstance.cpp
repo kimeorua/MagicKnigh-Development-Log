@@ -23,6 +23,7 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		Direction = UKismetAnimationLibrary::CalculateDirection(Player->GetVelocity(), Player->GetActorRotation());
 		EquipedWeapon = CheackWeaponTag();
 		IsBlock = CheackUseBlock();
+		bLockOn = Player->GetUseLockOn();
 	}
 }
 
