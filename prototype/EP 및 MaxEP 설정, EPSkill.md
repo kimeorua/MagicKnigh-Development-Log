@@ -26,4 +26,4 @@ void UCharacterAttributeSetBase::OnRep_MaxEP(const FGameplayAttributeData& OldMa
 ```
 
 + ### EPSkills Ability블루프린트를 만들어서, 기초적인 EP수치 확인과, 작동을 구현 함.
-![](./img/특수스킬기초.PNG)
+![](https://github.com/kimeorua/kimeorua.github.io/blob/main/img/%ED%8A%B9%EC%88%98%EC%8A%A4%ED%82%AC%EA%B8%B0%EC%B4%88.PNG?raw=true)
