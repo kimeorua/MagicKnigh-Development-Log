@@ -203,7 +203,7 @@
 ### 06/26 ~ 06/30 프로토타입에서 발견된 문제점 고찰 및 개선
 + ### [06/26 프로토타입에서 발견된 문제점 고찰](#프로토타입에서-발견된-문제점-고찰-및-개선)
 + ### 06/27 플레이어 행동 및 상태Tag 정의 및 정리(기초)
-+ ### [06/28 프로젝트 재생성 및 기초 캐릭터 클래스(BaseCharacter)및 플레이어 캐릭터(PlayerCharacter)구현, GameplayAbilitySystem, 향상된 입력 적용](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%B2%A0%EC%9D%B4%EC%8A%A4%2C%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%BA%90%EB%A6%AD%ED%84%B0%EA%B8%B0%EC%B4%88.md)
++ ### [06/28 프로젝트 재생성 및 기초 캐릭터 클래스(BaseCharacter)및 플레이어 캐릭터(PlayerCharacter)구현], [GameplayAbilitySystem](https://github.com/kimeorua/portfolio/blob/main/Upgrade/GAS.md), 향상된 입력 적용(https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%B2%A0%EC%9D%B4%EC%8A%A4%2C%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%BA%90%EB%A6%AD%ED%84%B0%EA%B8%B0%EC%B4%88.md)
 + ### [06/29 - 06/30 기본 걷기, 달리기, 대기상태 애니메이션 리타겟팅 및 달리기 구현, 해당 행동, 상태에 따른 GameplayTag 부착 및 제거 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EA%B8%B0%EB%B3%B8%20%EC%9B%80%EC%A7%81%EC%9E%84.md)
 
 ### 07/03 ~ 07/07
@@ -240,27 +240,27 @@
 + ### [08/08 공격 Overlap판정 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%9D%BC%EB%B0%98%EA%B3%B5%EA%B2%A9%20Overlap%ED%8C%90%EC%A0%95%20%EA%B5%AC%ED%98%84.md)
 + ### [08/09 공격 판정 변경](#공격-판정-변경) 및 [적중 시 적 캐릭터의 HP 감소 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/Enemy%20%EB%8D%B0%EB%AF%B8%EC%A7%80%20%EB%B0%9B%EC%9D%8C.md)
 + ### [08/10 공격 판정 개선](#공격-판정-개선)
-+ ### 08/11 일반공격 적중시 적 피격 모션 출력 구현
++ ### [08/11 일반공격 적중시 적 피격 모션 출력 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%ED%94%BC%EA%B2%A9%EB%AA%A8%EC%85%98.md)
 
 ### 08/14 ~ 08/18
-+ ### 08/14 무기 중심 범위 스킬 및 플레이어 중심 범위 스킬 Collision 구현 및 적HP 감소 적용
-+ ### 08/16 적 캐릭터의 공격 판정 구현 및 플레이어 HP 감소 구현
-+ ### 08/17 플레이어 피격 모션 구현
-+ ### 08/18 플레어 방어 구현 및 체간 구현, 코드 업로드
++ ### [08/14 무기 중심 범위 스킬 및 플레이어 중심 범위 스킬 Collision 구현 및 적HP 감소 적용](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EA%B3%B5%EA%B2%A9%20%ED%8C%90%EC%A0%95%20%EC%A2%85%EB%A5%98%20%EC%B6%94%EA%B0%80.md)
++ ### 08/16 적 캐릭터의 공격 판정 구현 및 플레이어 HP 감소 구현(플레이어의 기본 공격 판정과 동일, HP 감소도 동일한 방식의 Effect를 사용함.)
++ ### 08/17 플레이어 피격 모션 구현(적 피격 모션과 동일한 방식)
++ ### [08/18 플레이어 및 적 체간 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EB%B0%8F%20%EC%A0%81%20%EC%B2%B4%EA%B0%84.md), 코드 업로드
 
 ### 08/21 ~ 08/25
-+ ### 08/21 방어 피격 모션 및 패링 판정 구현
-+ ### 08/22 페링 모션 및 적 체간 상승 구현
-+ ### 08/23 피격후 공격 불가 현상 수정
++ ### [08/21 방어 피격 모션 및 패링 판정 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%B0%A9%EC%96%B4%20%EB%B0%8F%20%ED%8E%98%EB%A7%81%20%ED%8C%90%EC%A0%95.md)
++ ### [08/22 페링 모션 및 적 체간 상승 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%EC%B2%B4%EA%B0%84%20%EC%83%81%EC%8A%B9.md)
++ ### [08/23 피격후 공격 불가 현상 수정](#피격후-공격-불가-현상-수정)
 + ### 08/24 피격 및 방어, 페링시 사운드 & 파티클 출력
 + ### 08/25 코드 업로드
 
 ### 08/28 ~ 09/01
-+ ### 08/28 락온 기능 구현
-+ ### 08/29 락온 중 이동 및 회피 변경 -> 좌우 이동 시, 정면을 바라보도록 변경, 회피 시 해당 방향키 방향으로 구르는 애니메이션 추가
-+ ### 08/30 플레이어가 공격 성공 시 EF 충전구현, HP감소 및 체간 획득 시스템 변경
-+ ### 08/31 필요없는 c++ 클래스 제거 및 적 캐릭터AI 재 구상
-+ ### 09/01 AI Patrol 개선 및 코드 업로드
++ ### [08/28 락온 기능 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%9D%BD%EC%98%A8%EA%B8%B0%EB%8A%A5.md)
++ ### 08/29 락온 중 이동 및 회피 변경 (좌우 이동 시, 정면을 바라보도록 변경, 회피 시 해당 방향키 방향으로 구르는 애니메이션 추가)
++ ### [08/30 플레이어가 공격 성공 시 EF 충전구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/EF%EC%B6%A9%EC%A0%84.md), [HP감소 및 체간 획득 시스템 변경](https://github.com/kimeorua/portfolio/blob/main/Upgrade/HP%EB%B0%8F%20%EC%B2%B4%EA%B0%84%20%EA%B3%84%EC%82%B0%20%EB%B3%80%EA%B2%BD.md)
++ ### 08/31 필요없는 c++ 클래스 제거 및 [적 캐릭터AI 재 구상](적-캐릭터-AI-재구상)
++ ### 09/01 [AI Patrol 변경](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%20Patrol%EB%B3%80%EA%B2%BD.md) 및 코드 업로드
 
 ### 09/04 ~ 09/08
 + ### 09/04 AI 플레이어 추격 재 적용
@@ -345,13 +345,8 @@
 + #### 플레이어가 피격 된후, 공격버튼을 눌러도 공격이 작동 하지 않는 문제 발생
 + #### 분석 결과 피격이 되었어도, 현제 작동중인 공격 Ability가 중지 되지 않고, Tag또한 부착 된상태로 유지되는 것을 확인
 + #### 피격후 Tag 제거 및 Ability 작동 중지를 추가함
-  
-### HP감소 및 체간 획득 시스템 변경
-+ #### HP, 체간, EF Attribute값에 집적 수정하는 것이 아닌, Damage, ChargeEF, PostrueUP Attribute를 작성 후, 해당 Attribute에 값이 설정되면 변경되는 형식으로 변경함.
-+ #### 후에 GameplayEffectCalculate를 통해 무기 또는 스킬마다 다른 데미지 및 체간 상승을 위하여 변경을 함.
-+ #### 해당 방식은 공격 성공시 EF 충전에도 같은 방식을 적용
 
-### 적 캐릭터 AI 재 구상
+### 적 캐릭터 AI 재구상
 + #### 게임을 플레이하면서 적 캐릭터의AI패턴이 기획한 전투와 다른 모습을 띄어 변경 하도록 함.
 + #### 문제점: 패턴과 패턴사이의 간극이 너무 짧음, 적 캐릭터가 피격 후 매우 빠른속도로 반격을 하기에 플레이어가 공격을 할 여유가 없음, AI구성이 복잡하여 후에 추가 및 변경이 곤란함.
 + #### AI 재 구성을 위한 예시자료 및 영상을 확인하여, 기초부터 다시 작성할 예정
