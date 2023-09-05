@@ -140,7 +140,7 @@ void AEnemyController::SetPerceptionSystem()
 
 비헤이비어 트리
 
-![](https://github.com/kimeorua/kimeorua.github.io/blob/main/img/%ED%8A%B8%EB%A6%AC2.png?raw=true)
+![](https://github.com/kimeorua/kimeorua.github.io/blob/main/img/%ED%8A%B8%EB%A6%AC.PNG?raw=true)
 
 + #### RandomPatrol: 맵상의 랜덤 좌표를 지정하여, 블랙보드에 기입.
 
