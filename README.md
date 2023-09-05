@@ -49,7 +49,7 @@
 
 ### 4-1 플러그인 설명
 + #### Enhanced Input(향상된 입력): 복잡한 입력 처리, 런타임 컨트롤 리매핑 등 더욱 향상된 입력 기능, 방사상 데드존(dead zone), 조합 액션(chorded action), 컨텍스트에 따른 입력, 우선순위 지정 등의 기능과 에셋 기반 환경에서 원시 입력 데이터의 필터링 및 처리를 확장할 수 있는 능력을 제공함
-+ ### GameplayAbilitySystem: 게임플레이 어빌리티 시스템(Gameplay Ability System) 은 RPG나 MOBA 타이틀에서 볼 수 있는 어빌리티 및 어트리뷰트 유형을 구축하기 위한 고도로 유연한 프레임워크, 제작하는 게임에선 스킬과 기본적인 HP 같은 스텟을 정의하고, GameplayTag를 통해 제어하여, 사용할 것
++ #### GameplayAbilitySystem: 게임플레이 어빌리티 시스템(Gameplay Ability System) 은 RPG나 MOBA 타이틀에서 볼 수 있는 어빌리티 및 어트리뷰트 유형을 구축하기 위한 고도로 유연한 프레임워크, 제작하는 게임에선 스킬과 기본적인 HP 같은 스텟을 정의하고, GameplayTag를 통해 제어하여, 사용할 것
   
 ## 5 게임 흐름 및 클래스 구조
 
