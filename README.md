@@ -108,7 +108,7 @@
 + ### [01/09 캐릭터 후방 이동속도 감소](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%BA%90%EB%A6%AD%ED%84%B0%20%ED%9B%84%EB%B0%A9%20%EC%9D%B4%EB%8F%99%EC%86%8D%EB%8F%84%20%EA%B0%90%EC%86%8C.md) 
 + ### [01/10 캐릭터 달리기 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%8C%80%EC%89%AC.md)
 + ### [01/11 ~ 01/12 캐릭터 회피 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%BA%90%EB%A6%AD%ED%84%B0%20%ED%9A%8C%ED%94%BC%20%EA%B5%AC%ED%98%84.md)
-+ ### 01/13 ~ 01/15 회피 개선
++ ### [01/13 ~ 01/15 회피 개선](#회피-오류-및-개선)
 + ### [01/16 캐릭터에 방패 부착](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%B0%A9%ED%8C%A8%20%EB%B6%80%EC%B0%A9.md)
 + ### [01/17 방어 애니메이션 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%B0%A9%EC%96%B4%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98.md)
 
@@ -288,13 +288,13 @@
 + #### 해결 사용할려는 애니메이션에 제일 비슷한 구조를 가진 pragon에셋을 사용하도록 결정, 추가로 프로젝트 파일 정리 실시.
 ---
 
-### 회피 시점 오류 발생(01/13) -> 1차 개선(01/13) -> 2차 오류 발생(01/14) -> 2차 개선(01/15)
+### 회피 오류 및 개선
 + #### 문제점: 회피하면서 카메라 시점을 회전하면 캐릭터도 그에 맞게 회전됨 -> 후에 Idle 상태를 추가하여 이동 입력이 들어오면 Move로 바꾸고 이 경우에만 카메라 시점이 회전하면 캐릭터가 회전 하도록 수정 해볼 것
-+ #### 1차 개선: Enum에 Idle 상태를 추가하여 Move(이동), Dodge(회피), Idle(대기)3가지의 상태를 만들어 각각 해당하는 입력에 따라 캐릭터의 bUseRotatuonYaw값을 수정 하도록 설계
++ #### 1차 개선(01/13): Enum에 Idle 상태를 추가하여 Move(이동), Dodge(회피), Idle(대기)3가지의 상태를 만들어 각각 해당하는 입력에 따라 캐릭터의 bUseRotatuonYaw값을 수정 하도록 설계
 
-### 2차 오류 발생
-+ #### 문제점: 회피는 BindAction이고 움직임은 BindAxis라 서로 작동 방식이 미세하게 다름, 따라서 움직임키에 BindAction할 이벤트를 새로 작성하여 구현, Move -> Dodge -> Idel의 상태 변화에는 성공 하였음, 그러나 회피후 이동 키를 다시 한번 눌러야 하는 점이나, 사선 이동 -> 직선 이동으로 변경시 이동이 끊기는 상황이 생겨, 해당 안은 폐기함
-+ #### 2차 개선(01/15): Enum에 따로 추가하지않고 기본상태를 Move로, 회피 시에만 Dodge상태로 바꾸며 이때 직접적으로, bUseRotatuonYaw값을 수정하여 회피시에 카메라 회전에 따라 캐릭터의 이동을 막음 -> 생각한 이동 방식 적합하다고 판단하여 해당 방식으로 구현함
+### 2차 오류 발생(01/14)
++ #### 문제점: 회피는 BindAction이고 움직임은 BindAxis라 서로 작동 다름, 따라서 움직임키에 BindAction할 이벤트를 새로 작성하여 구현, Move -> Dodge -> Idel의 상태 변화에는 성공 하였음, 그러나 회피후 이동 키를 다시 한번 눌러야 하는 점이나, 사선 이동 -> 직선 이동으로 변경시 이동이 끊기는 상황이 생겨, 해당 안은 폐기함
++ #### 2차 개선(01/14): Enum에 따로 추가하지않고 기본상태를 Move로, 회피 시에만 Dodge상태로 바꾸며 이때 직접적으로, bUseRotatuonYaw값을 수정하여 회피시에 카메라 회전에 따라 캐릭터의 이동을 막음 -> 생각한 이동 방식 적합하다고 판단하여 해당 방식으로 구현함
 
 #### 클래스 개선(01/15)
 + #### MainCharacter.h에 있던 ENum을 MainState에서 MoveState로 이름을 변경, BaseCharacter.h로 위치를 이동
