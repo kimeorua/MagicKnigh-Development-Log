@@ -18,16 +18,16 @@ FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range = 0.f)
 	FHitResult OutHit; //Hit 결과 구조체
 	bool bResult; // 판정 성공여부
 
-  bResult = UKismetSystemLibrary::LineTraceSingle(
-  GetWorld(),
-  Start,
-  End,
-  UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
-  false,
-  ActorsToIgnore,
-  EDrawDebugTrace::ForDuration,
-  OutHit,
-  true);
+	bResult = UKismetSystemLibrary::LineTraceSingle(
+	GetWorld(),
+	Start,
+	End,
+	UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
+	false,
+	ActorsToIgnore,
+	EDrawDebugTrace::ForDuration,
+	OutHit,
+	true);
 
 	if (bResult)
 	{
