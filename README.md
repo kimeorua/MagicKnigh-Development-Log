@@ -207,7 +207,7 @@
 + ### 06/29 - 06/30 [기본 걷기, 달리기, 대기상태 애니메이션 리타겟팅 및 달리기 구현, 해당 행동, 상태에 따른 GameplayTag 부착 및 제거 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EA%B8%B0%EB%B3%B8%20%EC%9B%80%EC%A7%81%EC%9E%84.md)
 
 ### 07/03 ~ 07/07
-+ ### 07/03 플레이어 캐릭터 회피 작동 개선
++ ### 07/03 플레이어 캐릭터 회피 작동 개선(https://github.com/kimeorua/portfolio/edit/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%ED%9A%8C%ED%94%BC%20%EA%B0%9C%EC%84%A0.md)
 + ### 07/04 무기 시스템 재 구상 및 정리
 + ### 07/05 플레이어 무기 소환 및 장착 구현
 + ### 07/06 무기 장착시 애니메이션 변화 재 구현
