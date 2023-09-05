@@ -155,8 +155,6 @@ void AEnemyAIController::OnTargetDetected(AActor* actor, FAIStimulus const Stimu
 			}
 			GetBlackboardComponent()->SetValueAsObject(Player, PlayerPawn);
 			Enemy->FindPlayer(); //이동속도 증가 함수
-
-			SetFocus(PlayerPawn); //적 캐릭터가 플레이어를 바라봄
 		}
 		else
 		{
@@ -169,8 +167,6 @@ void AEnemyAIController::OnTargetDetected(AActor* actor, FAIStimulus const Stimu
 			// 플레이어가 감지 범위 밖으로 나갔거나, 감지 하지 않은 것이므로 Player에 nullptr저장 및 이동속도 감소
 			GetBlackboardComponent()->SetValueAsObject(Player, nullptr);
 			Enemy->LosePlayer(); //이동속도 원복 함수
-
-			ClearFocus(EAIFocusPriority::Gameplay); // 적 캐릭터가 플레이어를 바라보지 않음
 		}
 	}
 }
