@@ -203,8 +203,8 @@
 ### 06/26 ~ 06/30 프로토타입에서 발견된 문제점 고찰 및 개선
 + ### [06/26 프로토타입에서 발견된 문제점 고찰](#프로토타입에서-발견된-문제점-고찰-및-개선)
 + ### 06/27 플레이어 행동 및 상태Tag 정의 및 정리(기초)
-+ ### 06/28 프로젝트 재생성 및 기초 캐릭터 클래스(BaseCharacter)및 플레이어 캐릭터(PlayerCharacter)구현, GameplayAbilitySystem, 향상된 입력 적용
-+ ### 06/29 - 06/30 기본 걷기, 달리기, 대기상태 애니메이션 리타겟팅 및 달리기 구현, 해당 행동, 상태에 따른 GameplayTag 부착 및 제거 구현
++ ### 06/28 프로젝트 재생성 및 기초 캐릭터 클래스(BaseCharacter)및 플레이어 캐릭터(PlayerCharacter)구현, GameplayAbilitySystem, 향상된 입력 적용(https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%B2%A0%EC%9D%B4%EC%8A%A4%2C%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%BA%90%EB%A6%AD%ED%84%B0%EA%B8%B0%EC%B4%88.md)
++ ### 06/29 - 06/30 기본 걷기, 달리기, 대기상태 애니메이션 리타겟팅 및 달리기 구현, 해당 행동, 상태에 따른 GameplayTag 부착 및 제거 구현(https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EA%B8%B0%EB%B3%B8%20%EC%9B%80%EC%A7%81%EC%9E%84.md)
 
 ### 07/03 ~ 07/07
 + ### 07/03 플레이어 캐릭터 회피 작동 개선
