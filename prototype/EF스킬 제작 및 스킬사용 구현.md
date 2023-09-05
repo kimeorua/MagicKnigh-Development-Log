@@ -1,5 +1,5 @@
-### EP스킬 제작 및 스킬사용 구현(03/21)
-+ #### Weapon class에 EPSkill 몽타주를 변수로 할당하고, EPSkills Ability에서 조건에 부합할시, 해당 무기의, EPSkill을 사용하도록 구현함.
+### EF스킬 제작 및 스킬사용 구현(03/21)
++ #### Weapon class에 EFSkill 몽타주를 변수로 할당하고, EFSkills Ability에서 조건에 부합할시, 해당 무기의, EFSkill을 사용하도록 구현함.
 
 ### Ability 사용을위한 조건문 코드 개선 및 방패 효과 추가(03/22)
 + #### Ability 사용을위한 조건문 코드 개선: 기존 블루프린트에서 조건을 확인하는 작업을 C++로 구현하여, 보기 쉽개 정리함.
