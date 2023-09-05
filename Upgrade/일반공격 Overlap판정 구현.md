@@ -8,7 +8,7 @@
 + #### HitArrReset()함수는 공격 판정이 끝나는 부분에서 호출 되도록 함.
 
 ```cpp
-FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range = 0.f)
+FHitResult AWeapon::CheakCollision(EAttackCollisionType Type)
 {
 	FVector Start = Mesh->GetSocketLocation(CollisionStartSocket); //시작 점
 	FVector End = Mesh->GetSocketLocation(CollisionEndSocket); //끝 점
