@@ -107,10 +107,10 @@
 ### 01/09 ~ 01/17
 + ### [01/09 캐릭터 후방 이동속도 감소](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%BA%90%EB%A6%AD%ED%84%B0%20%ED%9B%84%EB%B0%A9%20%EC%9D%B4%EB%8F%99%EC%86%8D%EB%8F%84%20%EA%B0%90%EC%86%8C.md) 
 + ### [01/10 캐릭터 달리기 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%8C%80%EC%89%AC.md)
-+ ### 01/11 ~ 01/12 [캐릭터 회피 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%BA%90%EB%A6%AD%ED%84%B0%20%ED%9A%8C%ED%94%BC%20%EA%B5%AC%ED%98%84.md)
++ ### [01/11 ~ 01/12 캐릭터 회피 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%BA%90%EB%A6%AD%ED%84%B0%20%ED%9A%8C%ED%94%BC%20%EA%B5%AC%ED%98%84.md)
 + ### 01/13 ~ 01/15 회피 개선
-+ ### 01/16 [캐릭터에 방패 부착](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%B0%A9%ED%8C%A8%20%EB%B6%80%EC%B0%A9.md)
-+ ### 01/17 [방어 애니메이션 구현]
++ ### [01/16 캐릭터에 방패 부착](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%B0%A9%ED%8C%A8%20%EB%B6%80%EC%B0%A9.md)
++ ### [01/17 방어 애니메이션 구현]
 
 ### 01/25 ~ 01/27
 + ### 01/25 무기 장착 구현
