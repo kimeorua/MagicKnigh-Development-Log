@@ -149,42 +149,37 @@
 
 ### 03/28 ~ 03/31
 + ### [03/28 기본EnemyClass 제작 및 이동 애니메이션, 기초 스텟 설정](https://github.com/kimeorua/portfolio/blob/main/prototype/EnemyClass%20%EC%A0%9C%EC%9E%91.md)
-+ ### [03/29 Enemy RandomPatrol 구현]()
-+ ### [03/30 플레이어 추적 구현]
++ ### [03/29 Enemy RandomPatrol 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/Enemy%20RandomPatrol.md)
++ ### [03/30 플레이어 추적 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%B6%94%EC%A0%81%20%EA%B5%AC%ED%98%84.md)
 
 ### 04/03 ~ 04/07
-+ ### 04/03 충돌처리 방식 고안
-+ ### 04/04 스킬 충돌 및 데미지 판정
-+ ### 04/05 일반공격 Ability 재 구현 및 데미지 판정
-+ ### 04/06 Enemy 피격모션 구현
-+ ### 04/07 콤보 공격 개선
++ ### [04/03 충돌처리 방식 고안](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%B6%A9%EB%8F%8C%20%EC%B2%98%EB%A6%AC%20%EB%B0%A9%EC%8B%9D%20%EA%B3%A0%EC%95%88.md)
++ ### [04/04 스킬 충돌 및 데미지 판정](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%8A%A4%ED%82%AC%20%EC%B6%A9%EB%8F%8C%20%EB%B0%8F%20%EB%8D%B0%EB%AF%B8%EC%A7%80%20%ED%8C%90%EC%A0%95.md)
++ ### [04/05 일반공격 Ability 재 구현 및 데미지 판정](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%9D%BC%EB%B0%98%EA%B3%B5%EA%B2%A9%20Ability%20%EC%9E%AC%20%EA%B5%AC%ED%98%84.md)
++ ### [04/06 Enemy 피격모션 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/Enemy%20%ED%94%BC%EA%B2%A9%EB%AA%A8%EC%85%98%20%EA%B5%AC%ED%98%84.md)
++ ### [04/07 콤보 공격 개선](#콤보-공격-개선)
 
 ### 04/10 ~ 04/14
-+ ### 04/10 공격 범위 설정 및 전투 <-> 추적 변환 구현
-+ ### 04/11 공격 AI 기초 로직 구현
-+ ### 04/12 콤보공격 패턴 완성
-+ ### 04/13 2번째 근접 공격 패턴 추가
-+ ### 04/14 3번째 근접 공격 패턴 추가
++ ### [04/10 AI 공격 범위 설정 및 전투 <-> 추적 변환 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EA%B3%B5%EA%B2%A9%20%EB%B2%94%EC%9C%84%20%EC%84%A4%EC%A0%95.md)
++ ### [04/11 AI 공격 기초 로직 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EA%B3%B5%EA%B2%A9%20AI%20%EA%B8%B0%EC%B4%88%20%EB%A1%9C%EC%A7%81%20%EA%B5%AC%ED%98%84.md)
++ ### [04/12 AI 콤보공격 패턴 완성](https://github.com/kimeorua/portfolio/blob/main/prototype/%EA%B3%B5%EA%B2%A9%20AI%20%EA%B8%B0%EC%B4%88%20%EB%A1%9C%EC%A7%81%20%EA%B5%AC%ED%98%84.md)
++ ### [04/13 AI 2번째 근접 공격 패턴 추가](https://github.com/kimeorua/portfolio/blob/main/prototype/2%EB%B2%88%EC%A7%B8%20%EA%B7%BC%EC%A0%91%20%EA%B3%B5%EA%B2%A9%20%ED%8C%A8%ED%84%B4.md)
++ ### 04/14 AI 3번째 근접 공격 패턴 추가
 
 ### 04/17 ~ 04/19
-+ ### 04/17 적 캐릭터 공격 판정 추가
-+ ### 04/18 플레이어 캐릭터 데미지 판정 추가
-+ ### 04/19 플레이어 방어 구현
++ ### 04/17 적 캐릭터 공격 판정 추가 (플레이어 공격 판정과 동일)
++ ### 04/18 플레이어 캐릭터 데미지 판정 추가 (적 데미지 판정과 동일)
++ ### [04/19 플레이어 방어 판정 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EB%B0%A9%EC%96%B4%20%ED%8C%90%EC%A0%95.md)
 
-### 04/20 ~ 04/26
-+ ### 04/20 피격 시 플레이어 및 몬스터가 정지하는 오류 발견
-+ ### 04/24 일반 피격 개선
-+ ### 04/25 방어 기능 개선
-
-### 04/27 ~ 04/30
-+ ### 04/27 패링 기능 구현
-+ ### 04/28 적 피격 개선
+### 04/20 ~04/28
++ ### [04/20 ~ 04/26 전투 시스템 버그 발생 및 수정](#전투-시스템-버그-발생-및-수정)
++ ### [04/27 패링 기능 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%ED%8C%A8%EB%A7%81%20%EA%B5%AC%ED%98%84.md)
 
 ### 05/01 ~ 05/05
-+ ### 05/01 범위형 공격 데미지 처리 구현, 페링 시 적 움찔 에니메이션 추가
++ ### [05/01 범위형 공격 데미지 처리 구현, 페링 시 적 움찔 에니메이션 추가](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%B2%94%EC%9C%84%ED%98%95%EB%8D%B0%EB%AF%B8%EC%A7%80.md)
 + ### 05/02 플레이어, 적 기절 및 죽음 구현
 + ### 05/03 방어 및 페링 이펙트 추가 및, 스킬 공격 시 ElementalForce충전 구현
-+ ### 05/04 보스 캐릭터 기초 제작
++ ### 05/04 보스 캐릭터 기초 제작(EnemyClass를 상속받아 구현 함.)
 + ### 05/05 보스 캐릭터 AI 추적 및 랜덤 패트롤 구현(일반 적 캐릭터와 동일한 방식 - 설명 생략)
 
 ### 05/08 ~ 05/12 보스 캐릭터 AI 제작 (일반 적 캐릭터와 동일)
@@ -200,11 +195,8 @@
 + ### 05/24 게임 시작 및 종료, 일시정지 UI 구현
 
 ### 05/29 ~ 06/02 일반 스테이지 및 보스 스테이지 구현
-+ ### 05/30 일반 스테이지 포탈기믹 구현
-+ ### 06/01 보스 스테이지 진입 후 문 개폐 구현
 
 ### 06/05 프로토타입 빌드 및 가동 확인
-+ ### 06/06 ~ 06/14 졸업 작품전시회를 위한 PPT, 포스터, 영상 제작 및 프로토타입 버그 개선
 
 ## ------------------------게임 시스템 업그레이드 개발 요약------------------------
 
@@ -308,21 +300,20 @@
 
 ---
 
-### 콤보 공격 개선(04/07) -> 해결(04/07)
+### 콤보 공격 개선
 + #### 콤보 공격을 Ability로 구현 하였으나, 공격기능이 어색하고, 의도치 않은 방식으로 작동 되는 것을 확인함
 + #### 해결 법: Youtube에서 "UE備忘録本舗" 라는 사람이 올린 동영상을 보고 해당 방식을 인용하여 사용 하기로 함
 + #### 사이트URL: https://www.youtube.com/watch?v=e7btrlL5Kas&t=1705
 
 ---
 
-### 피격시 플레이 및 몬스터 정지 버그 발견(04/20)
+### 전투 시스템 버그 발생 및 수정
 + #### 피격시 일반 공격을 하면 회피와 움직이는것 말고는 모든 입력이 막힘 -> 해결(04/26)
 + #### 피격시 몬스터의 AI가 정지하는 현상 발견 -> (04/28)
 + #### 전투 시스템의 개선이 필요
 + #### 04/24 플레이어 일반 피격 개선: GA_Hit Ability를 사용하여, 몽타주가 재생 되는 동안 Player.Hit Tag를 플레이어 에게 붙임 -> 이 Tag가 있는 동안 공격Ability가 작동 하지 못하도록 구현함. (이 방식을 이용하여 적AI 및 방어 개선에도 사용 가능 할 것으로 )
 + #### 04/25 방어 기능을 개선 -> "Enhanced Input" 플러그인을 사용하여 방어 입력과, 홀드기능을 개선하였음
 + #### 04/26 방어 기능 완성 -> 방어 애니메이션을 추가 하여 방어 기능을 완성함
-+ #### 04/28 적 피격 개선 -> 플레이어 일반 피격을 응용하여 개선
 
 ### 프로토타입에서 발견된 문제점 고찰 및 개선(06/26)
 #### 발견된 문제점
