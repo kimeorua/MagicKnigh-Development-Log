@@ -144,15 +144,13 @@
 
 ### 03/20 ~ 03/24
 + ### [03/20 ElementalForce및 MaxElementalForce 설정, 특수 스킬기초 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/EP%20%EB%B0%8F%20MaxEP%20%EC%84%A4%EC%A0%95%2C%20EPSkill.md)
-+ ### [03/21 ~ 03/22 ElementalForce 스킬 제작 및 스킬사용 구현, Ability 사용을위한 조건문 코드 개선 및 방패 효과 추가]
-+ ### [03/23 두번째 무기(도끼) 구현 및 장착 구현]
-+ ### [03/24 두번째 무기 일반 스킬 애니메이션 구현]
++ ### [03/21 ~ 03/22 ElementalForce 스킬 제작 및 스킬사용 구현, Ability 사용을위한 조건문 코드 개선 및 방패 효과 추가](https://github.com/kimeorua/portfolio/blob/main/prototype/EP%EC%8A%A4%ED%82%AC%20%EC%A0%9C%EC%9E%91%20%EB%B0%8F%20%EC%8A%A4%ED%82%AC%EC%82%AC%EC%9A%A9%20%EA%B5%AC%ED%98%84.md)
++ ### [03/23 ~ 03/25 두번째 무기(도끼) 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%8F%84%EB%81%BC.md)
 
-### 03/27 ~ 03/31
-+ ### 03/27 두번째 무기 특수스킬 및 이펙트 추가
-+ ### 03/28 기본EnemyClass 제작 및 이동 애니메이션, 기초 스텟 설정
-+ ### 03/29 Enemy RandomPatrol 구현
-+ ### 03/30 플레이어 추적 구현
+### 03/28 ~ 03/31
++ ### [03/28 기본EnemyClass 제작 및 이동 애니메이션, 기초 스텟 설정](https://github.com/kimeorua/portfolio/blob/main/prototype/EnemyClass%20%EC%A0%9C%EC%9E%91.md)
++ ### [03/29 Enemy RandomPatrol 구현]()
++ ### [03/30 플레이어 추적 구현]
 
 ### 04/03 ~ 04/07
 + ### 04/03 충돌처리 방식 고안
