@@ -32,4 +32,4 @@ AWeapon* AMainCharacter::CheackCanUseSkillAbility() const // 현제 무기여부
 ```
 
 + ####  방패 효과 추가: 방어를 사용할려고 할때 방패가 커지는 효과를 추가하여, 기본 상태일때는 작게 방어 상태일때는 커지도록 구현, 사운드 추가.
-![](./img/뱅패효과.gif)
+![](https://github.com/kimeorua/kimeorua.github.io/blob/main/img/%EB%B1%85%ED%8C%A8%ED%9A%A8%EA%B3%BC.gif?raw=true)
