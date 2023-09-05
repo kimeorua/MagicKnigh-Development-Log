@@ -208,9 +208,9 @@
 
 ### 07/03 ~ 07/07
 + ### [07/03 플레이어 캐릭터 회피 작동 개선](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%ED%9A%8C%ED%94%BC%20%EA%B0%9C%EC%84%A0.md)
-+ ### 07/04 무기 시스템 재 구상 및 정리
-+ ### 07/05 플레이어 무기 소환 및 장착 구현
-+ ### 07/06 무기 장착시 애니메이션 변화 재 구현
++ ### [07/04 무기 시스템 재 구상 및 정리](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%AC%B4%EA%B8%B0Class.md)
++ ### [07/05 플레이어 무기 소환 및 장착 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EB%AC%B4%EA%B8%B0%20%EC%86%8C%ED%99%98%20%EB%B0%8F%20%EC%9E%A5%EC%B0%A9.md)
++ ### [07/06 무기 장착시 애니메이션 변화 재 구현]
 + ### 07/07 코드 최적화 및 깃허브 업로드
   
 ### 07/10 ~ 07/14
