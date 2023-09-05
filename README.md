@@ -102,7 +102,7 @@
 ### 01/02 ~ 01/08
 + ### 01/02 클래스 기능 및 요소 작성
 + ### [01/03 ~ 01/04 메인캐릭터 이동 및 시점 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%BA%90%EB%A6%AD%ED%84%B0%20%EC%9D%B4%EB%8F%99%20%EB%B0%8F%20%EC%8B%9C%EC%A0%90%20%EA%B5%AC%ED%98%84.md)
-+ ### 01/06 ~ 01/08 애니메이션 오류 발생 및 수정
++ ### 01/06 ~ 01/08 애니메이션 오류 발생 및 수정(#애니메이션-에셋-오류-발생)
 
 ### 01/09 ~ 01/17
 + ### [01/09 캐릭터 후방 이동속도 감소](https://github.com/kimeorua/portfolio/blob/main/prototype/%EC%BA%90%EB%A6%AD%ED%84%B0%20%ED%9B%84%EB%B0%A9%20%EC%9D%B4%EB%8F%99%EC%86%8D%EB%8F%84%20%EA%B0%90%EC%86%8C.md) 
@@ -113,9 +113,9 @@
 + ### [01/17 방어 애니메이션 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%B0%A9%EC%96%B4%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98.md)
 
 ### 01/25 ~ 01/27
-+ ### 01/25 무기 장착 구현
-+ ### 01/26 검 장착시 작동될 애니메이션 구현
-+ ### 01/27 깃허브 정리 및 코드 정리
++ ### [01/25 무기 장착 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EB%AC%B4%EA%B8%B0%20%EC%9E%A5%EC%B0%A9%20%EA%B5%AC%ED%98%84.md)
++ ### [01/26 검 장착후 Locomotion Animation 변동 구현](https://github.com/kimeorua/portfolio/blob/main/prototype/%EA%B2%80%20%EC%9E%A5%EC%B0%A9%20%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98.md)
++ ### [01/27 깃허브 정리 및 코드 정리]
 
 ### 01/30 ~ 02/03
 + ### 01/30 검 장착 로직 및 애니메이션 개선
