@@ -55,3 +55,4 @@ void UBTS_RandomPattern::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, uin
 ![](https://github.com/kimeorua/portfolio/blob/main/img/BTT_JumpAttack.PNG?raw=true)
 #### 점프 공격 BTS(비헤이비어 트리 서비스) -> 애니메이션 재생 중 날라 가는 시스템
 ![](https://github.com/kimeorua/portfolio/blob/main/img/BTS_JumpAttack.PNG?raw=true)
++ #### 해당 기능들은 후에 GameplayAbility를 응용하여 재 구현할 예정.
