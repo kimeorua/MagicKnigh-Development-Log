@@ -42,12 +42,12 @@ public:
 	static const FName Distance;
 	static const FName TargetLocation;
 	static const FName PatrolNum;
-	static const FName EnemyPattern;
+	static const FName EnemyPatternNum;
 	//-------------------------------------------블랙보드 키에 접근시 사용할 이름들-------------------------------------------//
 
 	//-------------------------------------------------AI Perception 변수-------------------------------------------------//
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float AISightRadius = 500;
+	float AISightRadius = 600;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AILoseSightRadius = 150.f;
 

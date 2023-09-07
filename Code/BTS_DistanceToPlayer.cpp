@@ -23,7 +23,7 @@ void UBTS_DistanceToPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* N
 	if (EnemySelf == nullptr) return;
 	if (Player == nullptr) return;
 
-	Distance = Player->GetDistanceTo(EnemySelf);
+	Distance = Player->GetHorizontalDistanceTo(EnemySelf);
 
 	OwnerComp.GetBlackboardComponent()->SetValueAsFloat(AEnemyAIController::Distance, Distance);
 }

@@ -19,7 +19,7 @@ const FName AEnemyAIController::SelfActor(TEXT("SelfActor"));
 const FName AEnemyAIController::Distance(TEXT("Distance"));
 const FName AEnemyAIController::TargetLocation(TEXT("TargetLocation"));
 const FName AEnemyAIController::PatrolNum(TEXT("PatrolNum"));
-const FName AEnemyAIController::EnemyPattern(TEXT("EnemyPattern"));
+const FName AEnemyAIController::EnemyPatternNum(TEXT("EnemyPatternNum"));
 
 
 AEnemyAIController::AEnemyAIController()

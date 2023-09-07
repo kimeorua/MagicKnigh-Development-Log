@@ -24,14 +24,3 @@ enum class EAttackCollisionType : uint8
 
 	Max UMETA(DisplayName = "Max")
 };
-
-UENUM(BlueprintType)
-enum class EEnemyPattern : uint8
-{
-	None = 0 UMETA(DisplayName = "None"),
-	Chase UMETA(DisplayName = "Chase"),
-	MiddleRange UMETA(DisplayName = "MiddleRange"),
-	CloseRange UMETA(DisplayName = "CloseRange"),
-
-	Max UMETA(DisplayName = "Max")
-};
