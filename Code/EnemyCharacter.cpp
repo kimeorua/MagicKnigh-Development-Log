@@ -42,7 +42,7 @@ void AEnemyCharacter::LosePlayer()
 
 void AEnemyCharacter::TakeDamgeFormPlayer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit"));
+	//UE_LOG(LogTemp, Warning, TEXT("Hit"));
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);

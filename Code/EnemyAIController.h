@@ -39,10 +39,10 @@ public:
 	static const FName CanSeePlayer;
 	static const FName Player;
 	static const FName SelfActor;
-	static const FName Distance;
 	static const FName TargetLocation;
 	static const FName PatrolNum;
 	static const FName EnemyPatternNum;
+	static const FName Distance;
 	//-------------------------------------------블랙보드 키에 접근시 사용할 이름들-------------------------------------------//
 
 	//-------------------------------------------------AI Perception 변수-------------------------------------------------//
