@@ -268,6 +268,9 @@
 + ### 09/06 [AI 전투 시스템 1차 구현(추적 및 중거리 판정)](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EC%A0%84%ED%88%AC1%EC%B0%A8.md)
 + ### 09/07 [AI 전투 시스템 2차 구현(중거리 점프 공격 구현)](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EC%A0%84%ED%88%AC2%EC%B0%A8.md)
 + ### 09/08 [AI 전투 시스템 3차 구현(중거리 점프 공격 완성)]()
+
+### 09/11 ~ 09/15
++ #### 09/11 [AI 전투 시스템 개선]()
 ---
 
 ## 9 버그 및 개선 사항
