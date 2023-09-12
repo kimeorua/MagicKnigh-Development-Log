@@ -80,3 +80,6 @@ void UBTT_EnemyAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 }
 
 ```
+
+#### 비헤이비어 트리
+![](https://github.com/kimeorua/portfolio/blob/main/img/AI%EA%B3%B5%EA%B2%A9.PNG?raw=true)
