@@ -270,8 +270,8 @@
 + ### 09/08 [AI 전투 시스템 3차 구현(중거리 점프 공격 완성)](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%20%EC%A4%91%EA%B1%B0%EB%A6%AC%20%ED%8C%A8%ED%84%B4%20%EC%99%84%EC%84%B1.md)
 
 ### 09/11 ~ 09/15
-+ #### 09/11 [AI 전투 시스템 개선](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EC%A0%84%ED%88%AC%20%EA%B0%9C%EC%84%A0.md)
-+ #### 09/12 [AI 공격 시스템 완성](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EA%B3%B5%EA%B2%A9%20%EC%99%84%EC%84%B1.md)
++ ### 09/11 [AI 전투 시스템 개선](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EC%A0%84%ED%88%AC%20%EA%B0%9C%EC%84%A0.md)
++ ### 09/12 [AI 공격 시스템 완성](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EA%B3%B5%EA%B2%A9%20%EC%99%84%EC%84%B1.md)
 ---
 
 ## 9 버그 및 개선 사항
