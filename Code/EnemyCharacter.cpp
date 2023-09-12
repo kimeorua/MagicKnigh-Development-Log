@@ -7,6 +7,7 @@
 #include "Engine/TargetPoint.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "PlayerCharacter.h"
+#include "EnemyAnimInstance.h"
 #include "Components/CapsuleComponent.h"
 
 AEnemyCharacter::AEnemyCharacter()
@@ -23,11 +24,19 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 	Controller = Cast<AEnemyAIController>(GetController());
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	
 }
 
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AEnemyCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	EnemyAnim = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance()); //애니메이션 호출을 위한 변수
+	EnemyAnim->OnMontageEnded.AddDynamic(this, &AEnemyCharacter::OnAttackMontageEnded);
 }
 
 void AEnemyCharacter::FindPlayer()
@@ -42,7 +51,7 @@ void AEnemyCharacter::LosePlayer()
 
 void AEnemyCharacter::TakeDamgeFormPlayer()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Hit"));
+	UE_LOG(LogTemp, Warning, TEXT("Hit"));
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
@@ -141,4 +150,10 @@ void AEnemyCharacter::TakeParrying()
 	{
 		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 	}
+}
+
+void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("oo"));
+	OnAttackEnd.Broadcast(); //BTTask_EnemyAttack에서 선언한 공격 종료 함수가 호출되도록 델리게이트를 이용하여 구축
 }

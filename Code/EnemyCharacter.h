@@ -7,9 +7,8 @@
 #include "MagicKnightEnums.h"
 #include "EnemyCharacter.generated.h"
 
-/**
- * 
- */
+DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate);
+
 UCLASS()
 class PF_MAGICKNIGHT_API AEnemyCharacter : public ABaseCharacter
 {
@@ -50,13 +49,22 @@ private:
 protected:
 	virtual void BeginPlay()override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void PostInitializeComponents() override;
 
 public:
+	FOnAttackEndDelegate OnAttackEnd;
+
+	UPROPERTY()
+	class UEnemyAnimInstance* EnemyAnim; //애니메이션 호출을 위한 변수
+
 	AEnemyCharacter();
 	void FindPlayer();
 	void LosePlayer();
 	void TakeDamgeFormPlayer();
 	void TakeParrying();
+
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
 	UFUNCTION(BlueprintCallable)
 	void PlayerHitReset();
