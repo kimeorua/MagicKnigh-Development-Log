@@ -7,7 +7,7 @@
 
 UBTT_EnemyAttack::UBTT_EnemyAttack()
 {
-	bNotifyTick = true;
+	bNotifyTick = true; //TickTask 사용
 	AttackAbility = nullptr;
 	NodeName = TEXT("Enemy Attack");
 	bIsAttack = false;
@@ -21,12 +21,11 @@ EBTNodeResult::Type UBTT_EnemyAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 
 	if (IsValid(Enemy))
 	{
-		Enemy->GetAbilitySystemComponent()->TryActivateAbilityByClass(AttackAbility);
+		Enemy->GetAbilitySystemComponent()->TryActivateAbilityByClass(AttackAbility); //어빌리티 작동
 		bIsAttack = true;
-		UE_LOG(LogTemp, Warning, TEXT("True"));
 
-		Enemy->OnAttackEnd.AddLambda([this]() -> void { bIsAttack = false; });
-		return EBTNodeResult::InProgress;
+		Enemy->OnAttackEnd.AddLambda([this]() -> void { bIsAttack = false; }); //람다식으로, OnAttackEnd델리게이트 코드 구현
+		return EBTNodeResult::InProgress; //Task 진행중으로 변경
 	}
 	else { return EBTNodeResult::Failed; }
 }
@@ -36,7 +35,6 @@ void UBTT_EnemyAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 	if (!bIsAttack)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("False"));
-		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded); //Task 성공으로 변경
 	}
 }

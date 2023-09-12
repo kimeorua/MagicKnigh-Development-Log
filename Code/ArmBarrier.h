@@ -26,8 +26,8 @@ public:
 	FORCEINLINE FName GetEquipSocketName() const { return EquipSocketName; }
 
 	UFUNCTION(BlueprintCallable)
-	void BarrierOn();
-	void BarrierOff();
+	void BarrierOn(); //방패 크기 확 대
+	void BarrierOff(); //방패 크기 원복
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -45,5 +45,5 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sounds", meta = (AllowPrivateAccess = "true"))
 	USoundBase* BarrierOffSound = nullptr;
 
-	bool IsBarrierOnEffect = false;
+	bool IsBarrierOnEffect = false; //방패 크기 증가 여부
 };

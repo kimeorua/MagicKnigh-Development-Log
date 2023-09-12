@@ -31,6 +31,7 @@ void AArmBarrier::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+//방패 크기 증가
 void AArmBarrier::BarrierOn()
 {
 	if (!IsBarrierOnEffect)
@@ -43,6 +44,7 @@ void AArmBarrier::BarrierOn()
 	}
 }
 
+// 방패 크기 원복
 void AArmBarrier::BarrierOff()
 {
 	if (IsBarrierOnEffect)

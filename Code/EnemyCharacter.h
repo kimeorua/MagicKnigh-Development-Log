@@ -7,7 +7,7 @@
 #include "MagicKnightEnums.h"
 #include "EnemyCharacter.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate);
+DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate); //델리게이트 선언
 
 UCLASS()
 class PF_MAGICKNIGHT_API AEnemyCharacter : public ABaseCharacter
