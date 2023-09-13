@@ -4,5 +4,5 @@
 
 #### 비헤이비어 트리
 ![](https://github.com/kimeorua/portfolio/blob/main/img/AI%EA%B3%B5%EA%B2%A9%EC%B6%94%EA%B0%80.PNG?raw=true)
-#### 1.번 콤보 공격은 50%, 2번 콤보 공격은 30% 내려찍기 공격은 20%의 확률로 실행 함.
+#### 1번 콤보 공격은 50%, 2번 콤보 공격은 30% 내려찍기 공격은 20%의 확률로 실행 함.
 
