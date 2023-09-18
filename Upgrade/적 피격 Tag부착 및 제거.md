@@ -5,7 +5,7 @@
 + #### 피격 시 AnimNotify를 이용하여 Enemy.State.Hit Tag를 부착 및 제거 하도록 함.
 
 #### AN_HitTagOm
-![]()
+![](https://github.com/kimeorua/portfolio/blob/main/img/HitTagOn.PNG?raw=true)
 
 #### AN_HitTagOff
-![]()
+![](https://github.com/kimeorua/portfolio/blob/main/img/HitTagOff.PNG?raw=true)
