@@ -274,6 +274,9 @@
 + ### [09/12 AI 공격 시스템 완성](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EA%B3%B5%EA%B2%A9%20%EC%99%84%EC%84%B1.md)
 + ### [09/13 AI 공격 패턴 추가](https://github.com/kimeorua/portfolio/blob/main/Upgrade/AI%EA%B3%B5%EA%B2%A9%20%ED%8C%A8%ED%84%B4%20%EC%B6%94%EA%B0%80.md)
 + ### 09/14 적 공격에 파티클 및 사운드 추가
+
+### 09/18 ~ 09/22
++ ### [09/18 적 캐릭터 피격시 Tag 부착및 제거 구현]()
 ---
 
 ## 9 버그 및 개선 사항
