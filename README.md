@@ -277,7 +277,7 @@
 
 ### 09/18 ~ 09/22
 + ### [09/18 적 캐릭터 피격시 Tag 부착및 제거 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%20%ED%94%BC%EA%B2%A9%20Tag%EB%B6%80%EC%B0%A9%20%EB%B0%8F%20%EC%A0%9C%EA%B1%B0.md)
-+ ### [09/19 적 캐릭터 슈퍼아머 구현]()
++ ### [09/19 적 캐릭터 슈퍼아머 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%8A%88%ED%8D%BC%EC%95%84%EB%A8%B8%20%EA%B5%AC%ED%98%84.md)
 ---
 
 ## 9 버그 및 개선 사항
