@@ -16,7 +16,7 @@ class PF_MAGICKNIGHT_API AEnemyCharacter : public ABaseCharacter
 	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
-	class AEnemyAIController* AIController; //AI컨트롤러
+	class AEnemyAIController* AIController = nullptr; //AI컨트롤러
 
 	//걷기 이동 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
@@ -32,7 +32,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* HitCollision;
 
-	// 0 -> Hit Effect, 1-> TakeDamage(Attack) 2-> ParryingAble
+	// 0 -> Hit Effect, 1-> TakeDamage(Attack), 2-> ParryingAble, 3 -> SuperArmor
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
 	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 데미지용 이펙트들(에디터 설정)
 
@@ -45,6 +45,15 @@ private:
 	FName CollisionEndSocket = "";
 
 	bool PlayerIsHit = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
+	FName HitParticleSocket = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* HitParticle;
 
 protected:
 	virtual void BeginPlay()override;

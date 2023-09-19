@@ -9,6 +9,7 @@
 #include "PlayerCharacter.h"
 #include "EnemyAnimInstance.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -54,7 +55,21 @@ void AEnemyCharacter::TakeDamgeFormPlayer()
 	UE_LOG(LogTemp, Warning, TEXT("Hit"));
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
-	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+	FGameplayEffectSpecHandle SpecHandle;
+
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.SuperArmor"))) > 0)
+	{
+		if (IsValid(HitSound) && HitParticle != nullptr)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), HitSound);
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetMesh()->GetSocketLocation(HitParticleSocket));
+		}
+		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[3], 1, EffectContext);
+	}
+	else
+	{
+		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+	}
 
 	if (SpecHandle.IsValid())
 	{
@@ -154,6 +169,5 @@ void AEnemyCharacter::TakeParrying()
 
 void AEnemyCharacter::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("oo"));
 	OnAttackEnd.Broadcast(); //BTTask_EnemyAttack에서 선언한 공격 종료 함수가 호출되도록 델리게이트를 이용하여 구축
 }
