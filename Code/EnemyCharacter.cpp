@@ -52,7 +52,7 @@ void AEnemyCharacter::LosePlayer()
 
 void AEnemyCharacter::TakeDamgeFormPlayer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit"));
+	//UE_LOG(LogTemp, Warning, TEXT("Hit"));
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 	FGameplayEffectSpecHandle SpecHandle;
@@ -108,7 +108,17 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		break;
 
 	case EAttackCollisionType::AOE:
-		bResult = false;
+		bResult = UKismetSystemLibrary::SphereTraceSingle(
+			GetWorld(),
+			Start,
+			End,
+			Range,
+			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
+			false,
+			ActorsToIgnore,
+			EDrawDebugTrace::ForDuration,
+			OutHit,
+			true);
 		break;
 
 	case EAttackCollisionType::AOE_Player_Center:
@@ -154,7 +164,7 @@ void AEnemyCharacter::TakeParrying()
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable"))) > 0)
 	{
 		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
-		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable")));
+		//GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable")));
 	}
 	else
 	{

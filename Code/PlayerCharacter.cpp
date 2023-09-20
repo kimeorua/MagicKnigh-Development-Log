@@ -458,9 +458,13 @@ void APlayerCharacter::TakeDamageFromEnemy()
 					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
 					AttackedEnemy->TakeParrying();
 				}
+				else if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Break Block")); 
+					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+				}
 				else
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Block"));
 					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
 				}
 				
