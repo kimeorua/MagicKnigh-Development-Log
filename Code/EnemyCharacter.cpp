@@ -164,7 +164,6 @@ void AEnemyCharacter::TakeParrying()
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable"))) > 0)
 	{
 		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
-		//GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable")));
 	}
 	else
 	{

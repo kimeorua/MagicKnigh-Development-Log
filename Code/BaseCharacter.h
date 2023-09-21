@@ -30,6 +30,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	TArray<TSubclassOf<class UGameplayAbility>>DefaultAbility; //사용하는 GameplayAbility
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	bool bIsStun = false;
+
 //----------------------------------------------------함수----------------------------------------------------//
 public:
 	// Sets default values for this character's properties
@@ -52,4 +55,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void Stun();
+	UFUNCTION(BlueprintCallable)
+	void StunEnd();
 };

@@ -471,7 +471,7 @@ void APlayerCharacter::TakeDamageFromEnemy()
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Hit"));
+				//UE_LOG(LogTemp, Warning, TEXT("Hit"));
 				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
 			}
 		}

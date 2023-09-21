@@ -89,3 +89,13 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void ABaseCharacter::Stun()
+{
+	bIsStun = true;
+	UE_LOG(LogTemp, Warning, TEXT("Base Stun"));
+}
+
+void ABaseCharacter::StunEnd()
+{
+	bIsStun = false;
+}
