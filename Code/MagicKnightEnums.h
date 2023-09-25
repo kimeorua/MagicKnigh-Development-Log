@@ -24,3 +24,29 @@ enum class EAttackCollisionType : uint8
 
 	Max UMETA(DisplayName = "Max")
 };
+
+UENUM(BlueprintType)
+enum class ECombetEffectType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	Block UMETA(DisplayName = "Block"),
+	Parrying UMETA(DisplayName = "Parrying"),
+	Charge UMETA(DisplayName = "EF Charge"),
+
+	Max UMETA(DisplayName = "Max")
+};
+
+UENUM(BlueprintType)
+enum class EDamageEffectType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	NormalAttack UMETA(DisplayName = "Normal Attack"),
+	LightAttack UMETA(DisplayName = "Light Attack"),
+	HeavyAttack UMETA(DisplayName = "Heavy Attack"),
+	SpecialAttack UMETA(DisplayName = "Special Attack"),
+	SuperArmor UMETA(DisplayName = "Super Armor"),
+	PostureUp UMETA(DisplayName = "Posture Up"),
+	PostureUp_OnParry UMETA(DisplayName = "Posture Up_OnParry"),
+
+	Max UMETA(DisplayName = "Max")
+};

@@ -455,7 +455,8 @@ void APlayerCharacter::TakeDamageFromEnemy()
 				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Parrying"));
-					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
+					//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
+					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
 					AttackedEnemy->TakeParrying();
 				}
 				else if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
@@ -465,7 +466,8 @@ void APlayerCharacter::TakeDamageFromEnemy()
 				}
 				else
 				{
-					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+					//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
 				}
 				
 			}
@@ -499,7 +501,7 @@ void APlayerCharacter::EFCharge()
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 	FGameplayEffectSpecHandle SpecHandle;
-	SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[3], 1, EffectContext);
+	SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Charge], 1, EffectContext);
 
 	if (SpecHandle.IsValid())
 	{

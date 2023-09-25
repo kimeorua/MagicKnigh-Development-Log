@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "InputActionValue.h"
+#include "MagicKnightEnums.h"
 #include "PlayerCharacter.generated.h"
 
 /**
@@ -115,6 +116,17 @@ private:
 	// 0-> Hit Effect,  1 -> Block Effect, 2-> Parrying Effect, 3-> EF Charge Effect
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
 	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 전투 용 이펙트들(에디터 설정)
+
+
+	//사용하는 전투 용 이펙트들(EX: 슈퍼아머, 체간 상승, 방어, 페링)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
+	TMap<ECombetEffectType, TSubclassOf<class UGameplayEffect>> CombetEffects;
+
+	//사용하는 데미지 용 이펙트(체력 감소)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
+	TMap<EDamageEffectType, TSubclassOf<class UGameplayEffect>> DamageEffects;
+
+
 
 	bool CanUseParrying = false;
 
