@@ -283,7 +283,7 @@
 + ### [09/22 간단한 플레이어 캐릭터 UI 제작](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20UI.md)
 
 ### 09/25 ~ 09/27
-+ ### [09/25 방어 및 튕겨내기 코드 개선]()
++ ### [09/25 방어 및 튕겨내기 코드 개선](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%B0%A9%EC%96%B4%20%EB%B0%8F%20%ED%8A%95%EA%B2%A8%EB%82%B4%EA%B8%B0%20%EC%BD%94%EB%93%9C%20%EA%B0%9C%EC%84%A0.md)
 ---
 
 ## 9 버그 및 개선 사항
