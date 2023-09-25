@@ -281,6 +281,9 @@
 + ### [09/20 적 캐릭터 공격 판정 추가](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EA%B3%B5%EA%B2%A9%20%ED%8C%90%EC%A0%95%20%EC%B6%94%EA%B0%80.md)
 + ### [09/21 기절 시스템 추가](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EA%B8%B0%EC%A0%88%20%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EC%B6%94%EA%B0%80.md)
 + ### [09/22 간단한 플레이어 캐릭터 UI 제작](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20UI.md)
+
+### 09/25 ~ 09/27
++ ### [09/25 데미지 처리 개선]()
 ---
 
 ## 9 버그 및 개선 사항
