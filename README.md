@@ -284,7 +284,7 @@
 
 ### 09/25 ~ 09/27
 + ### [09/25 방어 및 튕겨내기 코드 개선](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%B0%A9%EC%96%B4%20%EB%B0%8F%20%ED%8A%95%EA%B2%A8%EB%82%B4%EA%B8%B0%20%EC%BD%94%EB%93%9C%20%EA%B0%9C%EC%84%A0.md)
-+ ### [09/26 데미지 처리 코드 개선]() 및 [특수 스킬 사용 조건 구현]()
++ ### [09/26 데미지 처리 코드 개선](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EB%8D%B0%EB%AF%B8%EC%A7%80%20%EC%B2%98%EB%A6%AC%20%EA%B0%9C%EC%84%A0.md) 및 [특수 스킬 사용 조건 구현]()
 ---
 
 ## 9 버그 및 개선 사항
