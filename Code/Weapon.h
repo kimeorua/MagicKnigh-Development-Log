@@ -29,7 +29,7 @@ public:
 
 	//¿À¹ö·¦ È®ÀÎ
 	UFUNCTION(BlueprintCallable)
-	FHitResult CheakCollision(EAttackCollisionType Type, float Range);
+	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamgeType);
 
 	UFUNCTION(BlueprintCallable)
 	void HitArrReset();

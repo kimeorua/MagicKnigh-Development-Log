@@ -44,7 +44,6 @@ enum class EDamageEffectType : uint8
 	LightAttack UMETA(DisplayName = "Light Attack"),
 	HeavyAttack UMETA(DisplayName = "Heavy Attack"),
 	SpecialAttack UMETA(DisplayName = "Special Attack"),
-	SuperArmor UMETA(DisplayName = "Super Armor"),
 	PostureUp UMETA(DisplayName = "Posture Up"),
 	PostureUp_OnParry UMETA(DisplayName = "Posture Up_OnParry"),
 

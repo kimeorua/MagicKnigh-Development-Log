@@ -436,7 +436,7 @@ void APlayerCharacter::WeaponUnequip()
 	}
 }
 
-void APlayerCharacter::TakeDamageFromEnemy()
+void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 {
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
@@ -447,7 +447,6 @@ void APlayerCharacter::TakeDamageFromEnemy()
 		if (GetInstigator())
 		{
 			float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw);
-			bool CheakBlock = UKismetMathLibrary::BooleanOR(BlockAbleRot > 150.f, BlockAbleRot < -150.f);
 			AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator());
 
 			if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f))
@@ -458,23 +457,26 @@ void APlayerCharacter::TakeDamageFromEnemy()
 					//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
 					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
 					AttackedEnemy->TakeParrying();
-				}
-				else if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Break Block")); 
-					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+					EFCharge();
 				}
 				else
 				{
-					//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
-					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
+					if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Break Block"));
+						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+					}
+					else
+					{
+						//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
+					}
 				}
-				
 			}
 			else
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("Hit"));
-				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
 			}
 		}
 		
@@ -487,7 +489,7 @@ void APlayerCharacter::TakeDamageFromEnemy()
 		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo4")));
 		GetAbilitySystemComponent()->CancelAbilities();
 
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
+		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
 	}
 
 	if (SpecHandle.IsValid())

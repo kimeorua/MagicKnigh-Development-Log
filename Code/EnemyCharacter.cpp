@@ -50,7 +50,7 @@ void AEnemyCharacter::LosePlayer()
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
-void AEnemyCharacter::TakeDamgeFormPlayer()
+void AEnemyCharacter::TakeDamgeFormPlayer(EDamageEffectType DamageType)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Hit"));
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
@@ -64,12 +64,9 @@ void AEnemyCharacter::TakeDamgeFormPlayer()
 			UGameplayStatics::PlaySound2D(GetWorld(), HitSound);
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetMesh()->GetSocketLocation(HitParticleSocket));
 		}
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[3], 1, EffectContext);
 	}
-	else
-	{
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[0], 1, EffectContext);
-	}
+
+	SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
 
 	if (SpecHandle.IsValid())
 	{
@@ -77,7 +74,7 @@ void AEnemyCharacter::TakeDamgeFormPlayer()
 	}
 }
 
-FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Range)
+FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType)
 {
 	FVector Start = GetMesh()->GetSocketLocation(CollisionStartSocket); //시작 점
 	FVector End = GetMesh()->GetSocketLocation(CollisionEndSocket); //끝 점
@@ -142,7 +139,7 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		if (Player && !PlayerIsHit)
 		{
 			Player->SetInstigator(this);
-			Player->TakeDamageFromEnemy();
+			Player->TakeDamageFromEnemy(DamageType);
 			PlayerIsHit = true;
 		}
 	}
@@ -163,11 +160,11 @@ void AEnemyCharacter::TakeParrying()
 
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable"))) > 0)
 	{
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
+		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[EDamageEffectType::PostureUp_OnParry], 1, EffectContext);
 	}
 	else
 	{
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[EDamageEffectType::PostureUp], 1, EffectContext);
 	}
 
 	if (SpecHandle.IsValid())

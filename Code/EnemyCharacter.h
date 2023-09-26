@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "MagicKnightEnums.h"
-#include "MagicKnightEnums.h"
 #include "EnemyCharacter.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate); //델리게이트 선언
@@ -32,10 +31,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* HitCollision;
-
-	// 0 -> Hit Effect, 1-> TakeDamage(Attack), 2-> ParryingAble, 3 -> SuperArmor
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
-	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 데미지용 이펙트들(에디터 설정)
 
 	//사용하는 전투 용 이펙트들(EX: 슈퍼아머, 체간 상승, 방어, 페링)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
@@ -79,7 +74,7 @@ public:
 	AEnemyCharacter();
 	void FindPlayer();
 	void LosePlayer();
-	void TakeDamgeFormPlayer();
+	void TakeDamgeFormPlayer(EDamageEffectType DamageType);
 	void TakeParrying();
 
 	UFUNCTION()
@@ -89,7 +84,7 @@ public:
 	void PlayerHitReset();
 
 	UFUNCTION(BlueprintCallable)
-	FHitResult CheakCollision(EAttackCollisionType Type, float Range);
+	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType);
 
 	FORCEINLINE TArray <class ATargetPoint*> GetPatrolPoint() const { return PatrolPoints; }
 };

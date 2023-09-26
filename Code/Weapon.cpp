@@ -37,7 +37,7 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range = 0.f)
+FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamgeType)
 {
 	FVector Start = Mesh->GetSocketLocation(CollisionStartSocket); //시작 점
 	FVector End = Mesh->GetSocketLocation(CollisionEndSocket); //끝 점
@@ -109,15 +109,16 @@ FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range = 0.f)
 		if (HitEnemys.IsEmpty())
 		{
 			HitEnemys.Add(Cast<AEnemyCharacter>(OutHit.GetActor()));
-			HitEnemys[0]->TakeDamgeFormPlayer();
-			Cast<APlayerCharacter>(GetOwner())->EFCharge();
+			HitEnemys[0]->TakeDamgeFormPlayer(DamgeType);
+			APlayerCharacter* Player = Cast<APlayerCharacter>(GetOwner());
+			if (IsValid(Player)) { Player->EFCharge(); }
 		}
 		else if(!HitEnemys.IsEmpty())
 		{
 			if (!HitEnemys.Contains(OutHit.GetActor()))
 			{
 				AEnemyCharacter* HitEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
-				HitEnemy->TakeDamgeFormPlayer();
+				HitEnemy->TakeDamgeFormPlayer(DamgeType);
 				HitEnemys.Add(HitEnemy);
 			}
 		}

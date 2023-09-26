@@ -206,7 +206,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void WeaponEquip(FName EquipSocketName, AWeapon* Weapon);
 
-	void TakeDamageFromEnemy(); //적이 공격하여 피격 될시 GameplayEffect 호출
+	void TakeDamageFromEnemy(EDamageEffectType DamgeType); //적이 공격하여 피격 될시 GameplayEffect 호출
 	void EFCharge();
 
 	//락온 기능 사용
