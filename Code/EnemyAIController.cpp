@@ -20,6 +20,7 @@ const FName AEnemyAIController::TargetLocation(TEXT("TargetLocation"));
 const FName AEnemyAIController::PatrolNum(TEXT("PatrolNum"));
 const FName AEnemyAIController::EnemyPatternNum(TEXT("EnemyPatternNum"));
 const FName AEnemyAIController::Distance(TEXT("Distance"));
+const FName AEnemyAIController::IsDie(TEXT("IsDie"));
 
 
 AEnemyAIController::AEnemyAIController()
@@ -38,6 +39,7 @@ void AEnemyAIController::BeginPlay()
 		BehaviorTreeComponent->StartTree(*BehaviorTree);
 		Enemy = Cast<AEnemyCharacter>(GetPawn());
 		GetBlackboardComponent()->SetValueAsObject(SelfActor, Enemy);
+		GetBlackboardComponent()->SetValueAsBool(IsDie, false);
 	}
 }
 

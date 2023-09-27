@@ -87,4 +87,6 @@ public:
 	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType);
 
 	FORCEINLINE TArray <class ATargetPoint*> GetPatrolPoint() const { return PatrolPoints; }
+
+	void Die() override;
 };

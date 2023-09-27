@@ -138,85 +138,88 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 }
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
-	// input is a Vector2D
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		// input is a Vector2D
+		FVector2D MovementVector = Value.Get<FVector2D>();
 
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.DoNotMove"))) <= 0)
+		if (Controller != nullptr)
 		{
-			// add movement 
-			AddMovementInput(ForwardDirection, MovementVector.Y);
-			AddMovementInput(RightDirection, MovementVector.X);
-		}
+			// find out which way is forward
+			const FRotator Rotation = Controller->GetControlRotation();
+			const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		//플레이어에게 Tag 부착, 현제 태그가 있의면 부착하지 않음.
-		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.Move"))) <= 0)
-		{
-			GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Move"))); //이동 중일때 부착
-		}
+			// get forward vector
+			const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 
-		// 이동 방향에 따른 상태 태그 부착, -> 후에 타겟 락온 상태에서의 회피에 사용할 예정
-		if (MovementVector.Y > 0)
-		{
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd"))) <= 0)
+			// get right vector 
+			const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.DoNotMove"))) <= 0)
 			{
-				// 다른 방향 태그 삭제
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
-
-				//W 키를 눌름 -> 앞으로 이동 -> MoveFwd Tag 부착
-				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
+				// add movement 
+				AddMovementInput(ForwardDirection, MovementVector.Y);
+				AddMovementInput(RightDirection, MovementVector.X);
 			}
-		}
-		else if (MovementVector.Y < 0)
-		{
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd"))) <= 0)
-			{
-				// 다른 방향 태그 삭제
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
 
-				//S 키를 눌름 -> 뒤로 이동 -> MoveBwd Tag 부착
-				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
+			//플레이어에게 Tag 부착, 현제 태그가 있의면 부착하지 않음.
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.Move"))) <= 0)
+			{
+				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Move"))); //이동 중일때 부착
 			}
-		}
-		else if (MovementVector.X < 0)
-		{
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft"))) <= 0)
-			{
-				// 다른 방향 태그 삭제
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
 
-				//A 키를 눌름 -> 좌로 이동 -> MoveLeft Tag 부착
-				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
+			// 이동 방향에 따른 상태 태그 부착, -> 후에 타겟 락온 상태에서의 회피에 사용할 예정
+			if (MovementVector.Y > 0)
+			{
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd"))) <= 0)
+				{
+					// 다른 방향 태그 삭제
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
+
+					//W 키를 눌름 -> 앞으로 이동 -> MoveFwd Tag 부착
+					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
+				}
 			}
-		}
-		else if (MovementVector.X > 0)
-		{
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight"))) <= 0)
+			else if (MovementVector.Y < 0)
 			{
-				// 다른 방향 태그 삭제
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
-				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd"))) <= 0)
+				{
+					// 다른 방향 태그 삭제
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
 
-				//D 키를 눌름 -> 우로 이동 -> MoveRight Tag 부착
-				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
+					//S 키를 눌름 -> 뒤로 이동 -> MoveBwd Tag 부착
+					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
+				}
+			}
+			else if (MovementVector.X < 0)
+			{
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft"))) <= 0)
+				{
+					// 다른 방향 태그 삭제
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
+
+					//A 키를 눌름 -> 좌로 이동 -> MoveLeft Tag 부착
+					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
+				}
+			}
+			else if (MovementVector.X > 0)
+			{
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight"))) <= 0)
+				{
+					// 다른 방향 태그 삭제
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd")));
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft")));
+
+					//D 키를 눌름 -> 우로 이동 -> MoveRight Tag 부착
+					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight")));
+				}
 			}
 		}
 	}
@@ -234,30 +237,36 @@ void APlayerCharacter::MoveEnd()
 
 void APlayerCharacter::Look(const FInputActionValue& Value)
 {
-	// input is a Vector2D
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		// add yaw and pitch input to controller
-		AddControllerYawInput(LookAxisVector.X * LookRate);
-		AddControllerPitchInput(LookAxisVector.Y * LookRate);
+		// input is a Vector2D
+		FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+		if (Controller != nullptr)
+		{
+			// add yaw and pitch input to controller
+			AddControllerYawInput(LookAxisVector.X * LookRate);
+			AddControllerPitchInput(LookAxisVector.Y * LookRate);
+		}
 	}
 }
 
 // 달리기 사용 -> 이동 속도 증가 및 Dash Tag 부착
 void APlayerCharacter::Dash()
 {
-	if (Controller != nullptr)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		if (!(GetCharacterMovement()->IsFalling()))
+		if (Controller != nullptr)
 		{
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
+			if (!(GetCharacterMovement()->IsFalling()))
 			{
-				GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.Dash"))) <= 0)
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
 				{
-					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Dash")));
+					GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.Dash"))) <= 0)
+					{
+						GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Dash")));
+					}
 				}
 			}
 		}
@@ -288,32 +297,35 @@ void APlayerCharacter::MakeTagAndActive(FString TagName)
 //회피
 void APlayerCharacter::Dodge()
 {
-	if (Controller != nullptr)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		if (!(GetCharacterMovement()->IsFalling()))
+		if (Controller != nullptr)
 		{
-			if (bUseLockOn)
+			if (!(GetCharacterMovement()->IsFalling()))
 			{
-				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd"))) > 0)
+				if (bUseLockOn)
+				{
+					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd"))) > 0)
+					{
+						MakeTagAndActive("Player.Dodge.Rolling");
+					}
+					else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd"))) > 0)
+					{
+						MakeTagAndActive("Player.Dodge.Rolling.Bwd");
+					}
+					else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft"))) > 0)
+					{
+						MakeTagAndActive("Player.Dodge.Rolling.Left");
+					}
+					else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight"))) > 0)
+					{
+						MakeTagAndActive("Player.Dodge.Rolling.Right");
+					}
+				}
+				else if (!bUseLockOn)
 				{
 					MakeTagAndActive("Player.Dodge.Rolling");
 				}
-				else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveBwd"))) > 0)
-				{
-					MakeTagAndActive("Player.Dodge.Rolling.Bwd");
-				}
-				else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveLeft"))) > 0)
-				{
-					MakeTagAndActive("Player.Dodge.Rolling.Left");
-				}
-				else if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveRight"))) > 0)
-				{
-					MakeTagAndActive("Player.Dodge.Rolling.Right");
-				}
-			}
-			else if (!bUseLockOn)
-			{
-				MakeTagAndActive("Player.Dodge.Rolling");
 			}
 		}
 	}
@@ -322,64 +334,79 @@ void APlayerCharacter::Dodge()
 //콤보 공격
 void APlayerCharacter::ComboAttack()
 {
-	if (!(GetCharacterMovement()->IsFalling()))
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		MakeTagAndActive("Player.Attack");
+		if (!(GetCharacterMovement()->IsFalling()))
+		{
+			MakeTagAndActive("Player.Attack");
+		}
 	}
 }
 
 //스킬 사용(Q)
 void APlayerCharacter::UseQSkill()
 {
-	if (!(GetCharacterMovement()->IsFalling()))
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		MakeTagAndActive("Player.Skill.QSkill");
+		if (!(GetCharacterMovement()->IsFalling()))
+		{
+			MakeTagAndActive("Player.Skill.QSkill");
+		}
 	}
 }
 
 //스킬 사용(E)
 void APlayerCharacter::UseESkill()
 {
-	if (!(GetCharacterMovement()->IsFalling()))
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		MakeTagAndActive("Player.Skill.ESkill");
+		if (!(GetCharacterMovement()->IsFalling()))
+		{
+			MakeTagAndActive("Player.Skill.ESkill");
+		}
 	}
 }
 
 // 특수 스킬 사용
 void APlayerCharacter::UseEFSkill()
 {
-	if (!(GetCharacterMovement()->IsFalling()))
-	{
-		MakeTagAndActive("Player.Skill.EFSkill");
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
+	{ 
+		if (!(GetCharacterMovement()->IsFalling()))
+		{
+			MakeTagAndActive("Player.Skill.EFSkill");
+		}
 	}
 }
 
 //방어 시작
 void APlayerCharacter::BlockStart()
 {
-	if (!(GetCharacterMovement()->IsFalling()))
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		if (!CanUseParrying)
+		if (!(GetCharacterMovement()->IsFalling()))
 		{
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) <= 0)
+			if (!CanUseParrying)
 			{
-				GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))); 
-				CanUseParrying = true;
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) <= 0)
+				{
+					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying")));
+					CanUseParrying = true;
 
-				FTimerHandle ParryingEndHandle;
-				GetWorld()->GetTimerManager().SetTimer(ParryingEndHandle, FTimerDelegate::CreateLambda([&]()
-					{
-						GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying")));
+					FTimerHandle ParryingEndHandle;
+					GetWorld()->GetTimerManager().SetTimer(ParryingEndHandle, FTimerDelegate::CreateLambda([&]()
+						{
+							GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying")));
 
-						// 타이머 초기화
-						GetWorld()->GetTimerManager().ClearTimer(ParryingEndHandle);
-					}), InDelayTime, false); 
+							// 타이머 초기화
+							GetWorld()->GetTimerManager().ClearTimer(ParryingEndHandle);
+						}), InDelayTime, false);
+				}
 			}
-		}
-		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
-		{
-			MakeTagAndActive("Player.Block");
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
+			{
+				MakeTagAndActive("Player.Block");
+			}
 		}
 	}
 }
@@ -398,12 +425,15 @@ void APlayerCharacter::BlockEnd()
 //검 소환
 void APlayerCharacter::SwordSummons()
 {
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) <= 0)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		if (!(GetCharacterMovement()->IsFalling()))
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) <= 0)
 		{
-			WeaponUnequip();
-			MakeTagAndActive("Player.EquipWeapon.Sword");
+			if (!(GetCharacterMovement()->IsFalling()))
+			{
+				WeaponUnequip();
+				MakeTagAndActive("Player.EquipWeapon.Sword");
+			}
 		}
 	}
 }
@@ -438,63 +468,66 @@ void APlayerCharacter::WeaponUnequip()
 
 void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 {
-	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-	FGameplayEffectSpecHandle SpecHandle;
-
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		if (GetInstigator())
-		{
-			float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw);
-			AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator());
+		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+		FGameplayEffectSpecHandle SpecHandle;
 
-			if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f))
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+		{
+			if (GetInstigator())
 			{
-				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
+				float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw);
+				AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator());
+
+				if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Parrying"));
-					//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
-					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
-					AttackedEnemy->TakeParrying();
-					EFCharge();
-				}
-				else
-				{
-					if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
+					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Break Block"));
-						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+						UE_LOG(LogTemp, Warning, TEXT("Parrying"));
+						//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
+						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
+						AttackedEnemy->TakeParrying();
+						EFCharge();
 					}
 					else
 					{
-						//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
-						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
+						if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
+						{
+							UE_LOG(LogTemp, Warning, TEXT("Break Block"));
+							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+						}
+						else
+						{
+							//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
+							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
+						}
 					}
 				}
+				else
+				{
+					//UE_LOG(LogTemp, Warning, TEXT("Hit"));
+					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+				}
 			}
-			else
-			{
-				//UE_LOG(LogTemp, Warning, TEXT("Hit"));
-				SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
-			}
+
 		}
-		
-	}
-	else
-	{
-		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo1")));
-		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo2")));
-		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo3")));
-		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo4")));
-		GetAbilitySystemComponent()->CancelAbilities();
+		else
+		{
+			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo1")));
+			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo2")));
+			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo3")));
+			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo4")));
+			GetAbilitySystemComponent()->CancelAbilities();
 
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
-	}
+			SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+		}
 
-	if (SpecHandle.IsValid())
-	{
-		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		if (SpecHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
 	}
 }
 
@@ -511,50 +544,68 @@ void APlayerCharacter::EFCharge()
 	}
 }
 
+void APlayerCharacter::Die()
+{
+	Super::Die();
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
+	{
+		GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.Die")));
+	}
+	DashEnd();
+	MoveEnd();
+	BlockEnd();
+	
+	WeaponUnequip();
+	ArmBarrier->Destroy();
+}
+
 void APlayerCharacter::LockOn()
 {
-	if (LockOnEnemy != nullptr) //락온 해제
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 	{
-		LockOnEnemy = nullptr;
-		GetCharacterMovement()->bOrientRotationToMovement = true;
-		GetCharacterMovement()->bUseControllerDesiredRotation = false;
-		bUseLockOn = false;
-	}
-	else if (LockOnEnemy == nullptr) //락온 작동
-	{
-		FVector Start = GetActorLocation();
-		FVector End = GetActorLocation() + (UKismetMathLibrary::GetForwardVector(GetControlRotation()) * 500.f);
-		TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
-		TraceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
-		TArray<AActor*> ActorsToIgnore;
-		ActorsToIgnore.Add(GetOwner());
-		ActorsToIgnore.Add(ArmBarrier);
-		ActorsToIgnore.Add(Sword);
-		FHitResult OutHit;
-		bool bResult;
-
-		bResult = UKismetSystemLibrary::SphereTraceSingle
-		(
-			GetWorld(),
-			Start,
-			End,
-			125.f,
-			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel4),
-			false,
-			ActorsToIgnore,
-			EDrawDebugTrace::ForDuration,
-			OutHit,
-			true
-		);
-
-		if (bResult)
+		if (LockOnEnemy != nullptr) //락온 해제
 		{
-			LockOnEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
-			if (LockOnEnemy)
+			LockOnEnemy = nullptr;
+			GetCharacterMovement()->bOrientRotationToMovement = true;
+			GetCharacterMovement()->bUseControllerDesiredRotation = false;
+			bUseLockOn = false;
+		}
+		else if (LockOnEnemy == nullptr) //락온 작동
+		{
+			FVector Start = GetActorLocation();
+			FVector End = GetActorLocation() + (UKismetMathLibrary::GetForwardVector(GetControlRotation()) * 500.f);
+			TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
+			TraceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+			TArray<AActor*> ActorsToIgnore;
+			ActorsToIgnore.Add(GetOwner());
+			ActorsToIgnore.Add(ArmBarrier);
+			ActorsToIgnore.Add(Sword);
+			FHitResult OutHit;
+			bool bResult;
+
+			bResult = UKismetSystemLibrary::SphereTraceSingle
+			(
+				GetWorld(),
+				Start,
+				End,
+				125.f,
+				UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel4),
+				false,
+				ActorsToIgnore,
+				EDrawDebugTrace::ForDuration,
+				OutHit,
+				true
+			);
+
+			if (bResult)
 			{
-				GetCharacterMovement()->bOrientRotationToMovement = false;
-				GetCharacterMovement()->bUseControllerDesiredRotation = true;
-				bUseLockOn = true;
+				LockOnEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
+				if (LockOnEnemy)
+				{
+					GetCharacterMovement()->bOrientRotationToMovement = false;
+					GetCharacterMovement()->bUseControllerDesiredRotation = true;
+					bUseLockOn = true;
+				}
 			}
 		}
 	}

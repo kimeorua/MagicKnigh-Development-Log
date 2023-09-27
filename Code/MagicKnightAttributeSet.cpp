@@ -31,12 +31,22 @@ void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		SetHealth(FMath::Clamp(GetHealth() - Damage.GetCurrentValue(), 0.f, GetMaxHealth()));
 		SetPosture(FMath::Clamp(GetPosture() + Damage.GetCurrentValue() * 1.2f, 0.f, GetMaxPosture()));
 
-		if (GetPosture() >= GetMaxPosture())
+		if (GetHealth() <= 0.f)
 		{
-			SetPosture(0.f);
+			SetHealth(0.f);
 			ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor());
-			//UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *Owner->GetName())
-			Owner->Stun();
+			Owner->Die();
+		}
+
+		else
+		{
+			if (GetPosture() >= GetMaxPosture())
+			{
+				SetPosture(0.f);
+				ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor());
+				//UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *Owner->GetName())
+				Owner->Stun();
+			}
 		}
 
 		Damage = 0.f;

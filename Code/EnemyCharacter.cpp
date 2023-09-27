@@ -9,6 +9,7 @@
 #include "PlayerCharacter.h"
 #include "EnemyAnimInstance.h"
 #include "Components/CapsuleComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AEnemyCharacter::AEnemyCharacter()
@@ -52,25 +53,28 @@ void AEnemyCharacter::LosePlayer()
 
 void AEnemyCharacter::TakeDamgeFormPlayer(EDamageEffectType DamageType)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hit"));
-	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-	FGameplayEffectSpecHandle SpecHandle;
-
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.SuperArmor"))) > 0)
+	if (!bIsDie)
 	{
-		if (IsValid(HitSound) && HitParticle != nullptr)
+		UE_LOG(LogTemp, Warning, TEXT("Hit"));
+		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+		FGameplayEffectSpecHandle SpecHandle;
+
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.SuperArmor"))) > 0)
 		{
-			UGameplayStatics::PlaySound2D(GetWorld(), HitSound);
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetMesh()->GetSocketLocation(HitParticleSocket));
+			if (IsValid(HitSound) && HitParticle != nullptr)
+			{
+				UGameplayStatics::PlaySound2D(GetWorld(), HitSound);
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitParticle, GetMesh()->GetSocketLocation(HitParticleSocket));
+			}
 		}
-	}
 
-	SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
 
-	if (SpecHandle.IsValid())
-	{
-		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		if (SpecHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
 	}
 }
 
@@ -136,15 +140,29 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		//UE_LOG(LogTemp, Warning, TEXT("Player_Hit"));
 
 		APlayerCharacter* Player = Cast<APlayerCharacter>(OutHit.GetActor());
-		if (Player && !PlayerIsHit)
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
 		{
-			Player->SetInstigator(this);
-			Player->TakeDamageFromEnemy(DamageType);
-			PlayerIsHit = true;
+			if (Player && !PlayerIsHit)
+			{
+				Player->SetInstigator(this);
+				Player->TakeDamageFromEnemy(DamageType);
+				PlayerIsHit = true;
+			}
+		}
+		else
+		{
+			Cast<AEnemyAIController>(GetController())->GetBlackboardComponent()->SetValueAsObject(AEnemyAIController::Player, nullptr);
+			Cast<AEnemyAIController>(GetController())->GetBlackboardComponent()->SetValueAsBool(AEnemyAIController::CanSeePlayer, false);
+			Cast<AEnemyAIController>(GetController())->ClearFocus(EAIFocusPriority::Gameplay);
 		}
 	}
-
 	return OutHit;
+}
+
+void AEnemyCharacter::Die()
+{
+	Super::Die();
+	Cast<AEnemyAIController>(GetController())->GetBlackboardComponent()->SetValueAsBool(AEnemyAIController::IsDie, true);
 }
 
 void AEnemyCharacter::PlayerHitReset()
@@ -154,22 +172,25 @@ void AEnemyCharacter::PlayerHitReset()
 
 void AEnemyCharacter::TakeParrying()
 {
-	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-	FGameplayEffectSpecHandle SpecHandle;
+	if (!bIsDie)
+	{
+		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+		FGameplayEffectSpecHandle SpecHandle;
 
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable"))) > 0)
-	{
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[EDamageEffectType::PostureUp_OnParry], 1, EffectContext);
-	}
-	else
-	{
-		SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[EDamageEffectType::PostureUp], 1, EffectContext);
-	}
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable"))) > 0)
+		{
+			SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[EDamageEffectType::PostureUp_OnParry], 1, EffectContext);
+		}
+		else
+		{
+			SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[EDamageEffectType::PostureUp], 1, EffectContext);
+		}
 
-	if (SpecHandle.IsValid())
-	{
-		FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		if (SpecHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
 	}
 }
 

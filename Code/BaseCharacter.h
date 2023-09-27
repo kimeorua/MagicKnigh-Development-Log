@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
 	bool bIsStun = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
+	bool bIsDie = false;
+
 //----------------------------------------------------ÇÔ¼ö----------------------------------------------------//
 public:
 	// Sets default values for this character's properties
@@ -56,6 +59,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void Stun();
+	virtual void Die();
 	UFUNCTION(BlueprintCallable)
 	void StunEnd();
+	UFUNCTION(BlueprintCallable)
+	void DieEnd();
 };

@@ -95,7 +95,17 @@ void ABaseCharacter::Stun()
 	UE_LOG(LogTemp, Warning, TEXT("Base Stun"));
 }
 
+void ABaseCharacter::Die()
+{
+	bIsDie = true;
+}
+
 void ABaseCharacter::StunEnd()
 {
 	bIsStun = false;
+}
+
+void ABaseCharacter::DieEnd()
+{
+	bIsDie = false;
 }

@@ -211,4 +211,6 @@ public:
 
 	//락온 기능 사용
 	void LockOn();
+
+	void Die() override;
 };
