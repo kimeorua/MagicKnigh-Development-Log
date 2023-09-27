@@ -544,6 +544,14 @@ void APlayerCharacter::EFCharge()
 	}
 }
 
+void APlayerCharacter::LockOnReset()
+{
+	LockOnEnemy = nullptr;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
+	bUseLockOn = false;
+}
+
 void APlayerCharacter::Die()
 {
 	Super::Die();
@@ -565,10 +573,7 @@ void APlayerCharacter::LockOn()
 	{
 		if (LockOnEnemy != nullptr) //락온 해제
 		{
-			LockOnEnemy = nullptr;
-			GetCharacterMovement()->bOrientRotationToMovement = true;
-			GetCharacterMovement()->bUseControllerDesiredRotation = false;
-			bUseLockOn = false;
+			LockOnReset();
 		}
 		else if (LockOnEnemy == nullptr) //락온 작동
 		{

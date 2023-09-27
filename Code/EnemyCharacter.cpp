@@ -14,7 +14,7 @@
 
 AEnemyCharacter::AEnemyCharacter()
 {
-	Controller = nullptr;
+	AIController = nullptr;
 
 	HitCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("HitCollision"));
 	HitCollision->SetupAttachment(RootComponent);
@@ -24,7 +24,7 @@ AEnemyCharacter::AEnemyCharacter()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	Controller = Cast<AEnemyAIController>(GetController());
+	AIController = Cast<AEnemyAIController>(GetController());
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	
 }
@@ -151,9 +151,9 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		}
 		else
 		{
-			Cast<AEnemyAIController>(GetController())->GetBlackboardComponent()->SetValueAsObject(AEnemyAIController::Player, nullptr);
-			Cast<AEnemyAIController>(GetController())->GetBlackboardComponent()->SetValueAsBool(AEnemyAIController::CanSeePlayer, false);
-			Cast<AEnemyAIController>(GetController())->ClearFocus(EAIFocusPriority::Gameplay);
+			AIController->GetBlackboardComponent()->SetValueAsObject(AEnemyAIController::Player, nullptr);
+			AIController->GetBlackboardComponent()->SetValueAsBool(AEnemyAIController::CanSeePlayer, false);
+			AIController->ClearFocus(EAIFocusPriority::Gameplay);
 		}
 	}
 	return OutHit;
@@ -162,7 +162,10 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 void AEnemyCharacter::Die()
 {
 	Super::Die();
-	Cast<AEnemyAIController>(GetController())->GetBlackboardComponent()->SetValueAsBool(AEnemyAIController::IsDie, true);
+	AIController->GetBlackboardComponent()->SetValueAsBool(AEnemyAIController::IsDie, true);
+	APlayerCharacter* Player = Cast<APlayerCharacter>(AIController->GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));
+	Player->LockOnReset();
+	AIController->ClearFocus(EAIFocusPriority::Gameplay);
 }
 
 void AEnemyCharacter::PlayerHitReset()

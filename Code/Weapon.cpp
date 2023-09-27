@@ -106,20 +106,23 @@ FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range, EDama
 
 	if (bResult)
 	{
-		if (HitEnemys.IsEmpty())
+		if (!Cast<AEnemyCharacter>(OutHit.GetActor())->bIsDie)
 		{
-			HitEnemys.Add(Cast<AEnemyCharacter>(OutHit.GetActor()));
-			HitEnemys[0]->TakeDamgeFormPlayer(DamgeType);
-			APlayerCharacter* Player = Cast<APlayerCharacter>(GetOwner());
-			if (IsValid(Player)) { Player->EFCharge(); }
-		}
-		else if(!HitEnemys.IsEmpty())
-		{
-			if (!HitEnemys.Contains(OutHit.GetActor()))
+			if (HitEnemys.IsEmpty())
 			{
-				AEnemyCharacter* HitEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
-				HitEnemy->TakeDamgeFormPlayer(DamgeType);
-				HitEnemys.Add(HitEnemy);
+				HitEnemys.Add(Cast<AEnemyCharacter>(OutHit.GetActor()));
+				HitEnemys[0]->TakeDamgeFormPlayer(DamgeType);
+				APlayerCharacter* Player = Cast<APlayerCharacter>(GetOwner());
+				if (IsValid(Player)) { Player->EFCharge(); }
+			}
+			else if (!HitEnemys.IsEmpty())
+			{
+				if (!HitEnemys.Contains(OutHit.GetActor()))
+				{
+					AEnemyCharacter* HitEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
+					HitEnemy->TakeDamgeFormPlayer(DamgeType);
+					HitEnemys.Add(HitEnemy);
+				}
 			}
 		}
 	}
