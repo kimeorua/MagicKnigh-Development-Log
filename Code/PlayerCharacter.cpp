@@ -485,8 +485,7 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 				{
 					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Parrying"));
-						//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[2], 1, EffectContext);
+						//UE_LOG(LogTemp, Warning, TEXT("Parrying"));
 						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
 						AttackedEnemy->TakeParrying();
 						EFCharge();
@@ -500,14 +499,12 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 						}
 						else
 						{
-							//SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(HitEffects[1], 1, EffectContext);
 							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
 						}
 					}
 				}
 				else
 				{
-					//UE_LOG(LogTemp, Warning, TEXT("Hit"));
 					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
 				}
 			}
@@ -562,9 +559,7 @@ void APlayerCharacter::Die()
 	DashEnd();
 	MoveEnd();
 	BlockEnd();
-	
-	WeaponUnequip();
-	ArmBarrier->Destroy();
+	LockOnReset();
 }
 
 void APlayerCharacter::LockOn()
