@@ -288,7 +288,7 @@
 + ### [09/27 플레이어 및 적 캐릭터 죽음 판정 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%20%EB%B0%8F%20%EC%95%84%EA%B5%B0%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EC%82%AC%EB%A7%9D%20%ED%8C%90%EC%A0%95.md)
 
 ### 10/04 ~ 10/06
-+ ### [10/04 플레이어 사망 시 레벨 재 시작](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%82%AC%EB%A7%9D%20%EC%8B%9C%20%EB%A0%88%EB%B2%A8%20%EC%9E%AC%20%EC%8B%9C%EC%9E%91.md) 및 [적 사망 시 제거 구현]()
++ ### [10/04 플레이어 사망 시 레벨 재 시작](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%82%AC%EB%A7%9D%20%EC%8B%9C%20%EB%A0%88%EB%B2%A8%20%EC%9E%AC%20%EC%8B%9C%EC%9E%91.md) 및 [적 사망 시 제거 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%20%EC%82%AC%EB%A7%9D%20%EC%8B%9C%20%EC%A0%9C%EA%B1%B0%20%EA%B5%AC%ED%98%84.md)
 ---
 
 ## 9 버그 및 개선 사항
