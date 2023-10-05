@@ -26,6 +26,10 @@ void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 	{
 		SetPosture(FMath::Clamp(GetPosture(), 0.f, GetMaxPosture()));
 	}
+	else if (Data.EvaluatedData.Attribute == GetHealingCountAttribute())
+	{
+		SetHealingCount(FMath::Clamp(GetHealingCount(), 0.f, GetMaxHealingCount()));
+	}
 	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth() - Damage.GetCurrentValue(), 0.f, GetMaxHealth()));
@@ -68,6 +72,16 @@ void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 		}
 		PostureUp = 0.f;
 	}
+	else if (Data.EvaluatedData.Attribute == GetHealing_HPAttribute())
+	{
+		if (GetHealth() < GetMaxHealth() && GetHealingCount() > 0)
+		{
+			SetHealingCount(GetHealingCount() - 1);
+			SetHealth(FMath::Clamp(GetHealth(), GetHealth() + Healing_HP.GetCurrentValue(), GetMaxHealth()));
+			UE_LOG(LogTemp, Warning, TEXT("Heal"));
+		}
+		SetHealing_HP(0.f);
+	}
 }
 
 void UMagicKnightAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -82,6 +96,8 @@ void UMagicKnightAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, MaxPosture, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, Damage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, ChargeEF, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, HealingCount, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMagicKnightAttributeSet, MaxHealingCount, COND_None, REPNOTIFY_Always);
 }
 
 void UMagicKnightAttributeSet::OnRep_Health(FGameplayAttributeData& OldHealth)
@@ -127,4 +143,19 @@ void UMagicKnightAttributeSet::OnRep_ChargeEF(FGameplayAttributeData& OldChargeE
 void UMagicKnightAttributeSet::OnRep_PostureUp(FGameplayAttributeData& OldPostureUp)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, PostureUp, OldPostureUp);
+}
+
+void UMagicKnightAttributeSet::OnRep_HealingCount(FGameplayAttributeData& OldHealingCount)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, HealingCount, OldHealingCount);
+}
+
+void UMagicKnightAttributeSet::OnRep_MaxHealingCount(FGameplayAttributeData& OldMaxHealingCount)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, MaxHealingCount, OldMaxHealingCount);
+}
+
+void UMagicKnightAttributeSet::OnRep_OldHealing_HP(FGameplayAttributeData& OldHealing_HP)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMagicKnightAttributeSet, Healing_HP, OldHealing_HP);
 }

@@ -54,6 +54,15 @@ public:
 	UFUNCTION()
 	virtual void OnRep_PostureUp(FGameplayAttributeData& OldPostureUp);
 
+	UFUNCTION()
+	virtual void OnRep_HealingCount(FGameplayAttributeData& OldHealingCount);
+
+	UFUNCTION()
+	virtual void OnRep_MaxHealingCount(FGameplayAttributeData& OldMaxHealingCount);
+
+	UFUNCTION()
+	virtual void OnRep_OldHealing_HP(FGameplayAttributeData& OldHealing_HP);
+
 	void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data); // 속성의 기본 값을 수정하기 위해 GameplayEffect가 실행되기 직전에 호출됩니다
 
 	//-------------------------------------변수--------------------------------------------------//
@@ -103,4 +112,15 @@ public:
 	FGameplayAttributeData PostureUp;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, PostureUp)
 
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData HealingCount;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, HealingCount)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData MaxHealingCount = 5.0f;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, MaxHealingCount)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
+	FGameplayAttributeData Healing_HP;
+	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, Healing_HP)
 };

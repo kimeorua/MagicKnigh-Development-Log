@@ -33,10 +33,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOn", meta = (AllowPrivateAccess = "true"))
 	bool bLockOn;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Move", meta = (AllowPrivateAccess = "true"))
+	bool bHealing;
+
 public:
 	UPlayerAnimInstance(); // 생성자
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; //애니메이션 업데이트 함수
 
 	EEquipedWeapon CheackWeaponTag(); //플레이어가 장착한 무기를 GameplayTag를 통해 확인
 	bool CheackUseBlock();
+	bool CheackUseHeal();
 };

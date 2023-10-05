@@ -73,6 +73,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LockOnAction;
 
+	// 힐링 입력 Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* HealingAction;
+
 	//시점 회전 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float LookRate = 0.35f;
@@ -214,4 +218,6 @@ public:
 	void LockOnReset();
 
 	void Die() override;
+
+	void Healing();
 };

@@ -134,6 +134,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		//Lock On 사용
 		EnhancedInputComponent->BindAction(LockOnAction, ETriggerEvent::Started, this, &APlayerCharacter::LockOn);
+
+		//힐링 사용
+		EnhancedInputComponent->BindAction(HealingAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Healing);
 	}
 }
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -485,7 +488,7 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 				{
 					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
 					{
-						//UE_LOG(LogTemp, Warning, TEXT("Parrying"));
+						UE_LOG(LogTemp, Warning, TEXT("Parrying"));
 						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
 						AttackedEnemy->TakeParrying();
 						EFCharge();
@@ -560,6 +563,20 @@ void APlayerCharacter::Die()
 	MoveEnd();
 	BlockEnd();
 	LockOnReset();
+}
+
+void APlayerCharacter::Healing()
+{ 
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) 
+	{
+		if (!(GetCharacterMovement()->IsFalling())) 
+		{
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseHealing"))) <= 0)
+			{
+				MakeTagAndActive("Player.Healing");
+			}
+		}
+	}
 }
 
 void APlayerCharacter::LockOn()

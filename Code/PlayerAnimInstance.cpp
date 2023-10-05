@@ -24,6 +24,7 @@ void UPlayerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		EquipedWeapon = CheackWeaponTag();
 		IsBlock = CheackUseBlock();
 		bLockOn = Player->GetUseLockOn();
+		bHealing = CheackUseHeal();
 	}
 }
 
@@ -51,6 +52,25 @@ bool UPlayerAnimInstance::CheackUseBlock()
 	if (Player != nullptr) //  플레이어가 유효 하면
 	{
 		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool UPlayerAnimInstance::CheackUseHeal()
+{
+	if (Player != nullptr) //  플레이어가 유효 하면
+	{
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseHealing"))) > 0)
 		{
 			return true;
 		}
