@@ -130,16 +130,19 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
 	TMap<EDamageEffectType, TSubclassOf<class UGameplayEffect>> DamageEffects;
 
+	//튕겨내기 사용 여부
+	bool UseParrying = false;
 
-
-	bool CanUseParrying = false;
-
+	//튕겨내기 종료 시간 -> 테스트를 위해 블루프린트에서 설정 가능 하도록 구현
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
 	float InDelayTime = 0.5;
 
 	//-------------- Lock On ---------------//
 
+	//바라볼 적 객체
 	class AEnemyCharacter* LockOnEnemy = nullptr;
+
+	//LockOn 사용 여부
 	bool bUseLockOn = false;
 
 	//-------------- Lock On ---------------//
@@ -164,6 +167,7 @@ public:
 	FORCEINLINE bool GetUseLockOn() const { return bUseLockOn; }
 	//--------------------------------------------------------------------------------//
 	
+	//현재 사용 중인 무기 반환
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE class AWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
 
@@ -210,14 +214,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void WeaponEquip(FName EquipSocketName, AWeapon* Weapon);
 
-	void TakeDamageFromEnemy(EDamageEffectType DamgeType); //적이 공격하여 피격 될시 GameplayEffect 호출
+	//적이 공격하여 피격 될시 GameplayEffect 호출
+	void TakeDamageFromEnemy(EDamageEffectType DamgeType); 
+	// EF 충전 함수
 	void EFCharge();
 
 	//락온 기능 사용
 	void LockOn();
 	void LockOnReset();
 
+	//사망 함수
 	void Die() override;
 
+	//회복 스킬 사용
 	void Healing();
 };

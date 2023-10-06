@@ -81,7 +81,7 @@ FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range, EDama
 			true);
 		break;
 
-	case EAttackCollisionType::AOE_Player_Center:
+	case EAttackCollisionType::AOE_Object_Center:
 		bResult = UKismetSystemLibrary::SphereTraceSingle(
 			GetWorld(),
 			GetOwner()->GetActorLocation(),

@@ -31,9 +31,11 @@ APlayerCharacter::APlayerCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
 	FollowCamera->bUsePawnControlRotation = false; 
-
+	
+	//카메라 및 이동 기본 세팅
 	PlayerSetup();
 
+	//초기화
 	DefaultMappingContext = nullptr;
 	MoveAction = nullptr;
 	LookAction = nullptr;
@@ -300,13 +302,13 @@ void APlayerCharacter::MakeTagAndActive(FString TagName)
 //회피
 void APlayerCharacter::Dodge()
 {
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) //사망중이면 사용 불가
 	{
 		if (Controller != nullptr)
 		{
 			if (!(GetCharacterMovement()->IsFalling()))
 			{
-				if (bUseLockOn)
+				if (bUseLockOn) //LockOn 상태이면 방향에 따르게 다른 회피 작동
 				{
 					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.MoveFwd"))) > 0)
 					{
@@ -325,7 +327,7 @@ void APlayerCharacter::Dodge()
 						MakeTagAndActive("Player.Dodge.Rolling.Right");
 					}
 				}
-				else if (!bUseLockOn)
+				else if (!bUseLockOn) //LockOn 중이 아니면 일반 회피 작동
 				{
 					MakeTagAndActive("Player.Dodge.Rolling");
 				}
@@ -389,26 +391,27 @@ void APlayerCharacter::BlockStart()
 	{
 		if (!(GetCharacterMovement()->IsFalling()))
 		{
-			if (!CanUseParrying)
+			if (!UseParrying) //튕겨내기 사용 중이 아니면 -> 키를 처음 눌름
 			{
-				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) <= 0)
+				if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) <= 0) //1번만 부착하기 위해 Tag 검사
 				{
-					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying")));
-					CanUseParrying = true;
+					GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))); // Tag 부착
+					UseParrying = true; //튕겨내기 사용 중으로 변경 -> 가드 작동시, 일정 시간에만 튕겨내기 작동함.
 
-					FTimerHandle ParryingEndHandle;
+					//Timer 설정
+					FTimerHandle ParryingEndHandle; 
 					GetWorld()->GetTimerManager().SetTimer(ParryingEndHandle, FTimerDelegate::CreateLambda([&]()
 						{
-							GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying")));
+							GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))); //InDelayTime이 지난후 Tag 제거
 
 							// 타이머 초기화
 							GetWorld()->GetTimerManager().ClearTimer(ParryingEndHandle);
 						}), InDelayTime, false);
 				}
 			}
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0)
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0) // 방어 사용 중이 아니면  작동
 			{
-				MakeTagAndActive("Player.Block");
+				MakeTagAndActive("Player.Block"); 
 			}
 		}
 	}
@@ -419,9 +422,9 @@ void APlayerCharacter::BlockEnd()
 {
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
 	{
-		CanUseParrying = false;
-		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock")));
-		ArmBarrier->BarrierOff();
+		UseParrying = false; // 가드 종료 -> 튕겨내기 다시 사용 할 수 있도록 변경
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))); //가드 사용중 Tag 제거
+		ArmBarrier->BarrierOff(); //방패 크기 초기화
 	}
 }
 
@@ -469,68 +472,74 @@ void APlayerCharacter::WeaponUnequip()
 	}
 }
 
+//적에게 공격을 받을 시.
 void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 {
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) //플레이어가 사망 하지 않았을때 작동
 	{
 		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 		EffectContext.AddSourceObject(this);
 		FGameplayEffectSpecHandle SpecHandle;
 
-		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0) //현재 방어 중이면
 		{
 			if (GetInstigator())
 			{
-				float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw);
-				AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator());
+				float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw); //적 캐릭터의 방향과 플레이어 캐릭터의 방향 각도를 계산
+				AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator()); //공격한 객체 저장
 
-				if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f))
+				if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f)) //방어각도(100')에 들어 왔으면 방어 or 튕겨내기 성공
 				{
-					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
+					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0) //튕겨내기 Effect
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Parrying"));
+						//UE_LOG(LogTemp, Warning, TEXT("Parrying"));
 						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
 						AttackedEnemy->TakeParrying();
 						EFCharge();
 					}
 					else
 					{
-						if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
+						if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0) //적 캐릭터가 방어 무시 공격을 하면
 						{
-							UE_LOG(LogTemp, Warning, TEXT("Break Block"));
-							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+							//UE_LOG(LogTemp, Warning, TEXT("Break Block"));
+							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext); //데미지 받음
 						}
-						else
+						else //방어 성공시
 						{
-							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
+							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext); //방어 Effect
 						}
 					}
 				}
 				else
 				{
-					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext); //데미지 받음
 				}
 			}
 
 		}
+
+		//방어 중이 아닐때 
 		else
 		{
+			//일반 공격 중이면 테그 제거
 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo1")));
 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo2")));
 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo3")));
 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo4")));
+			//어빌리티 사용 취소
 			GetAbilitySystemComponent()->CancelAbilities();
 
-			SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+			SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext); //데미지 받음
 		}
 
 		if (SpecHandle.IsValid())
 		{
-			FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get()); //이펙트가 실제로 적용됨
 		}
 	}
 }
 
+//EF 충전
 void APlayerCharacter::EFCharge()
 {
 	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
@@ -544,6 +553,7 @@ void APlayerCharacter::EFCharge()
 	}
 }
 
+//LockOn 초기화
 void APlayerCharacter::LockOnReset()
 {
 	LockOnEnemy = nullptr;
@@ -552,6 +562,7 @@ void APlayerCharacter::LockOnReset()
 	bUseLockOn = false;
 }
 
+//플레이어 사망
 void APlayerCharacter::Die()
 {
 	Super::Die();
@@ -559,24 +570,12 @@ void APlayerCharacter::Die()
 	{
 		GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.Die")));
 	}
+	//충돌 방지를 위하여, Tag 제거
 	DashEnd();
 	MoveEnd();
 	BlockEnd();
+	//플레이어 사망시, LockOn 해제
 	LockOnReset();
-}
-
-void APlayerCharacter::Healing()
-{ 
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) 
-	{
-		if (!(GetCharacterMovement()->IsFalling())) 
-		{
-			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseHealing"))) <= 0)
-			{
-				MakeTagAndActive("Player.Healing");
-			}
-		}
-	}
 }
 
 void APlayerCharacter::LockOn()
@@ -589,8 +588,8 @@ void APlayerCharacter::LockOn()
 		}
 		else if (LockOnEnemy == nullptr) //락온 작동
 		{
-			FVector Start = GetActorLocation();
-			FVector End = GetActorLocation() + (UKismetMathLibrary::GetForwardVector(GetControlRotation()) * 500.f);
+			FVector Start = GetActorLocation(); //현재 플레이어의 위치
+			FVector End = GetActorLocation() + (UKismetMathLibrary::GetForwardVector(GetControlRotation()) * 500.f); //락온 범위
 			TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
 			TraceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
 			TArray<AActor*> ActorsToIgnore;
@@ -623,6 +622,21 @@ void APlayerCharacter::LockOn()
 					GetCharacterMovement()->bUseControllerDesiredRotation = true;
 					bUseLockOn = true;
 				}
+			}
+		}
+	}
+}
+
+//회복 스킬 사용
+void APlayerCharacter::Healing()
+{
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
+	{
+		if (!(GetCharacterMovement()->IsFalling()))
+		{
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseHealing"))) <= 0)
+			{
+				MakeTagAndActive("Player.Healing");
 			}
 		}
 	}

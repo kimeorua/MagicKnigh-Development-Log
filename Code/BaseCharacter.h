@@ -58,10 +58,15 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//기절
 	void Stun();
-	virtual void Die();
+
+	//기절 종료
 	UFUNCTION(BlueprintCallable)
 	void StunEnd();
-	UFUNCTION(BlueprintCallable)
-	void DieEnd();
+
+	//사망
+	virtual void Die();
+
+
 };

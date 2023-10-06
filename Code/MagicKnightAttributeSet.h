@@ -25,7 +25,7 @@ public:
 	//-------------------------------------함수--------------------------------------------------//
 
 	UMagicKnightAttributeSet(); //생성자
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const  override; //네트워크 복제에 사용되는 속성을 반환합니다. 기본 복제 속성이 있는 모든 액터 클래스에서 재정의해야 합니다.
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const  override; //네트워크 복제에 사용되는 속성을 반환. 기본 복제 속성이 있는 모든 액터 클래스에서 재정의 해야 함ㄴ
 
 	UFUNCTION()
 	virtual void OnRep_Health(FGameplayAttributeData& OldHealth);
@@ -63,7 +63,8 @@ public:
 	UFUNCTION()
 	virtual void OnRep_OldHealing_HP(FGameplayAttributeData& OldHealing_HP);
 
-	void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data); // 속성의 기본 값을 수정하기 위해 GameplayEffect가 실행되기 직전에 호출됩니다
+	// 속성의 기본 값을 수정하기 위해 GameplayEffect가 실행되기 직전에 호출
+	void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data); 
 
 	//-------------------------------------변수--------------------------------------------------//
 
@@ -112,14 +113,17 @@ public:
 	FGameplayAttributeData PostureUp;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, PostureUp)
 
+	//남은 회복 스킬 사용 횟수
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData HealingCount;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, HealingCount)
-
+	
+	//최대 회복 스킬 사용 횟수
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData MaxHealingCount = 5.0f;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, MaxHealingCount)
 
+	// 회복되는 체력 량
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	FGameplayAttributeData Healing_HP;
 	ATTRIBUTE_ACCESSORS(UMagicKnightAttributeSet, Healing_HP)

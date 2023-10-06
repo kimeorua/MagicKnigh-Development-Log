@@ -13,14 +13,14 @@
 #include "EnemyCharacter.h"
 
 //접근할 이름에 블랙보드 키값 할당
-const FName AEnemyAIController::CanSeePlayer(TEXT("CanSeePlayer"));
-const FName AEnemyAIController::Player(TEXT("Player"));
-const FName AEnemyAIController::SelfActor(TEXT("SelfActor"));
-const FName AEnemyAIController::TargetLocation(TEXT("TargetLocation"));
-const FName AEnemyAIController::PatrolNum(TEXT("PatrolNum"));
-const FName AEnemyAIController::EnemyPatternNum(TEXT("EnemyPatternNum"));
-const FName AEnemyAIController::Distance(TEXT("Distance"));
-const FName AEnemyAIController::IsDie(TEXT("IsDie"));
+const FName AEnemyAIController::CanSeePlayer(TEXT("CanSeePlayer")); //플레이어 인식 여부
+const FName AEnemyAIController::Player(TEXT("Player"));	//인식한 플레이어 캐릭터
+const FName AEnemyAIController::SelfActor(TEXT("SelfActor")); //적 캐릭터 자신
+const FName AEnemyAIController::TargetLocation(TEXT("TargetLocation"));	//이동할 좌표
+const FName AEnemyAIController::PatrolNum(TEXT("PatrolNum")); //순찰할 번호
+const FName AEnemyAIController::EnemyPatternNum(TEXT("EnemyPatternNum")); //랜덤 패턴 번호
+const FName AEnemyAIController::Distance(TEXT("Distance")); //플레이어와 적 캐릭터의 거리
+const FName AEnemyAIController::IsDie(TEXT("IsDie")); //현재 죽었는지 판단
 
 
 AEnemyAIController::AEnemyAIController()
@@ -43,6 +43,7 @@ void AEnemyAIController::BeginPlay()
 	}
 }
 
+//빙의시 호출
 void AEnemyAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);

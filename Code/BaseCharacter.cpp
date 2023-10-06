@@ -31,6 +31,7 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 	GiveAbilities();
 }
 
+//복제 알림(어빌리티는 기본적으로 복제되어 사용됨)
 void ABaseCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
@@ -42,6 +43,7 @@ void ABaseCharacter::OnRep_PlayerState()
 	InitalizeAttribute();
 }
 
+//어트리뷰트 초기화
 void ABaseCharacter::InitalizeAttribute()
 {
 	if (AbilitySystemComponent && DefaultAttributeEffect)
@@ -57,6 +59,7 @@ void ABaseCharacter::InitalizeAttribute()
 	}
 }
 
+//어빌리티 부여
 void ABaseCharacter::GiveAbilities()
 {
 	if (HasAuthority() && AbilitySystemComponent)
@@ -89,23 +92,21 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+//기절 함수 -> Attriute에서 호출.
 void ABaseCharacter::Stun()
 {
 	bIsStun = true;
-	UE_LOG(LogTemp, Warning, TEXT("Base Stun"));
+	//UE_LOG(LogTemp, Warning, TEXT("Base Stun"));
 }
 
-void ABaseCharacter::Die()
-{
-	bIsDie = true;
-}
-
+// 기절 종료 -> 에니메이션에서 호출
 void ABaseCharacter::StunEnd()
 {
 	bIsStun = false;
 }
 
-void ABaseCharacter::DieEnd()
+//사망 -> Attribute에서 호출
+void ABaseCharacter::Die()
 {
-	bIsDie = false;
+	bIsDie = true;
 }

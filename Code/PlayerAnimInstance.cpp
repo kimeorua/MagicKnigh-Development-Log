@@ -32,7 +32,7 @@ EEquipedWeapon UPlayerAnimInstance::CheackWeaponTag()
 {
 	if (Player != nullptr) // 플레이어가 유효 하면
 	{
-		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) > 0)
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword"))) > 0) //검 장착시
 		{
 			return  EEquipedWeapon::Sword;
 		}
@@ -51,7 +51,7 @@ bool UPlayerAnimInstance::CheackUseBlock()
 {
 	if (Player != nullptr) //  플레이어가 유효 하면
 	{
-		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0) //방어 사용 중이면
 		{
 			return true;
 		}
@@ -70,7 +70,7 @@ bool UPlayerAnimInstance::CheackUseHeal()
 {
 	if (Player != nullptr) //  플레이어가 유효 하면
 	{
-		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseHealing"))) > 0)
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseHealing"))) > 0) //회복 스킬 사용 중이면
 		{
 			return true;
 		}

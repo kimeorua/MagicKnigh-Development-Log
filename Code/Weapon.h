@@ -31,6 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamgeType);
 
+	//적 배열 초기화
 	UFUNCTION(BlueprintCallable)
 	void HitArrReset();
 
@@ -63,5 +64,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
 	FName CollisionAOESocket = "";
 
+	//공격에 맞은 적 배열
 	TArray<class AEnemyCharacter*>HitEnemys;
 };
