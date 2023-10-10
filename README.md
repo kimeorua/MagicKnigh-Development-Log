@@ -291,6 +291,9 @@
 + ### [10/04 플레이어 사망 시 레벨 재 시작](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%82%AC%EB%A7%9D%20%EC%8B%9C%20%EB%A0%88%EB%B2%A8%20%EC%9E%AC%20%EC%8B%9C%EC%9E%91.md) 및 [적 사망 시 제거 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%20%EC%82%AC%EB%A7%9D%20%EC%8B%9C%20%EC%A0%9C%EA%B1%B0%20%EA%B5%AC%ED%98%84.md)
 + ### [10/05 플레이어 힐링 스킬 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%ED%9E%90%EB%A7%81%20%EC%8A%A4%ED%82%AC%20%EA%B5%AC%ED%98%84.md)
 + ### 10/06 코드 주석 정리
+
+### 10/10 ~ 10/13
++ ### [10/10 체간 회복 구현]
 ---
 
 ## 9 버그 및 개선 사항
