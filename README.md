@@ -293,7 +293,7 @@
 + ### 10/06 코드 주석 정리
 
 ### 10/10 ~ 10/13
-+ ### [10/10 체간 회복 구현]
++ ### [10/10 체간 회복 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%B2%B4%EA%B0%84%20%ED%9A%8C%EB%B3%B5%20%EA%B5%AC%ED%98%84.md)
 ---
 
 ## 9 버그 및 개선 사항
