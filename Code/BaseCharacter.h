@@ -8,6 +8,7 @@
 #include <GameplayEffectTypes.h>
 #include "AbilitySystemInterface.h"
 #include "MagicKnightAttributeSet.h"
+#include "MagicKnightEnums.h"
 #include "BaseCharacter.generated.h"
 
 UCLASS(config = Game)
@@ -23,6 +24,16 @@ private:
 	UPROPERTY()
 	UMagicKnightAttributeSet* Attributes; //어트리뷰트
 
+protected:
+	FTimerHandle PostureHandle;
+	//사용하는 전투 용 이펙트들(EX: 슈퍼아머, 체간 상승, 방어, 페링)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
+	TMap<ECombetEffectType, TSubclassOf<class UGameplayEffect>> CombetEffects;
+
+	//사용하는 데미지 용 이펙트(체력 감소)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
+	TMap<EDamageEffectType, TSubclassOf<class UGameplayEffect>> DamageEffects;
+
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<class UGameplayEffect> DefaultAttributeEffect; //기본 스텟 설정용 GameplayEffect
@@ -36,13 +47,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet", meta = (AllowPrivateAccess = "true"))
 	bool bIsDie = false;
 
+	//체간 감소 타이머 작동 시간 -> 테스트를 위해 블루프린트에서 설정 가능 하도록 구현
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
+	float InDelayTime_Posture = 1.f;
+
 //----------------------------------------------------함수----------------------------------------------------//
 public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
 	FORCEINLINE UAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; };
-
+	FORCEINLINE UMagicKnightAttributeSet* GetMagicKnightAttributeSet() const { return Attributes; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -68,5 +83,8 @@ public:
 	//사망
 	virtual void Die();
 
+	void DecreasePosture();
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void ReStartPostureTimer() const { GetWorldTimerManager().UnPauseTimer(PostureHandle); }
 };

@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "InputActionValue.h"
-#include "MagicKnightEnums.h"
 #include "PlayerCharacter.generated.h"
 
 /**
@@ -117,25 +116,16 @@ private:
 
 	//----------------------------------------------------------------------무기-----------------------------------------------------------------------\\
 
-	// 0-> Hit Effect,  1 -> Block Effect, 2-> Parrying Effect, 3-> EF Charge Effect
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
-	TArray< TSubclassOf<class UGameplayEffect>> HitEffects; //사용하는 전투 용 이펙트들(에디터 설정)
-
-
-	//사용하는 전투 용 이펙트들(EX: 슈퍼아머, 체간 상승, 방어, 페링)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
-	TMap<ECombetEffectType, TSubclassOf<class UGameplayEffect>> CombetEffects;
-
-	//사용하는 데미지 용 이펙트(체력 감소)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
-	TMap<EDamageEffectType, TSubclassOf<class UGameplayEffect>> DamageEffects;
-
 	//튕겨내기 사용 여부
 	bool UseParrying = false;
 
 	//튕겨내기 종료 시간 -> 테스트를 위해 블루프린트에서 설정 가능 하도록 구현
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
-	float InDelayTime = 0.5;
+	float InDelayTime_Parry = 0.5f;
+
+	//체간 감소 타이머 작동 시간 -> 테스트를 위해 블루프린트에서 설정 가능 하도록 구현
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
+	//float InDelayTime_Posture = 1.f;
 
 	//-------------- Lock On ---------------//
 
@@ -146,6 +136,9 @@ private:
 	bool bUseLockOn = false;
 
 	//-------------- Lock On ---------------//
+
+	//체간 감소용 타이머
+	//FTimerHandle PostureHandle;
 
 public:
 	// 생성자
@@ -228,4 +221,9 @@ public:
 
 	//회복 스킬 사용
 	void Healing();
+
+	//void DecreasePosture();
+
+	//UFUNCTION(BlueprintCallable)
+	//FORCEINLINE void ReStartPostureTimer() const { GetWorldTimerManager().UnPauseTimer(PostureHandle); }
 };

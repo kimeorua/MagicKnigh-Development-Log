@@ -34,6 +34,7 @@ enum class ECombetEffectType : uint8
 	Block UMETA(DisplayName = "Block"), //가드 성공
 	Parrying UMETA(DisplayName = "Parrying"), // 튕겨내기 성공
 	Charge UMETA(DisplayName = "EF Charge"), //EF 충전
+	DecreasePosture UMETA(DisplayName = "Decrease Posture"), //체간 감소
 
 	Max UMETA(DisplayName = "Max")
 };

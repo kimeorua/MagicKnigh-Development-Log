@@ -75,7 +75,10 @@ void ABaseCharacter::GiveAbilities()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//----------------------------------------------------체간 감소-----------------------------------------------------//
+	GetWorldTimerManager().SetTimer(PostureHandle, this, &ABaseCharacter::DecreasePosture, InDelayTime_Posture, true);
+	//----------------------------------------------------체간 감소-----------------------------------------------------//
 }
 
 // Called every frame
@@ -109,4 +112,21 @@ void ABaseCharacter::StunEnd()
 void ABaseCharacter::Die()
 {
 	bIsDie = true;
+}
+
+void ABaseCharacter::DecreasePosture()
+{
+	FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+	FGameplayEffectSpecHandle PostureSpecHandle;
+
+	if (GetMagicKnightAttributeSet()->GetPosture() > 0.f) //체간이 0보다 GameplayEffect 설정 
+	{
+		PostureSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::DecreasePosture], 1, EffectContext);
+	}
+
+	if (PostureSpecHandle.IsValid())
+	{
+		FActiveGameplayEffectHandle Posture_GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*PostureSpecHandle.Data.Get());
+	}
 }

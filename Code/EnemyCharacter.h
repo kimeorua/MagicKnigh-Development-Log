@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
-#include "MagicKnightEnums.h"
 #include "EnemyCharacter.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnAttackEndDelegate); //델리게이트 선언
@@ -33,14 +32,6 @@ private:
 	//피격 판정 콜리전
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* HitCollision;
-
-	//사용하는 전투 용 이펙트들(EX: 슈퍼아머, 체간 상승, 방어, 페링)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
-	TMap<ECombetEffectType, TSubclassOf<class UGameplayEffect>> CombetEffects;
-
-	//사용하는 데미지 용 이펙트(체력 감소)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
-	TMap<EDamageEffectType, TSubclassOf<class UGameplayEffect>> DamageEffects;
 
 	//Trace Start Socket
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))

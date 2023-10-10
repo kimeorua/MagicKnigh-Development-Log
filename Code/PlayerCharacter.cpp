@@ -54,9 +54,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 
 	if (IsValid(LockOnEnemy)) //락온 판정 성공시, 카메라를 락온할 객체에 고정, 상하 시점 변경만 가능 하도록 구현
 	{
-		FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockOnEnemy->GetActorLocation());
-		FRotator LockOnRotation = FRotator (GetController()->GetControlRotation().Pitch, LookAt.Yaw, LookAt.Roll);
-		GetController()->SetControlRotation(LockOnRotation);
+		FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockOnEnemy->GetActorLocation()); //바라볼 방향 
+		FRotator LockOnRotation = FRotator (GetController()->GetControlRotation().Pitch, LookAt.Yaw, LookAt.Roll); //방향으로 회전할 회전 값
+		GetController()->SetControlRotation(LockOnRotation); //캐릭터 회전
 	}
 }
 
@@ -406,7 +406,7 @@ void APlayerCharacter::BlockStart()
 
 							// 타이머 초기화
 							GetWorld()->GetTimerManager().ClearTimer(ParryingEndHandle);
-						}), InDelayTime, false);
+						}), InDelayTime_Parry, false);
 				}
 			}
 			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) <= 0) // 방어 사용 중이 아니면  작동
@@ -477,6 +477,8 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 {
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) //플레이어가 사망 하지 않았을때 작동
 	{
+		GetWorldTimerManager().PauseTimer(PostureHandle);
+
 		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
 		EffectContext.AddSourceObject(this);
 		FGameplayEffectSpecHandle SpecHandle;
