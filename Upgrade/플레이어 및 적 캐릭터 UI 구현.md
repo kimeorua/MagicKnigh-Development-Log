@@ -73,3 +73,7 @@ AEnemyCharacter::AEnemyCharacter()
 	UI->SetupAttachment(RootComponent);
 }
 ```
+
+#### HP 및 체간, EF Bar 계산 함수
+![](https://github.com/kimeorua/portfolio/blob/main/img/UI%EA%B3%84%EC%82%B0%ED%95%A8%EC%88%98.PNG?raw=true)
++ #### 현재 수치 / 최대 수치를 계산하여, Progress bar의 percent에 저장하여, 남은 수치를 확인하기 쉽게 설정 함. 
