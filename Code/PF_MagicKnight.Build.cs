@@ -21,7 +21,8 @@ public class PF_MagicKnight : ModuleRules
 			"HeadMountedDisplay", 
 			"AnimGraphRuntime",
             "NavigationSystem", 
-			"AIModule"
+			"AIModule",
+			"UMG"
         });
     }
 }

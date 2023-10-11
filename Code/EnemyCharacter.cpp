@@ -11,6 +11,7 @@
 #include "Components/CapsuleComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/WidgetComponent.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -19,6 +20,9 @@ AEnemyCharacter::AEnemyCharacter()
 	HitCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("HitCollision"));
 	HitCollision->SetupAttachment(RootComponent);
 	HitCollision->SetCollisionProfileName(TEXT("EnemyHit"));
+	
+	UI = CreateDefaultSubobject<UWidgetComponent>(TEXT("UI"));
+	UI->SetupAttachment(RootComponent);
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -26,7 +30,6 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 	AIController = Cast<AEnemyAIController>(GetController());
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-	
 }
 
 void AEnemyCharacter::Tick(float DeltaTime)
@@ -58,6 +61,7 @@ void AEnemyCharacter::TakeDamgeFormPlayer(EDamageEffectType DamageType)
 {
 	if (!bIsDie) //현재 죽은상태가 아닌지 판단
 	{
+		GetWorldTimerManager().PauseTimer(PostureHandle);
 		//UE_LOG(LogTemp, Warning, TEXT("Hit"));
 		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext(); //EffectContext 생성
 		EffectContext.AddSourceObject(this); //SourceObject에 적 캐릭터 자신 추가
@@ -192,6 +196,7 @@ void AEnemyCharacter::TakeParrying()
 	//죽은 상태가 아니면
 	if (!bIsDie)
 	{
+		GetWorldTimerManager().PauseTimer(PostureHandle);
 		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext(); 
 		EffectContext.AddSourceObject(this);
 		FGameplayEffectSpecHandle SpecHandle;
@@ -199,6 +204,7 @@ void AEnemyCharacter::TakeParrying()
 		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.Parryable"))) > 0) //경직 모션이 나오는지에 따라 다르게 체간을 상승 시킴
 		{
 			SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[EDamageEffectType::PostureUp_OnParry], 1, EffectContext); 
+			Super::ReStartPostureTimer();
 		}
 		else
 		{

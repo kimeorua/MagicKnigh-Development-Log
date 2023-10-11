@@ -56,6 +56,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* HitParticle;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
+	class UWidgetComponent* UI;
+
 protected:
 	virtual void BeginPlay()override;
 	virtual void Tick(float DeltaTime) override;

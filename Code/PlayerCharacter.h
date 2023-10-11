@@ -123,10 +123,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
 	float InDelayTime_Parry = 0.5f;
 
-	//체간 감소 타이머 작동 시간 -> 테스트를 위해 블루프린트에서 설정 가능 하도록 구현
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
-	//float InDelayTime_Posture = 1.f;
-
 	//-------------- Lock On ---------------//
 
 	//바라볼 적 객체
@@ -137,8 +133,6 @@ private:
 
 	//-------------- Lock On ---------------//
 
-	//체간 감소용 타이머
-	//FTimerHandle PostureHandle;
 
 public:
 	// 생성자
