@@ -295,6 +295,7 @@
 ### 10/10 ~ 10/13
 + ### [10/10 체간 회복 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%B2%B4%EA%B0%84%20%ED%9A%8C%EB%B3%B5%20%EA%B5%AC%ED%98%84.md)
 + ### [10/11 플레이어 및 적 캐릭터 UI 구현](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EB%B0%8F%20%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0%20UI%20%EA%B5%AC%ED%98%84.md)
++ ### [10/12 메인 로비UI 및 게임 가이드UI 구현]()
 ---
 
 ## 9 버그 및 개선 사항
