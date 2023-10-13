@@ -76,6 +76,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* HealingAction;
 
+	// 일시정지 입력 Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* PauseAction;
+
 	//시점 회전 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	float LookRate = 0.35f;
@@ -132,6 +136,11 @@ private:
 	bool bUseLockOn = false;
 
 	//-------------- Lock On ---------------//
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UUserWidget> PauseWidgetClass;
+
+	class UUserWidget* PauseWidget;
 
 
 public:
@@ -216,8 +225,5 @@ public:
 	//회복 스킬 사용
 	void Healing();
 
-	//void DecreasePosture();
-
-	//UFUNCTION(BlueprintCallable)
-	//FORCEINLINE void ReStartPostureTimer() const { GetWorldTimerManager().UnPauseTimer(PostureHandle); }
+	void GamePause();
 };

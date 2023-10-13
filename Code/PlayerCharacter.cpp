@@ -17,6 +17,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "CollisionShape.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -139,6 +140,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		//힐링 사용
 		EnhancedInputComponent->BindAction(HealingAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Healing);
+
+		//게임 일시 정지
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Triggered, this, &APlayerCharacter::GamePause);
 	}
 }
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -642,4 +646,13 @@ void APlayerCharacter::Healing()
 			}
 		}
 	}
+}
+
+void APlayerCharacter::GamePause()
+{
+	PauseWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GetWorld(), 0), PauseWidgetClass);
+
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetShowMouseCursor(true);
+	PauseWidget->AddToViewport();
 }
