@@ -11,3 +11,21 @@
 #### 적 AI 거리 탐지 데코레이터 변경
 + #### 기존에 있던 InCloseAttackRange데코레이터를 CheackAttackRange로 변경하고, 탐지 거리를 변수하여, 비헤이비어 트리에서 직접 설정할수 있도록 변경함.
 + #### 이로 인하여, 기존에 근거리(150)뿐만 아니라 유동적으로 거리를 판단 할수 있게 됨.
+
+#### CheackAttackRange::CalculateRawConditionValue()
+```cpp
+bool UBTD_CheackAttackRange::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
+{
+	bool bResult = Super::CalculateRawConditionValue(OwnerComp, NodeMemory);
+
+	auto ControllingPawn = Cast<AEnemyCharacter>(OwnerComp.GetAIOwner()->GetPawn()); // 조종하고있는 폰 정보 변수에 저장
+	if (ControllingPawn == nullptr) { return false; }
+
+	APlayerCharacter* Target = Cast<APlayerCharacter>(OwnerComp.GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));
+	if (Target == nullptr) { return false; }
+
+
+	bResult = (Target->GetDistanceTo(ControllingPawn) <= CheackRange); // 현제 추적중인 적과의 거리가 CheackRange보다 작으면 true, 아니면 false반환
+	return bResult;
+}
+```
