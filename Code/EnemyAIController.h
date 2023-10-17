@@ -69,6 +69,8 @@ public:
 	UFUNCTION()
 	void SetPerceptionSystem();
 
+	void SetPerceptionRange();
+
 	//블랙보드 컴포넌트 반환
 	FORCEINLINE UBlackboardComponent* GetBlackboardComponent() const { return BlackboardComponent; }
 	FORCEINLINE UBehaviorTreeComponent* GetBehaviorTreeComponent() const { return BehaviorTreeComponent; }

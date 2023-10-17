@@ -28,6 +28,7 @@ AEnemyAIController::AEnemyAIController()
 	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
 	Enemy = nullptr;
+
 	SetPerceptionSystem();
 }
 
@@ -36,6 +37,7 @@ void AEnemyAIController::BeginPlay()
 	Super::BeginPlay();
 	if(IsValid(BehaviorTree))
 	{
+		SetPerceptionRange();
 		BehaviorTreeComponent->StartTree(*BehaviorTree);
 		Enemy = Cast<AEnemyCharacter>(GetPawn());
 		GetBlackboardComponent()->SetValueAsObject(SelfActor, Enemy);
@@ -54,6 +56,7 @@ void AEnemyAIController::OnPossess(APawn* InPawn)
 		{
 			Enemy = Cast<AEnemyCharacter>(GetPawn());
 			GetBlackboardComponent()->SetValueAsObject(SelfActor, Enemy);
+			GetBlackboardComponent()->SetValueAsInt(EnemyPatternNum, 5);
 		}
 	}
 }
@@ -102,6 +105,17 @@ void AEnemyAIController::OnTargetDetected(AActor* actor, FAIStimulus const Stimu
 	}
 }
 
+void AEnemyAIController::SetPerceptionRange()
+{
+	//시야 범위, 각도등 기초 정보 설정
+	SightConfig->SightRadius = AISightRadius;
+	SightConfig->LoseSightRadius = SightConfig->SightRadius + AILoseSightRadius;
+	SightConfig->PeripheralVisionAngleDegrees = AIFieldOfView;
+	SightConfig->SetMaxAge(AISightAge);
+	SightConfig->AutoSuccessRangeFromLastSeenLocation = AILastSeenLocation;
+}
+
+
 void AEnemyAIController::SetPerceptionSystem()
 {
 	//PerceptionComponent할당 및 주요 감지 설정
@@ -109,13 +123,6 @@ void AEnemyAIController::SetPerceptionSystem()
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("Sight Config"));
 	PerceptionComponent->ConfigureSense(*SightConfig);
 	PerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
-
-	//시야 범위, 각도등 기초 정보 설정
-	SightConfig->SightRadius = AISightRadius;
-	SightConfig->LoseSightRadius = SightConfig->SightRadius + AILoseSightRadius;
-	SightConfig->PeripheralVisionAngleDegrees = AIFieldOfView;
-	SightConfig->SetMaxAge(AISightAge);
-	SightConfig->AutoSuccessRangeFromLastSeenLocation = AILastSeenLocation;
 
 	//감지할 객체 정보(적, 중립, 아군)
 	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
@@ -129,4 +136,3 @@ void AEnemyAIController::SetPerceptionSystem()
 	PerceptionComponent->OnPerceptionUpdated.AddDynamic(this, &AEnemyAIController::OnUpdated);
 	PerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIController::OnTargetDetected);
 }
-

@@ -41,7 +41,7 @@ void AEnemyCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	EnemyAnim = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance()); //애니메이션 호출을 위한 변수
-	EnemyAnim->OnMontageEnded.AddDynamic(this, &AEnemyCharacter::OnAttackMontageEnded); //몽타주 종료시 OnAttackMontageEnded()함수 호출
+	if (IsValid(EnemyAnim)) { EnemyAnim->OnMontageEnded.AddDynamic(this, &AEnemyCharacter::OnAttackMontageEnded); } //몽타주 종료시 OnAttackMontageEnded()함수 호출
 }
 
 //플레이어 찾음
