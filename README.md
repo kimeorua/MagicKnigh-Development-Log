@@ -315,6 +315,7 @@
 
 ### 10/16 ~ 10/20
 + ### [10/16 적 캐릭터 Type 분류 및 근거리Type AI 수정](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0Type%20%EB%B6%84%EB%A5%98%20%EB%B0%8F%20%EA%B7%BC%EA%B1%B0%EB%A6%ACType%20AI%20%EC%88%98%EC%A0%95.md)
++ ### [10/17 원거리Type 적 캐릭터 생성 및 기본 설정 셋팅, 적 AI 거리 탐지 데코레이터 변경]()
 
 ### [맨위로](#)
 
