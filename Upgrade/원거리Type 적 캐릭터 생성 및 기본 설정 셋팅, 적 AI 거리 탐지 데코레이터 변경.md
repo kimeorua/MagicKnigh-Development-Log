@@ -3,7 +3,7 @@
 + #### 애니메이션 블루 프린트에서 플레이어가 탐지 되면, 대기자세에서 조준 자세로 변경함.
 
 #### 원거리Type 적
-![](.kimeorua.github.io//img/원거리적.PNG)
+![](./kimeorua.github.io//img/원거리적.PNG)
 
 #### 원거리Type 적 애니메이션 블루프린트
 ![](./img/원거리ABP.PNG)
