@@ -91,6 +91,12 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 {
 	FVector Start = GetMesh()->GetSocketLocation(CollisionStartSocket); //시작 점
 	FVector End = GetMesh()->GetSocketLocation(CollisionEndSocket); //끝 점
+	FVector TargeLocation;
+	APlayerCharacter* Target = Cast<APlayerCharacter>(AIController->GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));
+	if (IsValid(Target))
+	{
+		TargeLocation = Target->GetActorLocation();
+	}
 
 	TArray<AActor*> ActorsToIgnore; //판정에서 무시할 객체(자기 자신) 선언 및 추가
 	ActorsToIgnore.Add(GetOwner());
@@ -135,6 +141,19 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		bResult = false;
 		break;
 
+	case EAttackCollisionType::Ramge_Line:
+		bResult = UKismetSystemLibrary::LineTraceSingle(
+			GetWorld(),
+			Start,
+			TargeLocation,
+			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
+			false,
+			ActorsToIgnore,
+			EDrawDebugTrace::ForDuration,
+			OutHit,
+			true);
+		break;
+
 	case EAttackCollisionType::Max:
 		bResult = false;
 		break;
@@ -151,14 +170,17 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		APlayerCharacter* Player = Cast<APlayerCharacter>(OutHit.GetActor()); //충돌한 객체를 Player로 형변환 
 		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) //플레이어 캐릭터가 사망 하지 않았으면 데미지 주기
 		{
-			if (Player && !PlayerIsHit)
+			if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseDodge"))) <= 0)
 			{
-				Player->SetInstigator(this); //유발자를 해당 객체로 변경
-				Player->TakeDamageFromEnemy(DamageType); //몬스터의 공격 타입에 맞는 데미지 이펙트 작동
-				PlayerIsHit = true; //플레이어가 공격에 적중함 -> 한 공격에 1번만 피격 판정 유도
+				if (Player && !PlayerIsHit)
+				{
+					Player->SetInstigator(this); //유발자를 해당 객체로 변경
+					Player->TakeDamageFromEnemy(DamageType); //몬스터의 공격 타입에 맞는 데미지 이펙트 작동
+					PlayerIsHit = true; //플레이어가 공격에 적중함 -> 한 공격에 1번만 피격 판정 유도
+				}
 			}
 		}
-		else //캐릭터가 사망한 상태이면
+		else if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) > 0)//캐릭터가 사망한 상태이면
 		{
 			// 블랙보드에 기입한 플레이어 객체를 초기화 하고 플레이어 발견 여부를 false로 변경 
 			AIController->GetBlackboardComponent()->SetValueAsObject(AEnemyAIController::Player, nullptr);

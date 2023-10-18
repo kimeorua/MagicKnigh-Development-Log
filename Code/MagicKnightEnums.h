@@ -22,6 +22,7 @@ enum class EAttackCollisionType : uint8
 	Melee UMETA(DisplayName = "Melee"), //기본 근접 공격
 	AOE UMETA(DisplayName = "AOE"), //범위 공격
 	AOE_Object_Center UMETA(DisplayName = "AOE Object Center"), //특정 객체를 중심으로 범위 공격 (EX: 플레이어의 특수스킬)
+	Ramge_Line UMETA(DisplayName = "Range"),
 
 	Max UMETA(DisplayName = "Max")
 };
