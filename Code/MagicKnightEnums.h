@@ -27,6 +27,17 @@ enum class EAttackCollisionType : uint8
 	Max UMETA(DisplayName = "Max")
 };
 
+//공격 방향(쌍수 사용 시)Type
+UENUM(BlueprintType)
+enum class EAttackDriectionType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	Left UMETA(DisplayName = "Left"), //왼쪽
+	Right UMETA(DisplayName = "Right"), //오른쪽
+
+	Max UMETA(DisplayName = "Max")
+};
+
 //전투용 Effect Type -> 코드를 읽기쉽게 하기위하여 정의함.
 UENUM(BlueprintType)
 enum class ECombetEffectType : uint8

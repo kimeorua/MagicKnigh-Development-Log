@@ -87,16 +87,47 @@ void AEnemyCharacter::TakeDamgeFormPlayer(EDamageEffectType DamageType)
 }
 //충돌 처리 함수
 // "ECollisionChannel::ECC_GameTraceChannel3" 은 플레이어 캡슐 컴포넌트에 적용된 Trace채널 -> 충돌시 플레이어 캐릭터에만 반응함
-FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType)
+FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType, EAttackDriectionType DriectionType)
 {
-	FVector Start = GetMesh()->GetSocketLocation(CollisionStartSocket); //시작 점
-	FVector End = GetMesh()->GetSocketLocation(CollisionEndSocket); //끝 점
-	FVector TargeLocation;
-	APlayerCharacter* Target = Cast<APlayerCharacter>(AIController->GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));
-	if (IsValid(Target))
+	FVector Start ; //시작 점
+	FVector End; //끝 점
+
+	FVector TargtLocation;
+
+	switch (DriectionType)
 	{
-		TargeLocation = Target->GetActorLocation();
+	case EAttackDriectionType::None:
+		Start = GetMesh()->GetSocketLocation(CollisionStartSocket_L); //시작 점
+		End = GetMesh()->GetSocketLocation(CollisionEndSocket_L); //끝 점
+		break;
+
+	case EAttackDriectionType::Left:
+		Start = GetMesh()->GetSocketLocation(CollisionStartSocket_L); //시작 점
+		End = GetMesh()->GetSocketLocation(CollisionEndSocket_L); //끝 점
+		break;
+
+	case EAttackDriectionType::Right:
+		Start = GetMesh()->GetSocketLocation(CollisionStartSocket_R); //시작 점
+		End = GetMesh()->GetSocketLocation(CollisionEndSocket_R); //끝 점
+		break;
+
+	case EAttackDriectionType::Max:
+		break;
+
+	default:
+		break;
 	}
+	
+
+	if (Type == EAttackCollisionType::Ramge_Line)
+	{
+		APlayerCharacter* Target = Cast<APlayerCharacter>(AIController->GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));
+		if (IsValid(Target))
+		{
+			TargtLocation = Target->GetActorLocation();
+		}
+	}
+	
 
 	TArray<AActor*> ActorsToIgnore; //판정에서 무시할 객체(자기 자신) 선언 및 추가
 	ActorsToIgnore.Add(GetOwner());
@@ -141,11 +172,12 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		bResult = false;
 		break;
 
-	case EAttackCollisionType::Ramge_Line:
+	case EAttackCollisionType::Ramge_Line: //원거리 공격
+
 		bResult = UKismetSystemLibrary::LineTraceSingle(
 			GetWorld(),
 			Start,
-			TargeLocation,
+			TargtLocation,
 			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
 			false,
 			ActorsToIgnore,

@@ -35,11 +35,19 @@ private:
 
 	//Trace Start Socket
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-	FName CollisionStartSocket = "";
+	FName CollisionStartSocket_L = "";
 
 	//Trace End Socket
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-	FName CollisionEndSocket = "";
+	FName CollisionEndSocket_L = "";
+
+	//Trace Start Socket
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FName CollisionStartSocket_R = "";
+
+	//Trace End Socket
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FName CollisionEndSocket_R = "";
 
 	// 플레이어가 공격에 맞았는가?
 	bool PlayerIsHit = false;
@@ -96,7 +104,7 @@ public:
 
 	//공격 판정
 	UFUNCTION(BlueprintCallable)
-	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType);
+	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType, EAttackDriectionType DriectionType);
 
 	//패트롤 포인트 배열
 	FORCEINLINE TArray <class ATargetPoint*> GetPatrolPoint() const { return PatrolPoints; }

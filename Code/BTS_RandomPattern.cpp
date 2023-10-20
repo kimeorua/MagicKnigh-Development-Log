@@ -40,5 +40,4 @@ void UBTS_RandomPattern::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, uin
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsInt(AEnemyAIController::EnemyPatternNum, 5); //20%
 	}
-
 }
