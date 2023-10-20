@@ -6,7 +6,7 @@
 + #### 점프공격: 플레이어와의 거리가 일정 수준 벌어지면 플레이어에게 점프하여, 공격 함.
 
 #### AI 비헤이비어 트리
-![]()
+![](https://github.com/kimeorua/kimeorua.github.io/blob/main/img/%EC%A0%95%EC%98%88%EB%AA%B9AI.PNG?raw=true)
 
 #### 적 캐릭터CheakCollision() 함수 변경
 + #### 정예Type의 적 캐릭터는 양손에 무기를 각각 1개씩 들고 있음
