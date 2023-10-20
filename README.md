@@ -317,6 +317,7 @@
 + ### [10/16 적 캐릭터 Type 분류 및 근거리Type AI 수정](https://github.com/kimeorua/portfolio/blob/main/Upgrade/%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0Type%20%EB%B6%84%EB%A5%98%20%EB%B0%8F%20%EA%B7%BC%EA%B1%B0%EB%A6%ACType%20AI%20%EC%88%98%EC%A0%95.md)
 + ### [10/17 원거리Type 적 캐릭터 생성 및 기본 설정 셋팅, 적 AI 거리 탐지 데코레이터 변경](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EC%9B%90%EA%B1%B0%EB%A6%ACType%20%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EC%83%9D%EC%84%B1%20%EB%B0%8F%20%EA%B8%B0%EB%B3%B8%20%EC%84%A4%EC%A0%95%20%EC%85%8B%ED%8C%85,%20%EC%A0%81%20AI%20%EA%B1%B0%EB%A6%AC%20%ED%83%90%EC%A7%80%20%EB%8D%B0%EC%BD%94%EB%A0%88%EC%9D%B4%ED%84%B0%20%EB%B3%80%EA%B2%BD.md)
 + ### [10/18 원거리Type 완성](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EC%9B%90%EA%B1%B0%EB%A6%ACType%20%EC%A0%81%20%EC%99%84%EC%84%B1.md)
++ ### [10/18 정예Type 적 캐릭터 생성 및 기본 설정 셋팅]()
 
 ### [맨위로](#)
 
