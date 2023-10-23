@@ -321,7 +321,7 @@
 + ### [10/19 정예Type 적 캐릭터 완성 및 적 캐릭터 충돌 함수 변경](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EC%A0%95%EC%98%88Type%20%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EC%99%84%EC%84%B1%20%EB%B0%8F%20%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EC%B6%A9%EB%8F%8C%ED%95%A8%EC%88%98%20%EB%B3%80%EA%B2%BD.md)
 
 ### 10/23 ~ 10/27
-+ ### [10/23 보스Type 적 캐릭터 생성 및 기본 설정 셋팅, UI 출력]
++ ### [10/23 보스Type 적 캐릭터 생성 및 기본 설정 셋팅, UI 출력](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EB%B3%B4%EC%8A%A4Type%20%EC%A0%81%20%EC%BA%90%EB%A6%AD%ED%84%B0%20%EC%83%9D%EC%84%B1%20%EB%B0%8F%20%EA%B8%B0%EB%B3%B8%20%EC%84%A4%EC%A0%95%20%EC%85%8B%ED%8C%85%2C%20UI%20%EC%B6%9C%EB%A0%A5.md)
 
 ### [맨위로](#)
 
