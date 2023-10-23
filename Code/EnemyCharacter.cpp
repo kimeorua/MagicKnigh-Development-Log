@@ -23,6 +23,10 @@ AEnemyCharacter::AEnemyCharacter()
 	
 	UI = CreateDefaultSubobject<UWidgetComponent>(TEXT("UI"));
 	UI->SetupAttachment(RootComponent);
+
+	HitSound = nullptr;
+	HitParticle = nullptr;
+	EnemyAnim = nullptr;
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -118,7 +122,6 @@ FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Rang
 		break;
 	}
 	
-
 	if (Type == EAttackCollisionType::Ramge_Line)
 	{
 		APlayerCharacter* Target = Cast<APlayerCharacter>(AIController->GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));

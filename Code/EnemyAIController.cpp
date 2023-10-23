@@ -83,7 +83,18 @@ void AEnemyAIController::OnTargetDetected(AActor* actor, FAIStimulus const Stimu
 			}
 			GetBlackboardComponent()->SetValueAsObject(Player, PlayerPawn);
 			Enemy->FindPlayer();
-			UE_LOG(LogTemp, Warning, TEXT("PlayerDetected"));
+			
+			//UE_LOG(LogTemp, Warning, TEXT("PlayerDetected"));
+
+			if (bIsBoss)
+			{
+				//보스 UI 출력
+				bShowUI = true;
+			}
+			else 
+			{
+				return;
+			}
 
 			SetFocus(PlayerPawn);
 		}
@@ -98,8 +109,11 @@ void AEnemyAIController::OnTargetDetected(AActor* actor, FAIStimulus const Stimu
 			// 플레이어가 감지 범위 밖으로 나갔거나, 감지 하지 않은 것이므로 Player에 nullptr저장 및 이동속도 감소
 			GetBlackboardComponent()->SetValueAsObject(Player, nullptr);
 			Enemy->LosePlayer();
-			UE_LOG(LogTemp, Warning, TEXT("PlayerLose"));
+			
+			//UE_LOG(LogTemp, Warning, TEXT("PlayerLose"));
 
+			//보스 UI 제거
+			bShowUI = true;
 			ClearFocus(EAIFocusPriority::Gameplay);
 		}
 	}

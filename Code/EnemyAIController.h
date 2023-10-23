@@ -29,6 +29,12 @@ private:
 
 	class AEnemyCharacter* Enemy;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
+	bool bIsBoss = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true"))
+	bool bShowUI = false;
+
 protected:
 	void BeginPlay()override;
 	virtual void OnPossess(APawn* InPawn) override;     //폰 빙의시 호출 되는 함수

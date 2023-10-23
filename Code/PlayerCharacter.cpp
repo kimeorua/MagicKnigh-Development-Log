@@ -430,6 +430,11 @@ void APlayerCharacter::BlockEnd()
 		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))); //가드 사용중 Tag 제거
 		ArmBarrier->BarrierOff(); //방패 크기 초기화
 	}
+
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
+	{
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))); //가드 사용중 Tag 제거
+	}
 }
 
 //검 소환

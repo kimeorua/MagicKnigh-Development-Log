@@ -14,7 +14,6 @@ UMagicKnightAttributeSet::UMagicKnightAttributeSet()
 
 void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
-	
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth())); //HP의 하한선 및 상한선 설정

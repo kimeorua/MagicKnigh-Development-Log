@@ -137,10 +137,13 @@ private:
 
 	//-------------- Lock On ---------------//
 
+
+	//--------------------UI--------------------//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UUserWidget> PauseWidgetClass;
 
 	class UUserWidget* PauseWidget;
+	//--------------------UI--------------------//
 
 
 public:

@@ -58,6 +58,7 @@ public:
 
 	FORCEINLINE UAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; };
 	FORCEINLINE UMagicKnightAttributeSet* GetMagicKnightAttributeSet() const { return Attributes; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
