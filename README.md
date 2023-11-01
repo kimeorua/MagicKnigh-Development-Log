@@ -331,7 +331,7 @@
 + ### [10/26 게임 클리어 및 맵 구성](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EA%B2%8C%EC%9E%84%20%ED%81%B4%EB%A6%AC%EC%96%B4%20%EB%B0%8F%20%EB%A7%B5%20%EA%B5%AC%EC%84%B1.md)
 
 ### 11/01 ~ 11/05
-+ ### [11/01 코드 리팩토링 -> 충돌 처리]()
++ ### [11/01 코드 리팩토링 -> 충돌 처리](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EC%B6%A9%EB%8F%8C%20%EC%B2%98%EB%A6%AC%2C%20%EC%BD%94%EB%93%9C%20%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81.md)
 
 ### [맨위로](#)
 
