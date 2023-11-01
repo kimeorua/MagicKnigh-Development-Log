@@ -104,7 +104,7 @@ public:
 
 	//공격 판정
 	UFUNCTION(BlueprintCallable)
-	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType, EAttackDriectionType DriectionType);
+	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType, EAttackDirectionType DriectionType);
 
 	//패트롤 포인트 배열
 	FORCEINLINE TArray <class ATargetPoint*> GetPatrolPoint() const { return PatrolPoints; }

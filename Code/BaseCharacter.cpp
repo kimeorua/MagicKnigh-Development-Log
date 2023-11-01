@@ -4,6 +4,7 @@
 #include "BaseCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "MagicKnightAttributeSet.h"
+#include "CombetComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -16,6 +17,8 @@ ABaseCharacter::ABaseCharacter()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal); //복제 규칙 -> 솔로게임 최소치로
 
 	Attributes = CreateDefaultSubobject<UMagicKnightAttributeSet>(TEXT("Attributes")); //어트리뷰트 생성
+
+	CombetComponent = CreateDefaultSubobject<UCombetComponent>(TEXT("Combet Component"));
 }
 
 //빙의시 호출

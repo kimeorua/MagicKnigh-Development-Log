@@ -26,10 +26,11 @@ public:
 
 	FORCEINLINE UParticleSystem* GetSoummonsParticle() const { return SoummonParitcle; }
 	FORCEINLINE USoundBase* GetSoummonSound() const { return SoummonSound; }
+	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 
 	//오버랩 확인
 	UFUNCTION(BlueprintCallable)
-	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamgeType);
+	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EAttackDirectionType DriectionType, EDamageEffectType DamgeType);
 
 	//적 배열 초기화
 	UFUNCTION(BlueprintCallable)
@@ -66,4 +67,6 @@ private:
 
 	//공격에 맞은 적 배열
 	TArray<class AEnemyCharacter*>HitEnemys;
+
+	class UCombetComponent* CombetComp;
 };

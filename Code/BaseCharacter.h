@@ -51,6 +51,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
 	float InDelayTime_Posture = 1.f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CombetComponent", meta = (AllowPrivateAccess = "true"))
+	class UCombetComponent* CombetComponent;
+
 //----------------------------------------------------ÇÔ¼ö----------------------------------------------------//
 public:
 	// Sets default values for this character's properties
@@ -58,6 +61,7 @@ public:
 
 	FORCEINLINE UAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; };
 	FORCEINLINE UMagicKnightAttributeSet* GetMagicKnightAttributeSet() const { return Attributes; }
+	FORCEINLINE UCombetComponent* GetCombetComponent() const { return CombetComponent; }
 
 protected:
 	// Called when the game starts or when spawned

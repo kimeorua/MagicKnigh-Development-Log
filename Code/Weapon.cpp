@@ -8,7 +8,7 @@
 #include "Engine/EngineTypes.h"
 #include "Abilities/GameplayAbility.h"
 #include "EnemyCharacter.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "CombetComponent.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -37,74 +37,13 @@ void AWeapon::Tick(float DeltaTime)
 
 }
 
-FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamgeType)
+FHitResult AWeapon::CheakCollision(EAttackCollisionType Type, float Range, EAttackDirectionType DriectionType,  EDamageEffectType DamgeType)
 {
-	FVector Start = Mesh->GetSocketLocation(CollisionStartSocket); //시작 점
-	FVector End = Mesh->GetSocketLocation(CollisionEndSocket); //끝 점
-	FVector AOE = Mesh->GetSocketLocation(CollisionAOESocket); //범위 스킬 끝점
+	TTuple<bool, FHitResult> CollisionResult = Cast<APlayerCharacter>(GetOwner())->GetCombetComponent()->AttackCollision(Type, Range, DriectionType, ECollisionChannel::ECC_GameTraceChannel2, true);
+	bool isHit = CollisionResult.Get<0>(); 
+	FHitResult OutHit = CollisionResult.Get<1>(); 
 
-	TArray<AActor*> ActorsToIgnore;
-	ActorsToIgnore.Add(GetOwner());
-	FHitResult OutHit;
-	bool bResult;
-
-	switch (Type)
-	{
-	case EAttackCollisionType::None:
-		bResult = false;
-		break;
-
-	case EAttackCollisionType::Melee:
-		bResult = UKismetSystemLibrary::LineTraceSingle(
-			GetWorld(),
-			Start,
-			End,
-			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
-			false,
-			ActorsToIgnore,
-			EDrawDebugTrace::ForDuration,
-			OutHit,
-			true);
-		break;
-
-	case EAttackCollisionType::AOE:
-		bResult = UKismetSystemLibrary::SphereTraceSingle(
-			GetWorld(),
-			End,
-			AOE,
-			Range,
-			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
-			false,
-			ActorsToIgnore,
-			EDrawDebugTrace::ForDuration, 
-			OutHit,
-			true);
-		break;
-
-	case EAttackCollisionType::AOE_Object_Center:
-		bResult = UKismetSystemLibrary::SphereTraceSingle(
-			GetWorld(),
-			GetOwner()->GetActorLocation(),
-			GetOwner()->GetActorLocation(),
-			Range,
-			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel2),
-			false,
-			ActorsToIgnore,
-			EDrawDebugTrace::ForDuration,
-			OutHit,
-			true);
-		break;
-
-	case EAttackCollisionType::Max:
-		bResult = false;
-		break;
-
-	default:
-		bResult = false;
-		break;
-	}
-
-	if (bResult)
+	if (isHit)
 	{
 		if (!Cast<AEnemyCharacter>(OutHit.GetActor())->bIsDie)
 		{

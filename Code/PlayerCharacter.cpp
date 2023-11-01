@@ -403,7 +403,7 @@ void APlayerCharacter::BlockStart()
 					UseParrying = true; //튕겨내기 사용 중으로 변경 -> 가드 작동시, 일정 시간에만 튕겨내기 작동함.
 
 					//Timer 설정
-					FTimerHandle ParryingEndHandle; 
+					ParryingEndHandle; 
 					GetWorld()->GetTimerManager().SetTimer(ParryingEndHandle, FTimerDelegate::CreateLambda([&]()
 						{
 							GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))); //InDelayTime이 지난후 Tag 제거
@@ -587,6 +587,8 @@ void APlayerCharacter::Die()
 	BlockEnd();
 	//플레이어 사망시, LockOn 해제
 	LockOnReset();
+
+	GetWorld()->GetTimerManager().ClearTimer(ParryingEndHandle);
 }
 
 void APlayerCharacter::LockOn()
@@ -600,7 +602,7 @@ void APlayerCharacter::LockOn()
 		else if (LockOnEnemy == nullptr) //락온 작동
 		{
 			FVector Start = GetActorLocation(); //현재 플레이어의 위치
-			FVector End = GetActorLocation() + (UKismetMathLibrary::GetForwardVector(GetControlRotation()) * 500.f); //락온 범위
+			FVector End = GetActorLocation() + (UKismetMathLibrary::GetForwardVector(GetControlRotation()) * 1200.f); //락온 범위
 			TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectTypes;
 			TraceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
 			TArray<AActor*> ActorsToIgnore;
@@ -619,7 +621,7 @@ void APlayerCharacter::LockOn()
 				UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel4),
 				false,
 				ActorsToIgnore,
-				EDrawDebugTrace::ForDuration,
+				EDrawDebugTrace::None,
 				OutHit,
 				true
 			);

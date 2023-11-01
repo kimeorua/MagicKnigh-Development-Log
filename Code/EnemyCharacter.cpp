@@ -12,6 +12,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetComponent.h"
+#include "CombetComponent.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -91,131 +92,36 @@ void AEnemyCharacter::TakeDamgeFormPlayer(EDamageEffectType DamageType)
 }
 //충돌 처리 함수
 // "ECollisionChannel::ECC_GameTraceChannel3" 은 플레이어 캡슐 컴포넌트에 적용된 Trace채널 -> 충돌시 플레이어 캐릭터에만 반응함
-FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType, EAttackDriectionType DriectionType)
+FHitResult AEnemyCharacter::CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType, EAttackDirectionType DriectionType)
 {
-	FVector Start ; //시작 점
-	FVector End; //끝 점
-
-	FVector TargtLocation;
-
-	switch (DriectionType)
-	{
-	case EAttackDriectionType::None:
-		Start = GetMesh()->GetSocketLocation(CollisionStartSocket_L); //시작 점
-		End = GetMesh()->GetSocketLocation(CollisionEndSocket_L); //끝 점
-		break;
-
-	case EAttackDriectionType::Left:
-		Start = GetMesh()->GetSocketLocation(CollisionStartSocket_L); //시작 점
-		End = GetMesh()->GetSocketLocation(CollisionEndSocket_L); //끝 점
-		break;
-
-	case EAttackDriectionType::Right:
-		Start = GetMesh()->GetSocketLocation(CollisionStartSocket_R); //시작 점
-		End = GetMesh()->GetSocketLocation(CollisionEndSocket_R); //끝 점
-		break;
-
-	case EAttackDriectionType::Max:
-		break;
-
-	default:
-		break;
-	}
-	
-	if (Type == EAttackCollisionType::Ramge_Line)
+	if (Type == EAttackCollisionType::Range_Line)
 	{
 		APlayerCharacter* Target = Cast<APlayerCharacter>(AIController->GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));
 		if (IsValid(Target))
 		{
-			TargtLocation = Target->GetActorLocation();
+			GetCombetComponent()->SetTargetLocation(Target->GetActorLocation());
 		}
 	}
-	
+	TTuple<bool, FHitResult> CollisionResult = GetCombetComponent()->AttackCollision(Type, Range, DriectionType, ECollisionChannel::ECC_GameTraceChannel3);
+	bool isHit = CollisionResult.Get<0>();
+	FHitResult OutHit = CollisionResult.Get<1>();
 
-	TArray<AActor*> ActorsToIgnore; //판정에서 무시할 객체(자기 자신) 선언 및 추가
-	ActorsToIgnore.Add(GetOwner());
-
-	FHitResult OutHit; //Hit결과 구조체
-	bool bResult; //Ovelrap 결과
-
-	switch (Type)
+	if (isHit) //충돌 하면
 	{
-	case EAttackCollisionType::None: //공격 타입이 정해지지 않으면 판정 x
-		bResult = false;
-		break;
-
-	case EAttackCollisionType::Melee: //일반 근접 공격
-		bResult = UKismetSystemLibrary::LineTraceSingle(
-			GetWorld(),
-			Start,
-			End,
-			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
-			false,
-			ActorsToIgnore,
-			EDrawDebugTrace::ForDuration,
-			OutHit,
-			true);
-		break;
-
-	case EAttackCollisionType::AOE: //범위형 공격
-		bResult = UKismetSystemLibrary::SphereTraceSingle(
-			GetWorld(),
-			Start,
-			End,
-			Range,
-			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
-			false,
-			ActorsToIgnore,
-			EDrawDebugTrace::ForDuration,
-			OutHit,
-			true);
-		break;
-
-	case EAttackCollisionType::AOE_Object_Center: //특정 객체를 기준으로 범위 공격
-		bResult = false;
-		break;
-
-	case EAttackCollisionType::Ramge_Line: //원거리 공격
-
-		bResult = UKismetSystemLibrary::LineTraceSingle(
-			GetWorld(),
-			Start,
-			TargtLocation,
-			UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_GameTraceChannel3),
-			false,
-			ActorsToIgnore,
-			EDrawDebugTrace::ForDuration,
-			OutHit,
-			true);
-		break;
-
-	case EAttackCollisionType::Max:
-		bResult = false;
-		break;
-
-	default:
-		bResult = false;
-		break;
-	}
-
-	if (bResult) //충돌 하면
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Player_Hit"));
-
 		APlayerCharacter* Player = Cast<APlayerCharacter>(OutHit.GetActor()); //충돌한 객체를 Player로 형변환 
-		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) //플레이어 캐릭터가 사망 하지 않았으면 데미지 주기
+		if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0) //플레이어 캐릭터가 사망 하지 않았으면 데미지 주기 
 		{
-			if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseDodge"))) <= 0)
+			if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseDodge"))) <= 0) 
 			{
-				if (Player && !PlayerIsHit)
+				if (Player && !PlayerIsHit) 
 				{
-					Player->SetInstigator(this); //유발자를 해당 객체로 변경
-					Player->TakeDamageFromEnemy(DamageType); //몬스터의 공격 타입에 맞는 데미지 이펙트 작동
-					PlayerIsHit = true; //플레이어가 공격에 적중함 -> 한 공격에 1번만 피격 판정 유도
+					Player->SetInstigator(this); //유발자를 해당 객체로 변경  
+					Player->TakeDamageFromEnemy(DamageType); //몬스터의 공격 타입에 맞는 데미지 이펙트 작동 
+					PlayerIsHit = true; //플레이어가 공격에 적중함 -> 한 공격에 1번만 피격 판정 유도 
 				}
 			}
 		}
-		else if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) > 0)//캐릭터가 사망한 상태이면
+		else if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) > 0)//캐릭터가 사망한 상태이면 
 		{
 			// 블랙보드에 기입한 플레이어 객체를 초기화 하고 플레이어 발견 여부를 false로 변경 
 			AIController->GetBlackboardComponent()->SetValueAsObject(AEnemyAIController::Player, nullptr);

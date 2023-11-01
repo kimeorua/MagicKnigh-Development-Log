@@ -83,7 +83,7 @@ void AEnemyAIController::OnTargetDetected(AActor* actor, FAIStimulus const Stimu
 			}
 			GetBlackboardComponent()->SetValueAsObject(Player, PlayerPawn);
 			Enemy->FindPlayer();
-			
+			SetFocus(PlayerPawn);
 			//UE_LOG(LogTemp, Warning, TEXT("PlayerDetected"));
 
 			if (bIsBoss)
@@ -95,8 +95,6 @@ void AEnemyAIController::OnTargetDetected(AActor* actor, FAIStimulus const Stimu
 			{
 				return;
 			}
-
-			SetFocus(PlayerPawn);
 		}
 		else
 		{

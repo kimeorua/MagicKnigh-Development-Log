@@ -127,6 +127,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Parrying", meta = (AllowPrivateAccess = "true"))
 	float InDelayTime_Parry = 0.5f;
 
+	FTimerHandle ParryingEndHandle;
+
 	//-------------- Lock On ---------------//
 
 	//바라볼 적 객체
