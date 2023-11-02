@@ -64,8 +64,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* HitParticle;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* UI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
+	class UDecalComponent* TargetingDecal;
+
 
 protected:
 	virtual void BeginPlay()override;
@@ -111,4 +115,6 @@ public:
 
 	//»ç¸Á ÇÔ¼ö override
 	void Die() override;
+
+	void OnTargeting();
 };

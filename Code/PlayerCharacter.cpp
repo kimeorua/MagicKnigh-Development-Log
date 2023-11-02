@@ -567,10 +567,14 @@ void APlayerCharacter::EFCharge()
 //LockOn 초기화
 void APlayerCharacter::LockOnReset()
 {
-	LockOnEnemy = nullptr;
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->bUseControllerDesiredRotation = false;
-	bUseLockOn = false;
+	if (IsValid(LockOnEnemy))
+	{
+		LockOnEnemy->OnTargeting();
+		LockOnEnemy = nullptr;
+		GetCharacterMovement()->bOrientRotationToMovement = true;
+		GetCharacterMovement()->bUseControllerDesiredRotation = false;
+		bUseLockOn = false;
+	}
 }
 
 //플레이어 사망
@@ -631,6 +635,7 @@ void APlayerCharacter::LockOn()
 				LockOnEnemy = Cast<AEnemyCharacter>(OutHit.GetActor());
 				if (LockOnEnemy)
 				{
+					LockOnEnemy->OnTargeting(); 
 					GetCharacterMovement()->bOrientRotationToMovement = false;
 					GetCharacterMovement()->bUseControllerDesiredRotation = true;
 					bUseLockOn = true;

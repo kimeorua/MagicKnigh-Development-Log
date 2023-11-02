@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/WidgetComponent.h"
 #include "CombetComponent.h"
+#include "Components/DecalComponent.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -24,6 +25,10 @@ AEnemyCharacter::AEnemyCharacter()
 	
 	UI = CreateDefaultSubobject<UWidgetComponent>(TEXT("UI"));
 	UI->SetupAttachment(RootComponent);
+
+	TargetingDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("TargetingDecal"));
+	TargetingDecal->SetupAttachment(RootComponent);
+	TargetingDecal->SetVisibility(false);
 
 	HitSound = nullptr;
 	HitParticle = nullptr;
@@ -145,6 +150,13 @@ void AEnemyCharacter::Die()
 	Player->LockOnReset();
 	//포커스 해제
 	AIController->ClearFocus(EAIFocusPriority::Gameplay);
+}
+
+void AEnemyCharacter::OnTargeting()
+{
+	if (IsValid(TargetingDecal))
+		if (TargetingDecal->IsVisible()) { TargetingDecal->SetVisibility(false); }
+		else { TargetingDecal->SetVisibility(true); }
 }
 
 //블루프린트에서 공격 종료후, 다시 판정하기 위해 초기화 하는 함수
