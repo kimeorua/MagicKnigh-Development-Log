@@ -332,6 +332,7 @@
 
 ### 11/01 ~ 11/05
 + ### [11/01 코드 리팩토링 -> 충돌 처리](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EC%B6%A9%EB%8F%8C%20%EC%B2%98%EB%A6%AC%2C%20%EC%BD%94%EB%93%9C%20%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81.md)
++ ### [11/02 타겟 락온 가시성 개선]()
 
 ### [맨위로](#)
 
