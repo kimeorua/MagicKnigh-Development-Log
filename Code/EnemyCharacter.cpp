@@ -154,9 +154,9 @@ void AEnemyCharacter::Die()
 
 void AEnemyCharacter::OnTargeting()
 {
-	if (IsValid(TargetingDecal))
-		if (TargetingDecal->IsVisible()) { TargetingDecal->SetVisibility(false); }
-		else { TargetingDecal->SetVisibility(true); }
+	if (IsValid(TargetingDecal)) //데칼 컴포넌트가 유효 하면 작동
+		if (TargetingDecal->IsVisible()) { TargetingDecal->SetVisibility(false); } //데칼이 보여지고 있는 상태에서  호출시 데칼 컴포넌트 감춤
+		else { TargetingDecal->SetVisibility(true); }												//데칼이 감쳐져 있는 상태에서  호출시 데칼 컴포넌트 보임
 }
 
 //블루프린트에서 공격 종료후, 다시 판정하기 위해 초기화 하는 함수

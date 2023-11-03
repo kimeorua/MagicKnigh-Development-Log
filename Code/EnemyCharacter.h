@@ -84,37 +84,71 @@ public:
 	UPROPERTY()
 	class UEnemyAnimInstance* EnemyAnim; 
 
+	/// <summary>
+	/// 생성자
+	/// </summary>
 	AEnemyCharacter();
 
-	//플레이어 찾음 -> 이동속도 증가
+	
+	/// <summary>
+	/// 플레이어 찾음 -> 이동속도 증가
+	/// </summary>
 	void FindPlayer();
 
-	//플레이어 놓침 -> 이동속도 감소
+	/// <summary>
+	/// 플레이어 놓침 -> 이동속도 감소
+	/// </summary>
 	void LosePlayer();
 
-	//플레이어에게 데미지 받음
+	/// <summary>
+	/// 플레이어에게 데미지 받음
+	/// </summary>
+	/// <param name="DamageType">데미지 타입(약, 강, 특수, 보통)</param>
 	void TakeDamgeFormPlayer(EDamageEffectType DamageType);
 
-	//플레이어가 적 캐릭터의 공격을 튕겨냄 -> 체간 상승
+	/// <summary>
+	/// 플레이어가 적 캐릭터의 공격을 튕겨냄 -> 체간 상승
+	/// </summary>
 	void TakeParrying();
 
-	//델리게이트 작동
+	/// <summary>
+	/// 델리게이트 작동
+	/// </summary>
+	/// <param name="Montage">애님 몽타주</param>
+	/// <param name="bInterrupted">중단 여부</param>
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
-	//공격에 맞은 플레이어 초기화
+	/// <summary>
+	/// 공격에 맞은 플레이어 초기화
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void PlayerHitReset();
 
-	//공격 판정
+	/// <summary>
+	/// 공격 판정
+	/// </summary>
+	/// <param name="Type">공격 타입</param>
+	/// <param name="Range">공격 범위</param>
+	/// <param name="DamageType">데미지 타입</param>
+	/// <param name="DriectionType">공격 방향</param>
+	/// <returns>FHitResult 구조체</returns>
 	UFUNCTION(BlueprintCallable)
 	FHitResult CheakCollision(EAttackCollisionType Type, float Range, EDamageEffectType DamageType, EAttackDirectionType DriectionType);
 
-	//패트롤 포인트 배열
+	/// <summary>
+	/// 패트롤 포인트 배열 반환
+	/// </summary>
+	/// <returns>PatrolPoints</returns>
 	FORCEINLINE TArray <class ATargetPoint*> GetPatrolPoint() const { return PatrolPoints; }
 
-	//사망 함수 override
+	/// <summary>
+	/// 사망 함수 override
+	/// </summary>
 	void Die() override;
 
+	/// <summary>
+	/// 타겟팅 시 바닥에 원형 장판 표시 -> 가시성 개선용
+	/// </summary>
 	void OnTargeting();
 };

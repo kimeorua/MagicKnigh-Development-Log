@@ -23,11 +23,22 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/// <summary>
+	/// 장착될 소캣 이름 반환
+	/// </summary>
+	/// <returns>EquipSocketName</returns>
 	FORCEINLINE FName GetEquipSocketName() const { return EquipSocketName; }
 
+	/// <summary>
+	/// 방패 크기 증가
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
-	void BarrierOn(); //방패 크기 확 대
-	void BarrierOff(); //방패 크기 원복
+	void BarrierOn(); 
+
+	/// <summary>
+	/// 방패 크기 원복
+	/// </summary>
+	void BarrierOff();
 
 private:
 	UPROPERTY(VisibleAnywhere)

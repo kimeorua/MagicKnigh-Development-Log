@@ -27,9 +27,11 @@ class PF_MAGICKNIGHT_API UCombetComponent : public UActorComponent
 	GENERATED_BODY() 
 
 private:
+	// 소켓 배열
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "HitEffect", meta = (AllowPrivateAccess = "true"))
 	TMap<EAttackSocket, FName> AttackSockets;
 
+	//원거리용 타겟 좌표
 	FVector TargetLocation;
 
 public:	
@@ -39,6 +41,15 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/// <summary>
+	/// 오버랩 확인 함수
+	/// </summary>
+	/// <param name="Type">공격 타입</param>
+	/// <param name="Range">공격 범위</param>
+	/// <param name="DriectionType">공격 방향(왼손or 오른손....)</param>
+	/// <param name="TraceChannel">반응할 트레이스 채널</param>
+	/// <param name="isPlayer">플레이여 여부</param>
+	/// <returns>bool (공격 성공 여부), FHitResult(Hit 결과 구조체)</returns>
 	TTuple<bool, FHitResult> AttackCollision(EAttackCollisionType Type, float Range, EAttackDirectionType DriectionType, ECollisionChannel TraceChannel, bool isPlayer = false);
 
 	void SetTargetLocation(FVector TLocation) { TargetLocation = TLocation; }

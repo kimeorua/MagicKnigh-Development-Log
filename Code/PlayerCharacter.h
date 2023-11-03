@@ -168,20 +168,30 @@ public:
 	FORCEINLINE bool GetUseLockOn() const { return bUseLockOn; }
 	//--------------------------------------------------------------------------------//
 	
-	//현재 사용 중인 무기 반환
+	/// <summary>
+	/// 현재 사용 중인 무기 반환
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE class AWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
 
-	//태그 생성 및 해당 태그를 가진 GameplayAbility 작동
+	/// <summary>
+	/// 태그 생성 및 해당 태그를 가진 GameplayAbility 작동
+	/// </summary>
 	void MakeTagAndActive(FString TagName);
 
-	//W, A, S, D 움직임 
+	/// <summary>
+	/// W, A, S, D 움직임 
+	/// </summary>
 	void Move(const FInputActionValue& Value);
 
-	// 움직임 종료 -> Tag 제거
+	/// <summary>
+	/// 움직임 종료 -> Tag 제거
+	/// </summary>
 	void MoveEnd();
 
-	// 시점 변경
+	/// <summary>
+	/// 시점 변경
+	/// </summary>
 	void Look(const FInputActionValue& Value);
 
 	// 달리기 사용 및 종료
@@ -230,5 +240,6 @@ public:
 	//회복 스킬 사용
 	void Healing();
 
+	// 게임 일시 정지
 	void GamePause();
 };
