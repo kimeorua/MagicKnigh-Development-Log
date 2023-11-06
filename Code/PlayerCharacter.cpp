@@ -18,6 +18,7 @@
 #include "CollisionShape.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "MagicKnightPlayerState.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -667,4 +668,17 @@ void APlayerCharacter::GamePause()
 	UGameplayStatics::SetGamePaused(GetWorld(), true);
 	UGameplayStatics::GetPlayerController(GetWorld(), 0)->SetShowMouseCursor(true);
 	PauseWidget->AddToViewport();
+}
+
+void APlayerCharacter::Save()
+{
+	float hp = GetMagicKnightAttributeSet()->GetHealth();
+	float ef = GetMagicKnightAttributeSet()->GetElementalForce();
+	float posture = GetMagicKnightAttributeSet()->GetPosture();
+	AMagicKnightPlayerState::SavePlayerData(hp, ef, posture);
+}
+
+void APlayerCharacter::Load()
+{
+	AMagicKnightPlayerState::LoadPlayerData(this);
 }

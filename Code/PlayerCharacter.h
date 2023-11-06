@@ -242,4 +242,16 @@ public:
 
 	// 게임 일시 정지
 	void GamePause();
+
+	/// <summary>
+	/// 게임 저장
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void Save();
+
+	/// <summary>
+	/// 게임 불러오기
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void Load();
 };
