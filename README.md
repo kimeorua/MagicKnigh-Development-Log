@@ -335,6 +335,9 @@
 + ### [11/02 타겟 락온 가시성 개선](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%ED%83%80%EA%B2%9F%20%EB%9D%BD%EC%98%A8%20%EA%B0%80%EC%8B%9C%EC%84%B1%20%EA%B0%9C%EC%84%A0.md)
 + ### 11/03 코드 주석 정리
 
+### 11/06 ~ 11/10
++ ### [11/06 저장 및 불러오기 구현(플레이어 체력, 원소력, 체간)]()
+
 ### [맨위로](#)
 
 ---
