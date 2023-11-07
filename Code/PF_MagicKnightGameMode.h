@@ -23,6 +23,9 @@ private:
 public:
 	APF_MagicKnightGameMode();
 	void StartPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowUI();
 };
 
 

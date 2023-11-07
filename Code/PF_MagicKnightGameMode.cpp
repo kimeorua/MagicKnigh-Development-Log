@@ -13,19 +13,24 @@ APF_MagicKnightGameMode::APF_MagicKnightGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}*/
+	
 }
 
 void APF_MagicKnightGameMode::StartPlay()
 {
 	Super::StartPlay();
 
+	
+}
+
+void APF_MagicKnightGameMode::ShowUI()
+{
 	if (IsValid(PlayerWidgetClass))
 	{
 		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerWidgetClass);
-
-		if (IsValid(CurrentWidget))
-		{
-			CurrentWidget->AddToViewport();
-		}
+	}
+	if (IsValid(CurrentWidget))
+	{
+		CurrentWidget->AddToViewport();
 	}
 }

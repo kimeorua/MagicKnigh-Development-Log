@@ -14,7 +14,7 @@ UCLASS()
 class PF_MAGICKNIGHT_API AMagicKnightPlayerState : public APlayerState
 {
 	GENERATED_BODY()
-	
+
 public:
 	AMagicKnightPlayerState();
 
@@ -30,7 +30,14 @@ public:
 	/// <param name="hp">플레이어 체력</param>
 	/// <param name="ef">플레이어 원소력</param>
 	/// <param name="posture">플레이어 체간</param>
-	static void SavePlayerData(float hp, float ef, float posture);
+	static void SavePlayerData(float hp, float ef, float posture, float healCount);
 
-	FString SaveSlotName;
+	static void SaveLevelData(UWorld* CurrentLevel);
+
+	static TSoftObjectPtr<UWorld> LoadLevelData();
+
+	static void SaveTransfromData(FTransform CurrentTransfrom);
+
+	static void LoadTransfromData(class APlayerCharacter* Player);
+
 };

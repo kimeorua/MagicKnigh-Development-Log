@@ -670,15 +670,38 @@ void APlayerCharacter::GamePause()
 	PauseWidget->AddToViewport();
 }
 
-void APlayerCharacter::Save()
+void APlayerCharacter::SaveState()
 {
 	float hp = GetMagicKnightAttributeSet()->GetHealth();
 	float ef = GetMagicKnightAttributeSet()->GetElementalForce();
 	float posture = GetMagicKnightAttributeSet()->GetPosture();
-	AMagicKnightPlayerState::SavePlayerData(hp, ef, posture);
+	float healCount = GetMagicKnightAttributeSet()->GetHealingCount();
+	AMagicKnightPlayerState::SavePlayerData(hp, ef, posture, healCount);
 }
 
-void APlayerCharacter::Load()
+void APlayerCharacter::LoadState()
 {
 	AMagicKnightPlayerState::LoadPlayerData(this);
+}
+
+void APlayerCharacter::SaveLevel()
+{
+	UWorld* Level = GetWorld();
+
+	AMagicKnightPlayerState::SaveLevelData(Level);
+}
+
+TSoftObjectPtr<UWorld> APlayerCharacter::LoadLevel()
+{
+	return AMagicKnightPlayerState::LoadLevelData();
+}
+
+void APlayerCharacter::SaveTransfrom()
+{
+	FTransform Trans = GetActorTransform();
+	AMagicKnightPlayerState::SaveTransfromData(Trans);
+}
+void APlayerCharacter::LoadTransfrom()
+{
+	AMagicKnightPlayerState::LoadTransfromData(this);
 }

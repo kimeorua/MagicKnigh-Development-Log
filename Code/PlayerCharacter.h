@@ -247,11 +247,24 @@ public:
 	/// 게임 저장
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
-	void Save();
+	void SaveState();
 
 	/// <summary>
 	/// 게임 불러오기
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
-	void Load();
+	void LoadState();
+
+	UFUNCTION(BlueprintCallable)
+	void SaveLevel();
+
+	UFUNCTION(BlueprintCallable)
+	TSoftObjectPtr<UWorld> LoadLevel();
+
+	UFUNCTION(BlueprintCallable)
+	void SaveTransfrom();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadTransfrom();
+
 };

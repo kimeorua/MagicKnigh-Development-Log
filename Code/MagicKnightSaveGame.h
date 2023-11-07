@@ -25,7 +25,17 @@ public:
 	UPROPERTY()
 	float EF;
 
-	// // 플레이어 체간
+	// 플레이어 체간
 	UPROPERTY()
 	float Posture;
+
+	// 플레이어 회복 횟수
+	UPROPERTY()
+	float HealCount;
+
+	UPROPERTY()
+	TSoftObjectPtr<UWorld> Level;
+
+	UPROPERTY()
+	FTransform Transform;
 };
