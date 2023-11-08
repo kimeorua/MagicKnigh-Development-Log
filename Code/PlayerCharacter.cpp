@@ -99,6 +99,8 @@ void APlayerCharacter::BeginPlay()
 		ArmBarrier->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, ArmBarrier->GetEquipSocketName());
 
 		Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
+
+		//if (KillEnemyID_Arr.Num() > 0) { KillEnemyID_Arr.Empty(); }
 	}
 }
 
@@ -593,6 +595,9 @@ void APlayerCharacter::Die()
 	//플레이어 사망시, LockOn 해제
 	LockOnReset();
 
+	// 사망시 배열 초기화
+	if (KillEnemyID_Arr.Num() > 0) { KillEnemyID_Arr.Empty(); }
+
 	GetWorld()->GetTimerManager().ClearTimer(ParryingEndHandle);
 }
 
@@ -704,4 +709,26 @@ void APlayerCharacter::SaveTransfrom()
 void APlayerCharacter::LoadTransfrom()
 {
 	AMagicKnightPlayerState::LoadTransfromData(this);
+}
+
+void APlayerCharacter::AddKillEnemyID(FName NewId)
+{
+	bool Cheak = false;
+	for (FName ID : KillEnemyID_Arr)
+	{
+		if (NewId == ID) { Cheak = true; }
+	}
+
+	if (!Cheak)
+	{
+		KillEnemyID_Arr.Add(NewId);
+	}
+}
+
+void APlayerCharacter::SetKillArry(TArray<FName> NewArr)
+{
+	for (FName NewID : NewArr)
+	{
+		KillEnemyID_Arr.Add(NewID);
+	}
 }

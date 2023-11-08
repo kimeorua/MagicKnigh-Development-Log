@@ -4,6 +4,9 @@
 #include "PF_MagicKnightCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
+#include "MagicKnightPlayerState.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayerCharacter.h"
 
 APF_MagicKnightGameMode::APF_MagicKnightGameMode()
 {
@@ -33,4 +36,27 @@ void APF_MagicKnightGameMode::ShowUI()
 	{
 		CurrentWidget->AddToViewport();
 	}
+}
+
+void APF_MagicKnightGameMode::SaveKillEnemyData()
+{
+	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (IsValid(Player))
+	{
+		AMagicKnightPlayerState::SaveKillEnemyArr(Player->GetKillEnemyID_Arr());
+	}
+}
+
+void APF_MagicKnightGameMode::LoadKillEnemyData()
+{
+	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (IsValid(Player))
+	{
+		AMagicKnightPlayerState::LoadKillEnemyArr(Player);
+	}
+}
+
+void APF_MagicKnightGameMode::ReSet()
+{
+	AMagicKnightPlayerState::SaveReset();
 }

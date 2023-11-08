@@ -40,4 +40,9 @@ public:
 
 	static void LoadTransfromData(class APlayerCharacter* Player);
 
+	static void SaveKillEnemyArr(TArray<FName> NewArr);
+
+	static void LoadKillEnemyArr(class APlayerCharacter* Player);
+
+	static void SaveReset();
 };

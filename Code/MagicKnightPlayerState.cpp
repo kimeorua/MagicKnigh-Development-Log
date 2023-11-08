@@ -93,3 +93,41 @@ void AMagicKnightPlayerState::LoadTransfromData(class APlayerCharacter* Player)
 	}
 
 }
+
+void AMagicKnightPlayerState::SaveKillEnemyArr(TArray<FName> NewArr)
+{
+	UMagicKnightSaveGame* NewlData = NewObject<UMagicKnightSaveGame>();
+	//NewlData->KillArr.Empty();
+
+	for (FName NewID : NewArr)
+	{
+		NewlData->KillArr.Add(NewID);
+	}
+	if (UGameplayStatics::SaveGameToSlot(NewlData, "SaveKillEnemy", 0) == false)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SaveGame Error!"));
+	}
+}
+
+void AMagicKnightPlayerState::LoadKillEnemyArr(APlayerCharacter* Player)
+{
+	UMagicKnightSaveGame* SaveGame = Cast<UMagicKnightSaveGame>(UGameplayStatics::LoadGameFromSlot("SaveKillEnemy", 0));
+
+	if (!(IsValid(SaveGame)))
+	{
+		SaveGame = GetMutableDefault<UMagicKnightSaveGame>();
+	}
+	if (Player)
+	{
+		Player->SetKillArry(SaveGame->KillArr);
+	}
+
+}
+
+void AMagicKnightPlayerState::SaveReset()
+{
+	UGameplayStatics::DeleteGameInSlot("SaveState", 0);
+	UGameplayStatics::DeleteGameInSlot("SaveLevel", 0);
+	UGameplayStatics::DeleteGameInSlot("SaveTransfrom", 0);
+	UGameplayStatics::DeleteGameInSlot("SaveKillEnemy", 0);
+}

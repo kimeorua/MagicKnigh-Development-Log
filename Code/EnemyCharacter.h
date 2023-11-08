@@ -70,6 +70,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (AllowPrivateAccess = "true"))
 	class UDecalComponent* TargetingDecal;
 
+	// Enemy ID 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ID", meta = (AllowPrivateAccess = "true"))
+	FName ID;
+
 
 protected:
 	virtual void BeginPlay()override;
@@ -151,4 +155,6 @@ public:
 	/// 타겟팅 시 바닥에 원형 장판 표시 -> 가시성 개선용
 	/// </summary>
 	void OnTargeting();
+
+	FORCEINLINE FName GetID() const { return ID; }
 };

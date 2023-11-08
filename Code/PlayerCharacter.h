@@ -147,6 +147,10 @@ private:
 	class UUserWidget* PauseWidget;
 	//--------------------UI--------------------//
 
+	//--------------------처치한 Enemy ID 배열--------------------//
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "KillArr", meta = (AllowPrivateAccess = "true"))
+	TArray<FName> KillEnemyID_Arr;
+	//--------------------처치한 Enemy ID 배열--------------------//
 
 public:
 	// 생성자
@@ -244,27 +248,52 @@ public:
 	void GamePause();
 
 	/// <summary>
-	/// 게임 저장
+	/// 플레이어 스테이터스 저장
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void SaveState();
 
 	/// <summary>
-	/// 게임 불러오기
+	/// 플레이어 스테이터스 로드
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void LoadState();
 
+	/// <summary>
+	/// 레벨 저장
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void SaveLevel();
 
+	/// <summary>
+	/// 저장된 레벨 반환 -> UI에서 반환된 레벨을 로드함
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	TSoftObjectPtr<UWorld> LoadLevel();
 
+	/// <summary>
+	/// 플레이어 위치 저장
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void SaveTransfrom();
 
+	/// <summary>
+	///  플레이어 위치 로드
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void LoadTransfrom();
 
+	/// <summary>
+	/// 처치한 enemy 배열에 ID 추가
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void AddKillEnemyID(FName NewId);
+
+	/// <summary>
+	/// 처치한 enemy 배열 반환
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE TArray<FName> GetKillEnemyID_Arr() const { return KillEnemyID_Arr; }
+
+	void SetKillArry(TArray<FName> NewArr);
 };

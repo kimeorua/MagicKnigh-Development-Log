@@ -33,6 +33,8 @@ AEnemyCharacter::AEnemyCharacter()
 	HitSound = nullptr;
 	HitParticle = nullptr;
 	EnemyAnim = nullptr;
+
+	ID = "";
 }
 
 void AEnemyCharacter::BeginPlay()

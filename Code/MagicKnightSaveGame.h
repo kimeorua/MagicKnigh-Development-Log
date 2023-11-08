@@ -38,4 +38,7 @@ public:
 
 	UPROPERTY()
 	FTransform Transform;
+
+	UPROPERTY()
+	TArray<FName> KillArr;
 };

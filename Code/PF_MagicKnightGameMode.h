@@ -26,6 +26,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ShowUI();
+
+	UFUNCTION(BlueprintCallable)
+	void SaveKillEnemyData();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadKillEnemyData();
+
+	UFUNCTION(BlueprintCallable)
+	void ReSet();
 };
 
 
