@@ -338,7 +338,7 @@
 ### 11/06 ~ 11/10
 + ### [11/06 저장 및 불러오기 구현(플레이어 체력, 원소력, 체간)](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EC%A0%80%EC%9E%A5%20%EB%B0%8F%20%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0%20%EA%B5%AC%ED%98%84(%ED%94%8C%EB%A0%88%EC%9D%B4%EC%96%B4%20%EC%B2%B4%EB%A0%A5,%20%EC%9B%90%EC%86%8C%EB%A0%A5,%20%EC%B2%B4%EA%B0%84).md)
 + ### 11/07 저장 및 불러오기 구현(맵, 플레이어 위치) -> 방식은 동일, Save 파일을 각각 SaveTransfrom, SaveLevel로 하여 저장 함
-+ ### [11/08 저장 및 불러오기 구현(처치한 몬스터 제거 및 초기화)]()
++ ### [11/08 저장 및 불러오기 구현(처치한 몬스터 제거 및 초기화)](https://github.com/kimeorua/kimeorua.github.io/tree/main/Upgrade)
 
 ### [맨위로](#)
 
