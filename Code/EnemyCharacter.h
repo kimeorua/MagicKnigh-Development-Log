@@ -74,6 +74,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ID", meta = (AllowPrivateAccess = "true"))
 	FName ID;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UnLockWeapon", meta = (AllowPrivateAccess = "true"))
+	bool UnLockAble;
+
 
 protected:
 	virtual void BeginPlay()override;

@@ -27,14 +27,34 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShowUI();
 
+	/// <summary>
+	/// 처치한 적 저장
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void SaveKillEnemyData();
 
+	/// <summary>
+	/// 처치한 적 불러오기
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void LoadKillEnemyData();
 
+	/// <summary>
+	/// 게임 파일 삭제하여 리셋
+	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void ReSet();
+
+	/// <summary>
+	/// 무기 해금 정보 저장
+	/// </summary>
+	void SaveWeaponData();
+
+	/// <summary>
+	/// 무기 해금 정보 로드
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void LoadWeaponData();
 };
 
 

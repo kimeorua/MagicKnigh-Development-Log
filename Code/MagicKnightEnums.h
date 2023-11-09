@@ -9,7 +9,7 @@ enum class EEquipedWeapon : uint8
 {
 	None = 0 UMETA(DisplayName = "None"),
 	Sword UMETA(DisplayName = "Sword"), //°Ë
-	DoubleAxe UMETA(DisplayName = "DoubleAxe"), //½Ö¼ö µµ³¢
+	Axe UMETA(DisplayName = "Axe"), //µµ³¢
 
 	Max UMETA(DisplayName = "Max")
 };

@@ -102,6 +102,16 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	class AWeapon* Sword;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AWeapon> AxeClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	bool bCanUseAxe;
+
+	//class에서 사용할 검 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
+	class AWeapon* Axe;
+
 	// 장착될 장소 배열 0  = 검, 1 = 도끼  ....(무기가 늘어날때 마다 추가 할 것)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon, meta = (AllowPrivateAccess = "true"))
 	TArray<FName>EquipSockets;
@@ -223,6 +233,7 @@ public:
 
 	//무기 소환 -> 장착해제(다른 무기 장착 중 일때) -> 장착
 	void SwordSummons();
+	void AxeSummons();
 	void WeaponUnequip();
 
 	// 무기 장착은 블루프린트에서 호출 -> 무기 이동 완료후 장착 됨
@@ -295,5 +306,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE TArray<FName> GetKillEnemyID_Arr() const { return KillEnemyID_Arr; }
 
+	/// <summary>
+	/// 저장된 처치한 enemy 배열 적용
+	/// </summary>
 	void SetKillArry(TArray<FName> NewArr);
+
+	/// <summary>
+	/// 도끼 해금
+	/// </summary>
+	void UnLockAxe();
+
+	FORCEINLINE bool GetUnLockAxe() const { return bCanUseAxe; }
+	FORCEINLINE void SetUnLockAxe(bool data)  { bCanUseAxe = data; }
 };

@@ -60,3 +60,21 @@ void APF_MagicKnightGameMode::ReSet()
 {
 	AMagicKnightPlayerState::SaveReset();
 }
+
+void APF_MagicKnightGameMode::SaveWeaponData()
+{
+	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (IsValid(Player))
+	{
+		AMagicKnightPlayerState::SaveUseAxe(Player->GetUnLockAxe());
+	}
+}
+
+void APF_MagicKnightGameMode::LoadWeaponData()
+{
+	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (IsValid(Player))
+	{
+		AMagicKnightPlayerState::LoadUseAxe(Player);
+	}
+}

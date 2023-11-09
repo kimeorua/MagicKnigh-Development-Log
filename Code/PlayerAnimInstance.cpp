@@ -36,6 +36,10 @@ EEquipedWeapon UPlayerAnimInstance::CheackWeaponTag()
 		{
 			return  EEquipedWeapon::Sword;
 		}
+		else if (Player->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Axe"))) > 0) //µµ³¢ ÀåÂø½Ã
+		{
+			return  EEquipedWeapon::Axe;
+		}
 		else
 		{
 			return  EEquipedWeapon::None;

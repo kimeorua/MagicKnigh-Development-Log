@@ -44,10 +44,13 @@ APlayerCharacter::APlayerCharacter()
 	DashAction = nullptr;
 	DodgeAction = nullptr;
 	ComboAction = nullptr;
+	Axe = nullptr;
 	Sword = nullptr;
 	CurrentWeapon = nullptr;
 	BlockAction = nullptr;
 	bUseLockOn = false;
+
+	bCanUseAxe = false;
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -59,6 +62,10 @@ void APlayerCharacter::Tick(float DeltaTime)
 		FRotator LookAt = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockOnEnemy->GetActorLocation()); //바라볼 방향 
 		FRotator LockOnRotation = FRotator (GetController()->GetControlRotation().Pitch, LookAt.Yaw, LookAt.Roll); //방향으로 회전할 회전 값
 		GetController()->SetControlRotation(LockOnRotation); //캐릭터 회전
+	}
+	else
+	{
+		LockOnReset();
 	}
 }
 
@@ -100,6 +107,8 @@ void APlayerCharacter::BeginPlay()
 
 		Sword = GetWorld()->SpawnActor<AWeapon>(SwordClass);
 
+		Axe = GetWorld()->SpawnActor<AWeapon>(AxeClass);
+
 		//if (KillEnemyID_Arr.Num() > 0) { KillEnemyID_Arr.Empty(); }
 	}
 }
@@ -125,6 +134,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		//무기 장착
 		EnhancedInputComponent->BindAction(EquipActions[0], ETriggerEvent::Triggered, this, &APlayerCharacter::SwordSummons);
+		EnhancedInputComponent->BindAction(EquipActions[1], ETriggerEvent::Triggered, this, &APlayerCharacter::AxeSummons);
 
 		//일반공격(콤보)
 		EnhancedInputComponent->BindAction(ComboAction, ETriggerEvent::Started, this, &APlayerCharacter::ComboAttack);
@@ -450,7 +460,27 @@ void APlayerCharacter::SwordSummons()
 			if (!(GetCharacterMovement()->IsFalling()))
 			{
 				WeaponUnequip();
+				GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Axe")));
 				MakeTagAndActive("Player.EquipWeapon.Sword");
+			}
+		}
+	}
+}
+
+void APlayerCharacter::AxeSummons()
+{
+	if (bCanUseAxe)
+	{
+		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
+		{
+			if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Axe"))) <= 0)
+			{
+				if (!(GetCharacterMovement()->IsFalling()))
+				{
+					WeaponUnequip();
+					GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.State.Weapon.Sword")));
+					MakeTagAndActive("Player.EquipWeapon.Axe");
+				}
 			}
 		}
 	}
@@ -723,6 +753,11 @@ void APlayerCharacter::AddKillEnemyID(FName NewId)
 	{
 		KillEnemyID_Arr.Add(NewId);
 	}
+}
+
+void APlayerCharacter::UnLockAxe()
+{
+	bCanUseAxe = true;
 }
 
 void APlayerCharacter::SetKillArry(TArray<FName> NewArr)

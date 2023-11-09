@@ -41,4 +41,7 @@ public:
 
 	UPROPERTY()
 	TArray<FName> KillArr;
+
+	UPROPERTY()
+	bool bCanUseAxe;
 };

@@ -14,6 +14,7 @@
 #include "Components/WidgetComponent.h"
 #include "CombetComponent.h"
 #include "Components/DecalComponent.h"
+#include "PF_MagicKnightGameMode.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -33,7 +34,7 @@ AEnemyCharacter::AEnemyCharacter()
 	HitSound = nullptr;
 	HitParticle = nullptr;
 	EnemyAnim = nullptr;
-
+	UnLockAble = false;
 	ID = "";
 }
 
@@ -150,6 +151,14 @@ void AEnemyCharacter::Die()
 	//적캐릭터가 사망 했음으로, 플레이어의 LockOn을 해제함
 	APlayerCharacter* Player = Cast<APlayerCharacter>(AIController->GetBlackboardComponent()->GetValueAsObject(AEnemyAIController::Player));
 	Player->LockOnReset();
+
+	if (UnLockAble) //무기를 해금 시켜주는 적 캐릭터 이면 무기 해금 및 저장
+	{
+		Player->UnLockAxe();
+		APF_MagicKnightGameMode* GM = Cast<APF_MagicKnightGameMode>(UGameplayStatics::GetGameMode(this));
+		GM->SaveWeaponData();
+	}
+	
 	//포커스 해제
 	AIController->ClearFocus(EAIFocusPriority::Gameplay);
 }

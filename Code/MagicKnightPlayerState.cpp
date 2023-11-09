@@ -130,4 +130,31 @@ void AMagicKnightPlayerState::SaveReset()
 	UGameplayStatics::DeleteGameInSlot("SaveLevel", 0);
 	UGameplayStatics::DeleteGameInSlot("SaveTransfrom", 0);
 	UGameplayStatics::DeleteGameInSlot("SaveKillEnemy", 0);
+	UGameplayStatics::DeleteGameInSlot("SaveWeaponInfo", 0);
+}
+
+void AMagicKnightPlayerState::SaveUseAxe(bool UseAxe)
+{
+	UMagicKnightSaveGame* NewlData = NewObject<UMagicKnightSaveGame>();
+
+	NewlData->bCanUseAxe = UseAxe;
+
+	if (UGameplayStatics::SaveGameToSlot(NewlData, "SaveWeaponInfo", 0) == false)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SaveGame Error!"));
+	}
+}
+
+void AMagicKnightPlayerState::LoadUseAxe(APlayerCharacter* Player)
+{
+	UMagicKnightSaveGame* SaveGame = Cast<UMagicKnightSaveGame>(UGameplayStatics::LoadGameFromSlot("SaveWeaponInfo", 0));
+
+	if (!(IsValid(SaveGame)))
+	{
+		SaveGame = GetMutableDefault<UMagicKnightSaveGame>();
+	}
+	if (Player)
+	{
+		Player->SetUnLockAxe(SaveGame->bCanUseAxe);
+	}
 }
