@@ -73,3 +73,13 @@ void AWeapon::HitArrReset()
 	HitEnemys.Empty();
 }
 
+UAnimMontage* AWeapon::GetCurrentAttackMontage(int index) const
+{
+	return AttackMontages[index];
+}
+
+UAnimMontage* AWeapon::GetCurrentSkillMontage(ESkillType Type) const
+{
+	return SkillMontages[Type];
+}
+

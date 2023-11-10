@@ -7,6 +7,17 @@
 #include "GameFramework/Actor.h"
 #include "Weapon.generated.h"
 
+UENUM(BlueprintType)
+enum class ESkillType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	Q_Skill UMETA(DisplayName = "Q_Skill"), //중간 데미지
+	E_Skill UMETA(DisplayName = "E_Skill"), //낮은 데미지
+	Special_Skill UMETA(DisplayName = "Special_Skil"), //높은 데미지
+
+	Max UMETA(DisplayName = "Max")
+};
+
 UCLASS()
 class PF_MAGICKNIGHT_API AWeapon : public AActor
 {
@@ -35,6 +46,22 @@ public:
 	//적 배열 초기화
 	UFUNCTION(BlueprintCallable)
 	void HitArrReset();
+
+	/// <summary>
+	/// 공격 몽타주 반환
+	/// </summary>
+	/// <param name="index">공격 번호</param>
+	/// <returns>공격 애님 몽타주</returns>
+	UFUNCTION(BlueprintCallable)
+	UAnimMontage* GetCurrentAttackMontage(int index) const;
+
+	/// <summary>
+	/// 스킬 몽타주 반환
+	/// </summary>
+	/// <param name="Type">스킬 타입</param>
+	/// <returns>스킬 애님 몽타주</returns>
+	UFUNCTION(BlueprintCallable)
+	UAnimMontage* GetCurrentSkillMontage(ESkillType Type) const;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -69,4 +96,16 @@ private:
 	TArray<class AEnemyCharacter*>HitEnemys;
 
 	class UCombetComponent* CombetComp;
+
+	/// <summary>
+	/// 콤보 공격 몽타주
+	/// </summary>
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> AttackMontages;
+
+	/// <summary>
+	/// 스킬 몽타주
+	/// </summary>
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	TMap<ESkillType, UAnimMontage*> SkillMontages;
 };
