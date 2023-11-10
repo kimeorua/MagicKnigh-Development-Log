@@ -340,6 +340,7 @@
 + ### 11/07 저장 및 불러오기 구현(맵, 플레이어 위치) -> 방식은 동일, Save 파일을 각각 SaveTransfrom, SaveLevel로 하여 저장 함
 + ### [11/08 저장 및 불러오기 구현(처치한 몬스터 제거 및 초기화)](https://github.com/kimeorua/kimeorua.github.io/blob/main/Upgrade/%EC%A0%80%EC%9E%A5%20%EB%B0%8F%20%EB%B6%88%EB%9F%AC%EC%98%A4%EA%B8%B0%20%EA%B5%AC%ED%98%84(%EC%A0%81%20%EC%A0%9C%EA%B1%B0%20%EC%A0%81%EC%9A%A9%20%EB%B0%8F%20%EC%B4%88%EA%B8%B0%ED%99%94).md)
 + ### 11/09 두번째 무기 소환 및 장착 구현, 정예Type적 처치 시 무기 해금 및 해금 여부 저장 구현
++ ### 11/10 두번째 무기 스킬 및 공격 애니메이션 추가
 
 ### [맨위로](#)
 
