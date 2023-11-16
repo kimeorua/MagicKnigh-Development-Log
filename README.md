@@ -1,4 +1,4 @@
-# MakeGame
+# MagicKnight
 
 ### 게임 파일:
 
