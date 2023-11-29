@@ -1,6 +1,6 @@
 # MagicKnight
 
-### [] (https://drive.google.com/file/d/1Y9XnQNqTD-IDD9I6eDmUFSVSbHHhis5X/view?usp=sharing)
+### [게임 파일] (https://drive.google.com/file/d/1Y9XnQNqTD-IDD9I6eDmUFSVSbHHhis5X/view?usp=sharing)
 + #### 실행법: 압축 해제 -> MagicKnight -> Windows -> PF_MagicKnight.exe 실행
  
 # 졸업 작품 및 포트폴리오 정리
