@@ -529,7 +529,7 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 		{
 			if (GetInstigator())
 			{
-				float BlockAbleRot = 360.f - FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw); //적 캐릭터의 방향과 플레이어 캐릭터의 방향 각도를 계산
+				float BlockAbleRot = FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw); //적 캐릭터의 방향과 플레이어 캐릭터의 방향 각도를 계산
 				AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator()); //공격한 객체 저장
 
 				if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f)) //방어각도(100')에 들어 왔으면 방어 or 튕겨내기 성공
@@ -711,7 +711,16 @@ void APlayerCharacter::SaveState()
 	float ef = GetMagicKnightAttributeSet()->GetElementalForce();
 	float posture = GetMagicKnightAttributeSet()->GetPosture();
 	float healCount = GetMagicKnightAttributeSet()->GetHealingCount();
-	AMagicKnightPlayerState::SavePlayerData(hp, ef, posture, healCount);
+	AMagicKnightPlayerState::SavePlayerData(hp, ef, posture, healCount, false);
+}
+
+void APlayerCharacter::SaveStateOnPortal()
+{
+	float hp = GetMagicKnightAttributeSet()->GetHealth();
+	float ef = GetMagicKnightAttributeSet()->GetElementalForce();
+	float posture = GetMagicKnightAttributeSet()->GetPosture();
+	float healCount = GetMagicKnightAttributeSet()->GetHealingCount();
+	AMagicKnightPlayerState::SavePlayerData(hp, ef, posture, healCount, true);
 }
 
 void APlayerCharacter::LoadState()
