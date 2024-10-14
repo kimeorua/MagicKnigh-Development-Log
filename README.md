@@ -45,6 +45,8 @@
 ## 4. 개발 일정
 ![](img/개발일정ver3.PNG)
 
+### [맨위로](#)
+
 ## 5. 핵심 개발 기술
 ### 5-1 플레이어 방어 구현
 
@@ -120,6 +122,8 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 + #### 3. 방어 사용 중일 때 (플레이어.Roatation.Yaw - 공격 하는 적.Roatation.Yaw)를 계산하고 절대값을 씌워 두 객체의 각도 차이를 계산함.
 + #### 4. 두 객체가 서로 마주보고 있을 경우 각도 차이는 180' 임으로, 180'를 기준으로 좌 -50' 우 +50'를 계산하여 130'~230' 사이의 값이 나오면 방어 가는 여부를 판단함.
 + #### 5. 이후 방어 가능 여부에 따라 데미지를 처리하는 GameplayEffect를 작동 시키거나 Parry또는 Block GameplayEffect를 작동 시킴
+
+### [맨위로](#)
 
 
 ## 6. 후기
