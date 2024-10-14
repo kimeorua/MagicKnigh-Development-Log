@@ -133,8 +133,10 @@ void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 ```
 
 ### 코드 설명
-+ #### 1.Post Gameplay Effect Execute()는 Attribute의 BaseValue가 변경된 이후 트리거된다.
-+ #### 2. 이점을 활요하여, 변경된 값을 FMath::Clamp()를 통해 범위를 지정 하거나, HP가 0이하가 되면 사망 함수를 호출하는 등 상황에 맞는 기능을 사용하도록 구현 함
++ #### Post Gameplay Effect Execute()는 Attribute의 BaseValue가 변경된 이후 트리거된다.
++ #### 이점을 활용하여, 변경된 값을 FMath::Clamp()를 통해 범위를 지정 함
++ #### 들어온 값이 Damage값일 경우, 해당 값 만큼 Health에서 차감한 후, 해당 값이 0이하이면 사망 함수를 호출 하고, Health값이 0 초과, Posture(체간)이 최대값 이상이면 기절 함수를 호출 한다.
++ #### 추가적으로 플레이어가 공격 시 EF(마나)를 충전 하거나 방어시 체간이 상승하는 등 여러 기능을 추가 구현 하였다.
 
 ### 5-2 플레이어 방어 구현
 
@@ -205,11 +207,11 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 
 ```
 ### 코드 설명
-+ #### 1. 플레이어가 현재 죽은상태인지 확인
-+ #### 2. 죽은 상태가 아니면 방어 사용 중인지 확인함.
-+ #### 3. 방어 사용 중일 때 (플레이어.Roatation.Yaw - 공격 하는 적.Roatation.Yaw)를 계산하고 절대값을 씌워 두 객체의 각도 차이를 계산함.
-+ #### 4. 두 객체가 서로 마주보고 있을 경우 각도 차이는 180' 임으로, 180'를 기준으로 좌 -50' 우 +50'를 계산하여 130'~230' 사이의 값이 나오면 방어 가는 여부를 판단함.
-+ #### 5. 이후 방어 가능 여부에 따라 데미지를 처리하는 GameplayEffect를 작동 시키거나 Parry또는 Block GameplayEffect를 작동 시킴
++ #### 플레이어가 현재 죽은상태인지 확인
++ #### 죽은 상태가 아니면 방어 사용 중인지 확인함.
++ #### 방어 사용 중일 때 (플레이어.Roatation.Yaw - 공격 하는 적.Roatation.Yaw)를 계산하고 절대값을 씌워 두 객체의 각도 차이를 계산함.
++ #### 두 객체가 서로 마주보고 있을 경우 각도 차이는 180' 임으로, 180'를 기준으로 좌 -50' 우 +50'를 계산하여 130'~230' 사이의 값이 나오면 방어 가는 여부를 판단함.
++ #### 이후 방어 가능 여부에 따라 데미지를 처리하는 GameplayEffect를 작동 시키거나 Parry또는 Block GameplayEffect를 작동 시킴
 
 ### [맨위로](#)
 
