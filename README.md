@@ -4,7 +4,7 @@
 + #### 실행법: 압축 해제 -> MagicKnight -> Windows -> PF_MagicKnight.exe 실행
 ### [시현 영상] (https://www.youtube.com/watch?v=-506RGWtlkM)
  
-# 졸업 작품 및 포트폴리오 정리
+# 포트폴리오 정리
 
 ## 목차
 + ### [1.게임 개요](#1-게임-개요)
