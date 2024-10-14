@@ -2,7 +2,7 @@
 
 ### [게임 파일] (https://drive.google.com/file/d/1KxsD7Ux-HgiN-rVLcRbLNsiMT3DKebCF/view?usp=sharing)
 + #### 실행법: 압축 해제 -> MagicKnight -> Windows -> PF_MagicKnight.exe 실행
-### [시현 영상] (https://www.youtube.com/watch?v=-506RGWtlkM)
+### [시연 영상] (https://www.youtube.com/watch?v=-506RGWtlkM)
  
 # 포트폴리오 정리
 
