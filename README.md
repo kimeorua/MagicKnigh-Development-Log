@@ -71,7 +71,6 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
   				{
   					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
   					{
-  						//UE_LOG(LogTemp, Warning, TEXT("Parrying"));
   						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
   						AttackedEnemy->TakeParrying();
   						EFCharge();
@@ -80,12 +79,11 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
   					{
   						if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
   						{
-  							//UE_LOG(LogTemp, Warning, TEXT("Break Block"));
-  							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext); //데미지 받음
+  							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
   						}
   						else
   						{
-  							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext); //방어 Effect
+  							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext);
   						}
   					}
   				}
@@ -116,6 +114,13 @@ void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
 }
 
 ```
+### 코드 설명
++ #### 1. 플레이어가 현재 죽은상태인지 확인
++ #### 2. 죽은 상태가 아니면 방어 사용 중인지 확인함.
++ #### 3. 방어 사용 중일 때 (플레이어.Roatation.Yaw - 공격 하는 적.Roatation.Yaw)를 계산하고 절대값을 씌워 두 객체의 각도 차이를 계산함.
++ #### 4. 두 객체가 서로 마주보고 있을 경우 각도 차이는 180' 임으로, 180'를 기준으로 좌 -50' 우 +50'를 계산하여 130'~230' 사이의 값이 나오면 방어 가는 여부를 판단함.
++ #### 5. 이후 방어 가능 여부에 따라 데미지를 처리하는 GameplayEffect를 작동 시키거나 Parry또는 Block GameplayEffect를 작동 시킴
+
 
 ## 6. 후기
 ### 개인 프로젝트를 진행하면서 느낀 점으로는 언리얼 엔진의 기능에 대해 생각보다 모르던 부분이 많았다는 점과, 빌드 후의 테스트의 중요성을 알게 되었는데, 가장 기억에 남는 것은 포트폴리오로 만든 개인 프로젝트에는 Save &amp; Load 기능을 만들었는데 에디터 상에서 문제없이 저장된 캐릭터의 정보, 위치, 저장한 맵, 무기의 해금 여부, 여태까지 처치한 적 정보가 잘 불러왔으나, 정작 빌드 하고 나서는 캐릭터의 위치 및 처치한 적의 정보가 제대로 불러와지지 않아, 캐릭터가 이상한 곳에 스폰 되거나, 잡은 적의 정보가 적용되지 않아 이미 잡은 적을 다시 잡아야 하는 문제점이 발생함.
