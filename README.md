@@ -135,8 +135,8 @@ void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMo
 ### 코드 설명
 + #### Post Gameplay Effect Execute()는 Attribute의 BaseValue가 변경된 이후 트리거된다.
 + #### 이점을 활용하여, 변경된 값을 FMath::Clamp()를 통해 범위를 지정 함
-+ #### 들어온 값이 Damage값일 경우, 해당 값 만큼 Health에서 차감한 후, 해당 값이 0이하이면 사망 함수를 호출 하고, Health값이 0 초과, Posture(체간)이 최대값 이상이면 기절 함수를 호출 한다.
-+ #### 추가적으로 플레이어가 공격 시 EF(마나)를 충전 하거나 방어시 체간이 상승하는 등 여러 기능을 추가 구현 하였다.
++ #### 들어온 값이 Damage값일 경우, 해당 값 만큼 Health에서 차감한 후, 해당 값이 0이하이면 사망 함수를 호출 하고, Health값이 0 초과, Posture(체간)이 최대값 이상이면 기절 함수를 호출 함.
++ #### 추가적으로 플레이어가 공격 시 EF(마나)를 충전 하거나 방어시 체간이 상승하는 등 여러 기능을 추가 구현 함.
 
 ### 5-2 플레이어 방어 구현
 
