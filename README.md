@@ -48,7 +48,95 @@
 ### [맨위로](#)
 
 ## 5. 핵심 개발 기술
-### 5-1 플레이어 방어 구현
+### 5-1 Post Gameplay Effect Execute()활용
+
+```cpp
+
+void UMagicKnightAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth())); //HP의 하한선 및 상한선 설정
+	}
+	else if (Data.EvaluatedData.Attribute == GetElementalForceAttribute())
+	{
+		SetElementalForce(FMath::Clamp(GetElementalForce(), 0.f, GetMaxElementalForce())); //EF의 하한선 및 상한선 설정
+	}
+	else if (Data.EvaluatedData.Attribute == GetPostureAttribute())
+	{
+		SetPosture(FMath::Clamp(GetPosture(), 0.f, GetMaxPosture())); //체간의 하한선 및 상한선 설정
+	}
+	else if (Data.EvaluatedData.Attribute == GetHealingCountAttribute())
+	{
+		SetHealingCount(FMath::Clamp(GetHealingCount(), 0.f, GetMaxHealingCount())); //회복 스킬 횟수의 하한선 및 상한선 설정
+	}
+	else if (Data.EvaluatedData.Attribute == GetDamageAttribute()) //데미지를 값이 변경됨 -> 데미지를 받음
+	{
+		//HP 감소
+		SetHealth(FMath::Clamp(GetHealth() - Damage.GetCurrentValue(), 0.f, GetMaxHealth()));
+		//받은 데미지 * 1.2의 체간 상승
+		SetPosture(FMath::Clamp(GetPosture() + Damage.GetCurrentValue() * 1.2f, 0.f, GetMaxPosture()));
+
+		//HP가 0이하 -> 사망 판정
+		if (GetHealth() <= 0.f)
+		{
+			SetHealth(0.f); //HP를 0으로 고정
+			ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor()); //부모 클래스 포인터를 이용하여, 적 및 플레이어 캐릭터의 Die(사망 함수)를 호출 함.
+			Owner->Die();
+		}
+
+		else //HP가 남아 있으면
+		{
+			if (GetPosture() >= GetMaxPosture()) //체간을 비교하여, 체간 최대치 이상이면 기절 유발
+			{
+				SetPosture(0.f); //체간 초기화
+				ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor());//부모 클래스 포인터를 이용하여, 적 및 플레이어 캐릭터의 Stun(기절 함수)를 호출 함.
+				Owner->Stun();
+			}
+		}
+
+		Damage = 0.f; //데미지 초기화 
+	}
+
+	else if (Data.EvaluatedData.Attribute == GetChargeEFAttribute()) //공격 시 EF 충전
+	{
+		SetElementalForce(FMath::Clamp(GetElementalForce() + ChargeEF.GetCurrentValue(), 0, GetMaxElementalForce())); //충전한 값이 최대치를 넘지 않도록,
+		ChargeEF = 0.f; //충전치 초기화
+	}
+
+	else if (Data.EvaluatedData.Attribute == GetPostureUpAttribute()) //체간 상승(체력 감소는 없음) -> 가드 성공 시 작동
+	{
+		SetPosture(FMath::Clamp(GetPosture() + PostureUp.GetCurrentValue(), 0, GetMaxPosture()));
+
+		if (GetPosture() >= GetMaxPosture()) //체간을 비교하여, 체간 최대치 이상이면 기절 유발
+		{
+			SetPosture(0.f);
+			ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor()); //부모 클래스 포인터를 이용하여, 적 및 플레이어 캐릭터의 Stun(기절 함수)를 호출 함.
+			//UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *Owner->GetName())
+			Owner->Stun();
+		}
+		PostureUp = 0.f; //체간 상승치 초기화
+	}
+
+	else if (Data.EvaluatedData.Attribute == GetHealing_HPAttribute()) //체력 회복 시
+	{
+		if (GetHealth() < GetMaxHealth() && GetHealingCount() > 0) //최대 체력일때, 사용횟수가 0보다 작을때는 사용 불가
+		{
+			SetHealingCount(GetHealingCount() - 1); //횟수 차감
+			SetHealth(FMath::Clamp(GetHealth(), GetHealth() + Healing_HP.GetCurrentValue(), GetMaxHealth())); //HP 상승
+			//UE_LOG(LogTemp, Warning, TEXT("Heal")); 
+		}
+		SetHealing_HP(0.f); //회복량 초기화
+	}
+}
+
+```
+
+### 코드 설명
++ #### 1.Post Gameplay Effect Execute()는 Attribute의 BaseValue가 변경된 이후 트리거된다.
++ #### 2. 이점을 활요하여, 변경된 값을 FMath::Clamp()를 통해 범위를 지정 하거나, HP가 0이하가 되면 사망 함수를 호출하는 등 상황에 맞는 기능을 사용하도록 구현 함
+
+### 5-2 플레이어 방어 구현
 
 ```cpp
 
