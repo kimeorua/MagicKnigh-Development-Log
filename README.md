@@ -11,7 +11,7 @@
 + ### [2.모티브](#2-모티브가-된-게임)
 + ### [3.개발 툴 및 언어](#3-개발-툴-및-언어)
 + ### [4.개발 일정](#4-개발-일정)
-+ ### [5.핵심 개발 기술 정리](5-핵심-개발-기술-정리)
++ ### [5.핵심 개발 기술](5-핵심-개발-기술)
 + ### [6.후기](5-후기)
 
 ## 1. 게임의 장르 및 컨셉 플랫폼
@@ -45,7 +45,79 @@
 ## 4. 개발 일정
 ![](img/개발일정ver3.PNG)
 
-## 5. 후기
+## 5. 핵심 개발 기술
+### 5-1 플레이어 방어 구현
+
+```cpp
+
+void APlayerCharacter::TakeDamageFromEnemy(EDamageEffectType DamageType)
+{
+ 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.Die"))) <= 0)
+ 	{
+  		GetWorldTimerManager().PauseTimer(PostureHandle);
+  
+  		FGameplayEffectContextHandle EffectContext = GetAbilitySystemComponent()->MakeEffectContext();
+  		EffectContext.AddSourceObject(this);
+  		FGameplayEffectSpecHandle SpecHandle;
+  
+  		if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseBlock"))) > 0)
+  		{
+  			if (GetInstigator())
+  			{
+  				float BlockAbleRot = FMath::Abs(GetActorRotation().Yaw - GetInstigator()->GetActorRotation().Yaw);
+  				AEnemyCharacter* AttackedEnemy = Cast<AEnemyCharacter>(GetInstigator());
+  
+  				if (!(BlockAbleRot < 130.f || BlockAbleRot > 230.f))
+  				{
+  					if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Player.State.UseParrying"))) > 0)
+  					{
+  						//UE_LOG(LogTemp, Warning, TEXT("Parrying"));
+  						SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Parrying], 1, EffectContext);
+  						AttackedEnemy->TakeParrying();
+  						EFCharge();
+  					}
+  					else
+  					{
+  						if (AttackedEnemy->GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Enemy.State.BreakBlock"))) > 0)
+  						{
+  							//UE_LOG(LogTemp, Warning, TEXT("Break Block"));
+  							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext); //데미지 받음
+  						}
+  						else
+  						{
+  							SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(CombetEffects[ECombetEffectType::Block], 1, EffectContext); //방어 Effect
+  						}
+  					}
+  				}
+  				else
+  				{
+  					SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext);
+  				}
+  			}
+ 		}
+ 
+ 		else
+ 		{
+ 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo1")));
+ 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo2")));
+ 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo3")));
+ 			GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("Player.Attack.Combo4")));
+ 
+ 			GetAbilitySystemComponent()->CancelAbilities();
+ 
+ 			SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DamageEffects[DamageType], 1, EffectContext); 
+ 		}
+ 
+ 		if (SpecHandle.IsValid())
+ 		{
+ 			FActiveGameplayEffectHandle GEHandle = GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+ 		}
+ 	}
+}
+
+```
+
+## 6. 후기
 ### 개인 프로젝트를 진행하면서 느낀 점으로는 언리얼 엔진의 기능에 대해 생각보다 모르던 부분이 많았다는 점과, 빌드 후의 테스트의 중요성을 알게 되었는데, 가장 기억에 남는 것은 포트폴리오로 만든 개인 프로젝트에는 Save &amp; Load 기능을 만들었는데 에디터 상에서 문제없이 저장된 캐릭터의 정보, 위치, 저장한 맵, 무기의 해금 여부, 여태까지 처치한 적 정보가 잘 불러왔으나, 정작 빌드 하고 나서는 캐릭터의 위치 및 처치한 적의 정보가 제대로 불러와지지 않아, 캐릭터가 이상한 곳에 스폰 되거나, 잡은 적의 정보가 적용되지 않아 이미 잡은 적을 다시 잡아야 하는 문제점이 발생함.
 
 ### 이점을 고치기 위해, Log 출력을 이용하여 확인 해본결과, 에디터 상에서는 Game Mode의 Begin Play가 호출된 후 Level의 Begin Play가 호출되어 문제없이 작동되었으나,  빌드 버전에선 반대로 작동되는 것을 확인하여, 많이 당황했던 기억이 있음.
